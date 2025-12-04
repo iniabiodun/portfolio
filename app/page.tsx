@@ -137,14 +137,18 @@ export default function PersonalWebsite() {
             )}
           </>
         ) : (
-          <main className="flex-1 px-8 md:px-16 max-w-3xl overflow-y-auto pt-28 md:pt-16 flex flex-col justify-between min-h-screen pb-0">
+          <main className="flex-1 px-6 md:px-16 w-full md:max-w-3xl overflow-y-auto pt-20 md:pt-16 flex flex-col justify-between min-h-screen pb-0">
             <AboutSection onNavigateToSpeaking={() => setActiveTab("speaking")} />
           </main>
         )}
       </div>
 
+      {/* Mobile overlay - tap to close */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setMobileMenuOpen(false)} />
+        <div 
+          className="fixed inset-0 bg-black/20 z-30 md:hidden backdrop-blur-sm" 
+          onClick={() => setMobileMenuOpen(false)} 
+        />
       )}
     </div>
   )

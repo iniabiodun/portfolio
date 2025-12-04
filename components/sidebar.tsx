@@ -16,15 +16,24 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
   const tabs: Tab[] = ["about", "case-studies", "bookshelf", "notes", "speaking"]
 
   return (
-    <aside
-      style={{ width: `${width}px`, borderRight: '3px double var(--border)' }}
-      className={cn(
-        "fixed left-0 top-0 h-screen shrink-0 bg-background z-30",
-        "max-md:transition-transform max-md:duration-150",
-        mobileMenuOpen ? "max-md:translate-x-0" : "max-md:-translate-x-full",
-        "max-md:shadow-lg",
-      )}
-    >
+    <>
+      <style jsx>{`
+        @media (min-width: 768px) {
+          .sidebar-aside {
+            width: ${width}px !important;
+          }
+        }
+      `}</style>
+      <aside
+        style={{ borderRight: '3px double var(--border)' }}
+        className={cn(
+          "sidebar-aside fixed left-0 top-0 h-screen shrink-0 bg-background z-40",
+          "w-[280px]",
+          "transition-transform duration-300 ease-out",
+          mobileMenuOpen ? "translate-x-0" : "max-md:-translate-x-full",
+          "max-md:shadow-2xl",
+        )}
+      >
       {/* Ribbon Bookmark */}
       <div className="absolute top-0 left-8 w-8 h-40 z-10 group">
         <div
@@ -48,7 +57,7 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
           }
         }
       `}</style>
-      <nav className="flex flex-col gap-2 p-8 pt-54">
+      <nav className="flex flex-col gap-2 p-8 pt-48 md:pt-54">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -77,5 +86,6 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
 
       <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />
     </aside>
+    </>
   )
 }

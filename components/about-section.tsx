@@ -76,17 +76,24 @@ export function AboutSection({ onNavigateToSpeaking }: AboutSectionProps) {
           <p className="text-muted-foreground">noun</p>
           <ol className="space-y-2 list-decimal list-inside">
             <li className="text-foreground">
-              Former lawyer turned{" "}
-              <HoverWord onHover={handleHover} onLeave={handleLeave}>product designer</HoverWord>.
+              Player/coach senior IC with 12+ YOE at fast-moving B2B/B2C teams.
             </li>
             <li className="text-foreground">
-              Player/coach IC with 12 years of experience in fast-moving B2B/B2C teams.
+              <HoverWord onHover={handleHover} onLeave={handleLeave}>Designer</HoverWord>,{" "}
+              <a href="https://fin.ai/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Fin AI Agent</a>
+              /
+              <a href="https://www.intercom.com/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Intercom</a>
+              ; prev. Principal Product Designer,{" "}
+              <a href="https://www.gendigital.com/us/en/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Gen Digital</a>.
             </li>
             <li className="text-foreground">
-              Designer, Intercom (Fin AI Agent); previously Principal Product Designer, Gen Digital; founding designer at Decimals and Coho.
+              <HoverWord onHover={handleHover} onLeave={handleLeave}>Writer</HoverWord>,{" "}
+              <a href="https://iniabiodun.substack.com/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">In Good Company</a>
+              ; Podcast host,{" "}
+              <a href="https://open.spotify.com/show/0szIL4qmNk7DrrlAgMX0uV" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Growth Design Podcast</a>.
             </li>
             <li className="text-foreground">
-              <HoverWord onHover={handleHover} onLeave={handleLeave}>Writer</HoverWord>, In Good Company; co-host, Growth Design Podcast.
+              Founding designer, Decimals, Coho, and News Decoder.
             </li>
           </ol>
         </div>

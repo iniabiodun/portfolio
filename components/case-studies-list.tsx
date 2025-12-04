@@ -43,7 +43,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
         selectedCaseStudy && "max-md:hidden",
       )}
     >
-      <div className="px-8 md:px-16 pt-28 md:pt-16 pb-0 max-w-3xl flex flex-col justify-between min-h-full">
+      <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
         <div>
           <h1 className="text-4xl font-serif mb-8">Case Studies</h1>
           <p className="text-muted-foreground mb-8">Selected projects & design work.</p>

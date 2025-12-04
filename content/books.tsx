@@ -30,7 +30,7 @@ export const books: Book[] = [
     "hasNotes": true,
     "isReading": true,
     "coverImage": "/Bookshelf/Circe.png",
-    "content": "<blockquote>*This book was gifted to me by Calix.*</blockquote>\n<p>TO BE CONTINUED...</p>"
+    "content": "<blockquote>*I am loving the modern retellings of these Greek mythologies. Madeline Miller is an absolute beast of a writer.*</blockquote>\n<p>TO BE CONTINUED...</p>"
   },
   {
     "slug": "colors-of-wes-anderson",
