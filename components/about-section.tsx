@@ -83,7 +83,7 @@ export function AboutSection({ onNavigateToSpeaking }: AboutSectionProps) {
               Player/coach IC with 12 years of experience in fast-moving B2B/B2C teams.
             </li>
             <li className="text-foreground">
-              Currently at Intercom (Fin AI Agent); previously Principal across 58 markets at Gen Digital; founding designer at Decimals, Coho.
+              Designer, Intercom (Fin AI Agent); previously Principal Product Designer, Gen Digital; founding designer at Decimals and Coho.
             </li>
             <li className="text-foreground">
               <HoverWord onHover={handleHover} onLeave={handleLeave}>Writer</HoverWord>, In Good Company; co-host, Growth Design Podcast.
