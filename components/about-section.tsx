@@ -95,7 +95,16 @@ export function AboutSection({ onNavigateToSpeaking }: AboutSectionProps) {
         </div>
       </div>
 
-      <Footer />
+      {/* Footer with Seal */}
+      <div className="flex items-end justify-between">
+        <Footer />
+        <img 
+          src="/IniOluwa Seal 1.png" 
+          alt="OMÒ ASÍWAJU Seal" 
+          className="object-contain mb-8"
+          style={{ width: '130px', height: '130px' }}
+        />
+      </div>
     </div>
   )
 }
