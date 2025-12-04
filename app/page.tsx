@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import { useResizable } from "@/hooks/use-resizable"
-import { Sidebar } from "@/components/sidebar"
+import { Sidebar, MobileDrawer } from "@/components/sidebar"
 import { AboutSection } from "@/components/about-section"
 import { NotesList } from "@/components/notes-list"
 import { BookshelfList } from "@/components/bookshelf-list"
@@ -58,14 +58,16 @@ export default function PersonalWebsite() {
 
   return (
     <div className="flex min-h-screen">
+      {/* Mobile hamburger button */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="fixed top-6 left-6 z-50 md:hidden bg-background border border-border rounded-lg p-2.5 hover:bg-muted shadow-sm"
+        className="fixed top-5 left-5 z-[60] md:hidden bg-background border border-border rounded-lg p-2.5 hover:bg-muted shadow-md"
         aria-label="Toggle menu"
       >
         {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
       </button>
 
+      {/* Desktop sidebar */}
       <Sidebar
         activeTab={activeTab}
         onTabChange={handleTabChange}
@@ -75,7 +77,27 @@ export default function PersonalWebsite() {
         mobileMenuOpen={mobileMenuOpen}
       />
 
-      <div className="flex-1 max-md:ml-0 flex" style={{ marginLeft: `${sidebar.width}px` }}>
+      {/* Mobile drawer */}
+      <MobileDrawer
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+      />
+
+      {/* Main content area - desktop has margin for sidebar, mobile is full width */}
+      <div 
+        className="flex-1 flex md:ml-0"
+        style={{ marginLeft: `${sidebar.width}px` }}
+      >
+        <style jsx>{`
+          @media (max-width: 767px) {
+            div {
+              margin-left: 0 !important;
+            }
+          }
+        `}</style>
+        
         {activeTab === "notes" ? (
           <>
             <NotesList
@@ -137,19 +159,11 @@ export default function PersonalWebsite() {
             )}
           </>
         ) : (
-          <main className="flex-1 px-6 md:px-16 w-full md:max-w-3xl overflow-y-auto pt-20 md:pt-16 flex flex-col justify-between min-h-screen pb-0">
+          <main className="flex-1 px-5 md:px-16 w-full md:max-w-3xl overflow-y-auto pt-16 md:pt-16 flex flex-col justify-between min-h-screen pb-0">
             <AboutSection onNavigateToSpeaking={() => setActiveTab("speaking")} />
           </main>
         )}
       </div>
-
-      {/* Mobile overlay - tap to close */}
-      {mobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-30 md:hidden backdrop-blur-sm" 
-          onClick={() => setMobileMenuOpen(false)} 
-        />
-      )}
     </div>
   )
 }

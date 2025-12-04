@@ -36,13 +36,21 @@ function sortCaseStudiesByDate() {
 export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, isDragging, onMouseDown }: CaseStudiesListProps) {
   const sortedCaseStudies = sortCaseStudiesByDate()
   return (
-    <div
-      style={{ width: `${width}px` }}
-      className={cn(
-        "relative overflow-y-auto shrink-0 border-r border-border h-screen",
-        selectedCaseStudy && "max-md:hidden",
-      )}
-    >
+    <>
+      <style jsx>{`
+        @media (max-width: 767px) {
+          .list-container {
+            width: 100% !important;
+          }
+        }
+      `}</style>
+      <div
+        style={{ width: `${width}px` }}
+        className={cn(
+          "list-container relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:w-full",
+          selectedCaseStudy && "max-md:hidden",
+        )}
+      >
       <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
         <div>
           <h1 className="text-4xl font-serif mb-8">Case Studies</h1>
@@ -82,6 +90,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
 
       {selectedCaseStudy && <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />}
     </div>
+    </>
   )
 }
 

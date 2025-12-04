@@ -28,7 +28,7 @@ export function SpeakingList({ selectedSpeaking, onSelectSpeaking, width, isDrag
     <div
       style={{ width: `${width}px` }}
       className={cn(
-        "relative overflow-y-auto shrink-0 border-r border-border h-screen",
+        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full",
         selectedSpeaking && "max-md:hidden",
       )}
     >

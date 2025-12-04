@@ -24,7 +24,7 @@ export function BookshelfList({ selectedBook, onSelectBook, width, isDragging, o
     <div
       style={{ width: `${width}px` }}
       className={cn(
-        "relative overflow-y-auto shrink-0 border-r border-border h-screen",
+        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full",
         selectedBook && "max-md:hidden",
       )}
     >

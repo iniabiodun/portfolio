@@ -28,7 +28,7 @@ export function NotesList({ selectedNote, onSelectNote, width, isDragging, onMou
     <div
       style={{ width: `${width}px` }}
       className={cn(
-        "relative overflow-y-auto shrink-0 border-r border-border h-screen",
+        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full",
         selectedNote && "max-md:hidden",
       )}
     >
