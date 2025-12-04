@@ -18,6 +18,16 @@ function parseCaseStudyDate(dateString: string): number {
   return isNaN(parsed) ? 0 : parsed
 }
 
+// Helper function to remove year from date string for list display
+function formatDateForList(dateString: string): string {
+  // Remove the year (e.g., "2025 / B2B / $125M Series D" -> "B2B / $125M Series D")
+  const parts = dateString.split(' / ')
+  if (parts.length > 1 && /^\d{4}$/.test(parts[0])) {
+    return parts.slice(1).join(' / ')
+  }
+  return dateString
+}
+
 // Sort case studies in reverse chronological order (newest first)
 function sortCaseStudiesByDate() {
   return [...caseStudies].sort((a, b) => parseCaseStudyDate(b.date) - parseCaseStudyDate(a.date))
@@ -45,7 +55,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
                     <div className="flex items-baseline gap-2">
                       <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
                     </div>
-                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{caseStudy.date}</p>
+                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{formatDateForList(caseStudy.date)}</p>
                   </div>
                 ) : (
                   <button
@@ -56,7 +66,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
                       <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
                       <span className="text-muted-foreground text-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
                     </div>
-                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{caseStudy.date}</p>
+                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{formatDateForList(caseStudy.date)}</p>
                   </button>
                 )}
                 {index < sortedCaseStudies.length - 1 && (
