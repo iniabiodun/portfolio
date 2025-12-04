@@ -51,7 +51,9 @@ export function AboutSection({ onNavigateToSpeaking }: AboutSectionProps) {
 
       <div className="space-y-8">
         <div>
-          <h1 className="text-5xl font-serif mb-2">Ìní·Olúwa</h1>
+          <h1 className="text-5xl font-serif mb-2">
+            <HoverWord onHover={handleHover} onLeave={handleLeave}>Ìní·Olúwa</HoverWord>
+          </h1>
           <p className="text-muted-foreground text-sm mb-2">/ee-nee-OH-loo-wah/</p>
         </div>
 
@@ -59,15 +61,14 @@ export function AboutSection({ onNavigateToSpeaking }: AboutSectionProps) {
           <p className="text-muted-foreground">noun</p>
           <ol className="space-y-2 list-decimal list-inside">
             <li className="text-foreground">
-              Former lawyer turned product{" "}
-              <HoverWord onHover={handleHover} onLeave={handleLeave}>designer</HoverWord>.
+              Former lawyer turned{" "}
+              <HoverWord onHover={handleHover} onLeave={handleLeave}>product designer</HoverWord>.
             </li>
             <li className="text-foreground">
               Player/coach IC with 12 years of experience in fast-moving B2B/B2C teams.
             </li>
             <li className="text-foreground">
-              Currently at Intercom (Fin AI Agent); previously Principal across 58 markets at Gen Digital; founding{" "}
-              <HoverWord onHover={handleHover} onLeave={handleLeave}>designer</HoverWord> at Decimals, Coho.
+              Currently at Intercom (Fin AI Agent); previously Principal across 58 markets at Gen Digital; founding designer at Decimals, Coho.
             </li>
             <li className="text-foreground">
               <HoverWord onHover={handleHover} onLeave={handleLeave}>Writer</HoverWord>, In Good Company; co-host, Growth Design Podcast.
