@@ -40,16 +40,25 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
           <div className="space-y-0">
             {sortedCaseStudies.map((caseStudy, index) => (
               <div key={caseStudy.slug} className="relative">
-                <button
-                  onClick={() => onSelectCaseStudy(caseStudy.slug)}
-                  className="w-full text-left space-y-1.5 py-3 transition-colors group"
-                >
-                  <div className="flex items-baseline gap-2">
-                    <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
-                    <span className="text-muted-foreground text-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+                {caseStudy.disabled ? (
+                  <div className="w-full text-left space-y-1.5 py-3 opacity-50 cursor-not-allowed">
+                    <div className="flex items-baseline gap-2">
+                      <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
+                    </div>
+                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{caseStudy.date}</p>
                   </div>
-                  <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{caseStudy.date}</p>
-                </button>
+                ) : (
+                  <button
+                    onClick={() => onSelectCaseStudy(caseStudy.slug)}
+                    className="w-full text-left space-y-1.5 py-3 transition-colors group"
+                  >
+                    <div className="flex items-baseline gap-2">
+                      <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
+                      <span className="text-muted-foreground text-sm transition-transform duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest">{caseStudy.date}</p>
+                  </button>
+                )}
                 {index < sortedCaseStudies.length - 1 && (
                   <div className="h-px bg-border my-4" />
                 )}

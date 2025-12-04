@@ -12,7 +12,7 @@ export const notes: Note[] = [
     "title": "Example: Resource Collection",
     "date": "January 2025",
     "excerpt": "",
-    "content": "<p>This note demonstrates how you can organize and share collections of links, resources, or bookmarks.</p>\n<h2>Design Resources</h2>\n<ul><li>__<em>LINK</em>__ - A great design resource</li><li>__<em>LINK</em>__ - Another helpful tool</li></ul>\n<h2>Reading List</h2>\n<ul><li>__<em>LINK</em>__ - An interesting article</li><li>__<em>LINK</em>__ - A thought-provoking piece</li></ul>\n<h2>Tools</h2>\n<ul><li>__<em>LINK</em>__ - A useful utility</li></ul>"
+    "content": "<p>This note demonstrates how you can organize and share collections of links, resources, or bookmarks.</p>\n<h2>Design Resources</h2>\n<ul><li><a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Example Link 1</a> - A great design resource</li><li><a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Example Link 2</a> - Another helpful tool</li></ul>\n<h2>Reading List</h2>\n<ul><li><a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Example Article</a> - An interesting article</li><li><a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Example Essay</a> - A thought-provoking piece</li></ul>\n<h2>Tools</h2>\n<ul><li><a href=\"https://example.com\" target=\"_blank\" rel=\"noopener noreferrer\">Example Tool</a> - A useful utility</li></ul>"
   },
   {
     "slug": "hello-world",

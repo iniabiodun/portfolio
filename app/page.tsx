@@ -8,18 +8,21 @@ import { AboutSection } from "@/components/about-section"
 import { NotesList } from "@/components/notes-list"
 import { BookshelfList } from "@/components/bookshelf-list"
 import { CaseStudiesList } from "@/components/case-studies-list"
+import { SpeakingList } from "@/components/speaking-list"
+import { SpeakingReader } from "@/components/speaking-reader"
 import { NoteReader } from "@/components/note-reader"
 import { BookReader } from "@/components/book-reader"
 import { CaseStudyReader } from "@/components/case-study-reader"
 import { ContentPanel } from "@/components/content-panel"
 
-type Tab = "about" | "bookshelf" | "notes" | "case-studies"
+type Tab = "about" | "bookshelf" | "notes" | "case-studies" | "speaking"
 
 export default function PersonalWebsite() {
   const [activeTab, setActiveTab] = useState<Tab>("about")
   const [selectedNote, setSelectedNote] = useState<string | null>(null)
   const [selectedBook, setSelectedBook] = useState<string | null>(null)
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<string | null>(null)
+  const [selectedSpeaking, setSelectedSpeaking] = useState<string | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const sidebar = useResizable({ initialWidth: 192, minWidth: 150, maxWidth: 400 })
@@ -36,6 +39,12 @@ export default function PersonalWebsite() {
     offsetX: sidebar.width,
   })
   const caseStudiesList = useResizable({
+    initialWidth: 600,
+    minWidth: 200,
+    maxWidth: 600,
+    offsetX: sidebar.width,
+  })
+  const speakingList = useResizable({
     initialWidth: 600,
     minWidth: 200,
     maxWidth: 600,
@@ -112,9 +121,24 @@ export default function PersonalWebsite() {
               </ContentPanel>
             )}
           </>
+        ) : activeTab === "speaking" ? (
+          <>
+            <SpeakingList
+              selectedSpeaking={selectedSpeaking}
+              onSelectSpeaking={setSelectedSpeaking}
+              width={speakingList.width}
+              isDragging={speakingList.isDragging}
+              onMouseDown={speakingList.handleMouseDown}
+            />
+            {selectedSpeaking && (
+              <ContentPanel onClose={() => setSelectedSpeaking(null)}>
+                <SpeakingReader slug={selectedSpeaking} />
+              </ContentPanel>
+            )}
+          </>
         ) : (
           <main className="flex-1 px-8 md:px-16 max-w-3xl overflow-y-auto pt-28 md:pt-16 flex flex-col justify-between min-h-screen pb-0">
-            <AboutSection />
+            <AboutSection onNavigateToSpeaking={() => setActiveTab("speaking")} />
           </main>
         )}
       </div>

@@ -41,10 +41,7 @@ function markdownToHtml(markdown) {
       links.push({ text: match[1], url: match[2] })
     }
 
-    // Replace links with placeholders
-    processedText = processedText.replace(linkPattern, '___LINK___')
-
-    // Handle italic text: *text* or _text_
+    // Handle italic text FIRST: *text* or _text_ (before links to avoid conflicts)
     const italicPattern = /(\*|_)([^*_]+)\1/g
     const italics = []
     let italicMatch
@@ -53,22 +50,31 @@ function markdownToHtml(markdown) {
     }
     processedText = processedText.replace(italicPattern, '___ITALIC___')
 
+    // Replace links with placeholders AFTER italic processing
+    processedText = processedText.replace(linkPattern, 'LINKPLACEHOLDER123')
+
     // Escape HTML in the remaining text
     processedText = escapeHtml(processedText)
 
     // Restore images as HTML
     images.forEach(({ alt, url }) => {
+      // URL encode the path to handle Unicode characters in filenames
+      // Only encode if not already encoded (check for % which indicates encoding)
+      let encodedUrl = url
+      if (!url.includes('%')) {
+        if (url.startsWith('/')) {
+          const pathParts = url.substring(1).split('/')
+          const encodedParts = pathParts.map(part => encodeURIComponent(part))
+          encodedUrl = '/' + encodedParts.join('/')
+        } else {
+          encodedUrl = encodeURI(url)
+        }
+      }
       // Reduce telephone image by 40% (36% width - reduced from 60%)
-      const isTelephone = url.includes('Telephone')
+      const isTelephone = encodedUrl.includes('Telephone')
       const widthClass = isTelephone ? 'w-[36%] mx-auto' : 'w-full'
       processedText = processedText.replace('___IMAGE___',
-        `<img src="${url}" alt="${escapeHtml(alt)}" class="${widthClass} my-8 rounded-lg" />`)
-    })
-
-    // Restore links as HTML
-    links.forEach(({ text, url }) => {
-      processedText = processedText.replace('___LINK___',
-        `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`)
+        `<img src="${encodedUrl}" alt="${escapeHtml(alt)}" class="${widthClass} my-8 rounded-lg" />`)
     })
 
     // Restore italic text as HTML
@@ -76,6 +82,12 @@ function markdownToHtml(markdown) {
       const escapedText = escapeHtml(text)
       processedText = processedText.replace('___ITALIC___',
         `<em>${escapedText}</em>`)
+    })
+
+    // Restore links as HTML LAST (after all other processing)
+    links.forEach(({ text, url }) => {
+      processedText = processedText.replace('LINKPLACEHOLDER123',
+        `<a href="${url}" target="_blank" rel="noopener noreferrer">${escapeHtml(text)}</a>`)
     })
 
     return processedText
@@ -107,7 +119,18 @@ function markdownToHtml(markdown) {
     const imageLine = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/)
     if (imageLine) {
       const alt = imageLine[1]
-      const url = imageLine[2]
+      let url = imageLine[2]
+      // URL encode the path to handle Unicode characters in filenames
+      // Only encode if not already encoded (check for % which indicates encoding)
+      if (!url.includes('%')) {
+        if (url.startsWith('/')) {
+          const pathParts = url.substring(1).split('/')
+          const encodedParts = pathParts.map(part => encodeURIComponent(part))
+          url = '/' + encodedParts.join('/')
+        } else {
+          url = encodeURI(url)
+        }
+      }
       // Reduce telephone image by 40% (36% width - reduced from 60%)
       const isTelephone = url.includes('Telephone')
       const widthClass = isTelephone ? 'w-[36%] mx-auto' : 'w-full'
@@ -117,11 +140,11 @@ function markdownToHtml(markdown) {
     }
 
     // Handle video tags: <video src="..." controls class="..."></video>
-    const videoLine = line.match(/^<video\s+src="([^"]+)"\s+controls\s+class="([^"]+)"\s*><\/video>$/)
+    const videoLine = line.match(/^<video\s+src="([^"]+)"\s+(?:controls\s+)?class="([^"]+)"\s*><\/video>$/)
     if (videoLine) {
       const src = videoLine[1]
       const className = videoLine[2]
-      html.push(`<video src="${src}" controls class="${className}"></video>`)
+      html.push(`<video src="${src}" autoplay loop muted playsinline class="${className}"></video>`)
       i++
       continue
     }
@@ -175,11 +198,11 @@ function markdownToHtml(markdown) {
     }
 
     // Check if line contains HTML video tag
-    const videoTagMatch = line.match(/<video\s+src="([^"]+)"\s+controls\s+class="([^"]+)"\s*><\/video>/)
+    const videoTagMatch = line.match(/<video\s+src="([^"]+)"\s+(?:controls\s+)?class="([^"]+)"\s*><\/video>/)
     if (videoTagMatch) {
       const src = videoTagMatch[1]
       const className = videoTagMatch[2]
-      html.push(`<video src="${src}" controls class="${className}"></video>`)
+      html.push(`<video src="${src}" autoplay loop muted playsinline class="${className}"></video>`)
       i++
       continue
     }
@@ -189,7 +212,7 @@ function markdownToHtml(markdown) {
     while (i < lines.length && !/^\s*$/.test(lines[i])) {
       if (/^(?:```|#{1,6}\s|>\s|[-*]\s|\d+\.\s)/.test(lines[i])) break
       // Check if next line is a video tag
-      if (lines[i].match(/<video\s+src="([^"]+)"\s+controls\s+class="([^"]+)"\s*><\/video>/)) break
+      if (lines[i].match(/<video\s+src="([^"]+)"\s+(?:controls\s+)?class="([^"]+)"\s*><\/video>/)) break
       para.push(lines[i])
       i++
     }
@@ -304,6 +327,7 @@ function generateCaseStudies() {
       title: data.title || slug,
       date: data.date || "",
       excerpt: data.excerpt || "",
+      disabled: data.disabled || false,
       content: markdownToHtml(content),
     }
   })
@@ -313,6 +337,7 @@ function generateCaseStudies() {
   title: string
   date: string
   excerpt: string
+  disabled?: boolean
   content: string
 }
 
@@ -323,7 +348,46 @@ export const caseStudies: CaseStudy[] = ${JSON.stringify(caseStudies, null, 2)}
   console.log(`✓ Generated content for ${caseStudies.length} case studies`)
 }
 
+// Generate speaking content
+function generateSpeaking() {
+  const speakingDir = path.join(rootDir, "content/speaking")
+  if (!fs.existsSync(speakingDir)) {
+    fs.mkdirSync(speakingDir, { recursive: true })
+  }
+  const files = fs.readdirSync(speakingDir).filter((f) => f.endsWith(".mdx"))
+
+  const speaking = files.map((filename) => {
+    const slug = filename.replace(/\.mdx$/, "")
+    const fullPath = path.join(speakingDir, filename)
+    const fileContents = fs.readFileSync(fullPath, "utf8")
+    const { data, content } = matter(fileContents)
+
+    return {
+      slug,
+      title: data.title || slug,
+      date: data.date || "",
+      excerpt: data.excerpt || "",
+      content: markdownToHtml(content),
+    }
+  })
+
+  const output = `export interface Speaking {
+  slug: string
+  title: string
+  date: string
+  excerpt: string
+  content: string
+}
+
+export const speaking: Speaking[] = ${JSON.stringify(speaking, null, 2)}
+`
+
+  fs.writeFileSync(path.join(rootDir, "content/speaking.tsx"), output)
+  console.log(`✓ Generated content for ${speaking.length} speaking engagements`)
+}
+
 // Run generators
 generateNotes()
 generateBooks()
 generateCaseStudies()
+generateSpeaking()

@@ -13,7 +13,7 @@ const hedvigLettersSerif = {
 }
 
 export const metadata: Metadata = {
-  title: "ÌníOlúwa Abíódún",
+  title: "Ìní·Olúwa",
   description: "Designer and builder with founding-level experience across early and mature B2B/B2C teams. Building Aivie, health intelligence for chronic pain management.",
   generator: "v0.app",
   icons: {
