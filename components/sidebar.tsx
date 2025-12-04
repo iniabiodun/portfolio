@@ -65,11 +65,11 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
 
       {/* Wax Seal - only show when not on About page */}
       {activeTab !== "about" && (
-        <div className="absolute bottom-8 left-8 z-10">
+        <div className="absolute bottom-8 left-6 z-10">
           <img 
             src="/IniOluwa Seal 1.png" 
             alt="OMÒ ASÍWAJU Seal" 
-            className="w-26 h-26 object-contain"
+            className="object-contain"
             style={{ width: '104px', height: '104px' }}
           />
         </div>
