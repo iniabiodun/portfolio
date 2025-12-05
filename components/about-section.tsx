@@ -51,7 +51,7 @@ export function AboutSection() {
           >
             <img
               src="/1. About/Ini-Illustrated-Headshot-2025 2.PNG"
-              alt="Ìní·Olúwa"
+              alt="ÌníOlúwa"
               className="w-32 h-32 object-cover rounded-lg"
               style={{
                 boxShadow: '0 20px 40px -12px rgba(0, 0, 0, 0.35)',
@@ -64,7 +64,7 @@ export function AboutSection() {
       <div className="space-y-8">
         <div>
           <h1 className="text-5xl font-serif mb-2">
-            <HoverWord onHover={handleHover} onLeave={handleLeave}>Ìní·Olúwa</HoverWord>
+            <HoverWord onHover={handleHover} onLeave={handleLeave}>ÌníOlúwa</HoverWord>
           </h1>
           <p className="text-muted-foreground text-sm mb-2">/ee-nee-OH-loo-wah/</p>
         </div>
@@ -84,13 +84,13 @@ export function AboutSection() {
               <a href="https://www.gendigital.com/us/en/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Gen Digital</a>.
             </li>
             <li className="text-foreground">
-              <HoverWord onHover={handleHover} onLeave={handleLeave}>Writer</HoverWord>,{" "}
-              <a href="https://iniabiodun.substack.com/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">In Good Company</a>
-              ; Podcast host,{" "}
-              <a href="https://open.spotify.com/show/0szIL4qmNk7DrrlAgMX0uV" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Growth Design Podcast</a>.
+              Founding designer, <a href="https://decimals.co/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Decimals</a>, Coho, and News Decoder.
             </li>
             <li className="text-foreground">
-              Founding designer, <a href="https://decimals.co/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Decimals</a>, Coho, and News Decoder.
+              <HoverWord onHover={handleHover} onLeave={handleLeave}>Writer</HoverWord>,{" "}
+              <a href="https://iniabiodun.substack.com/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">In Good Company</a>
+              ; Host,{" "}
+              <a href="https://open.spotify.com/show/0szIL4qmNk7DrrlAgMX0uV" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Growth Design Podcast</a>.
             </li>
           </ol>
         </div>
