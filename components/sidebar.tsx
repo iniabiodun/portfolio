@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown, mobileMenuOpen }: SidebarProps) {
-  const tabs: Tab[] = ["about", "case-studies", "bookshelf", "notes", "speaking"]
+  const tabs: Tab[] = ["about", "case-studies", "speaking", "bookshelf", "notes"]
 
   return (
     <aside
@@ -87,7 +87,7 @@ export function MobileDrawer({
   isOpen: boolean
   onClose: () => void
 }) {
-  const tabs: Tab[] = ["about", "case-studies", "bookshelf", "notes", "speaking"]
+  const tabs: Tab[] = ["about", "case-studies", "speaking", "bookshelf", "notes"]
 
   return (
     <>
