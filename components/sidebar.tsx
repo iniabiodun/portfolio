@@ -58,8 +58,8 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
           ))}
         </nav>
 
-        {/* Wax Seal - only show when not on About page */}
-        {activeTab !== "about" && (
+        {/* Wax Seal - only show when not on About or Gallery page */}
+        {activeTab !== "about" && activeTab !== "gallery" && (
           <div className="absolute bottom-8 left-6 z-10">
             <img 
               src="/IniOluwa Seal 1.png" 
@@ -142,8 +142,8 @@ export function MobileDrawer({
           ))}
         </nav>
 
-        {/* Wax Seal on mobile - only show when not on About page */}
-        {activeTab !== "about" && (
+        {/* Wax Seal on mobile - only show when not on About or Gallery page */}
+        {activeTab !== "about" && activeTab !== "gallery" && (
           <div className="absolute bottom-6 left-6 z-10">
             <img 
               src="/IniOluwa Seal 1.png" 
