@@ -5,10 +5,10 @@ import { Footer } from "./footer"
 export function GallerySection() {
   return (
     <div 
-      className="flex-1 min-h-screen flex flex-col"
+      className="flex-1 min-h-screen flex flex-col px-5 md:px-16"
       style={{ backgroundColor: '#2A0107' }}
     >
-      <main className="flex-1 flex flex-col items-center justify-center px-6 md:px-16 py-16">
+      <main className="flex-1 flex flex-col items-center justify-center py-16">
         <p className="font-mono text-xs uppercase tracking-widest mb-8 text-white/80">
           THE ART OF ÌNÍOLÚWA
         </p>
@@ -33,9 +33,7 @@ export function GallerySection() {
         </div>
       </main>
       
-      <div className="px-6 md:px-16 pb-8">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   )
 }
