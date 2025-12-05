@@ -289,34 +289,39 @@ function generateBooks() {
   const booksDir = path.join(rootDir, "content/books")
   const files = fs.readdirSync(booksDir).filter((f) => f.endsWith(".mdx"))
 
-  const books = files.map((filename) => {
-    const slug = filename.replace(/\.mdx$/, "")
-    const fullPath = path.join(booksDir, filename)
-    const fileContents = fs.readFileSync(fullPath, "utf8")
-    const { data, content: mdxContent } = matter(fileContents)
+  const books = files
+    .map((filename) => {
+      const slug = filename.replace(/\.mdx$/, "")
+      const fullPath = path.join(booksDir, filename)
+      const fileContents = fs.readFileSync(fullPath, "utf8")
+      const { data, content: mdxContent } = matter(fileContents)
 
-    // Read metadata from frontmatter with defaults
-    const title = data.title || slug
-    const author = data.author || ""
-    const year = data.year || 0
-    const lastUpdated = data.lastUpdated
-    const hasNotes = data.hasNotes ?? (mdxContent.trim().length > 0)
-    const isReading = data.isReading ?? false
-    const coverImage = data.coverImage || ""
-    const content = markdownToHtml(mdxContent)
+      // Skip hidden books
+      if (data.hidden) return null
 
-    return {
-      slug,
-      title,
-      author,
-      year,
-      ...(lastUpdated && { lastUpdated }),
-      hasNotes,
-      isReading,
-      ...(coverImage && { coverImage }),
-      content,
-    }
-  })
+      // Read metadata from frontmatter with defaults
+      const title = data.title || slug
+      const author = data.author || ""
+      const year = data.year || 0
+      const lastUpdated = data.lastUpdated
+      const hasNotes = data.hasNotes ?? (mdxContent.trim().length > 0)
+      const isReading = data.isReading ?? false
+      const coverImage = data.coverImage || ""
+      const content = markdownToHtml(mdxContent)
+
+      return {
+        slug,
+        title,
+        author,
+        year,
+        ...(lastUpdated && { lastUpdated }),
+        hasNotes,
+        isReading,
+        ...(coverImage && { coverImage }),
+        content,
+      }
+    })
+    .filter(Boolean)
 
   const output = `export interface Book {
   slug: string

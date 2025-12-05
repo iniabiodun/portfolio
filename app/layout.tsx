@@ -17,10 +17,7 @@ export const metadata: Metadata = {
   description: "Designer and builder with founding-level experience across early and mature B2B/B2C teams. Building Aivie, health intelligence for chronic pain management.",
   generator: "v0.app",
   icons: {
-    icon: {
-      url: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">📚</text></svg>',
-      type: 'image/svg+xml',
-    },
+    icon: '/IniOluwa Seal 1.png',
   },
 }
 
