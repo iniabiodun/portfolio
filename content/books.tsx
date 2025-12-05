@@ -73,7 +73,7 @@ export const books: Book[] = [
     "lastUpdated": "12-04-2025",
     "hasNotes": true,
     "isReading": true,
-    "coverImage": "/Bookshelf/Circe.png",
+    "coverImage": "/2. Bookshelf/Circe.png",
     "content": "<blockquote><em>I am loving the modern retellings of these Greek mythologies. Madeline Miller is an absolute beast of a writer.</em></blockquote>"
   },
   {
@@ -156,7 +156,7 @@ export const books: Book[] = [
     "lastUpdated": "12-05-2025",
     "hasNotes": true,
     "isReading": true,
-    "coverImage": "/Bookshelf/TheSongofAchilles.png",
+    "coverImage": "/2. Bookshelf/TheSongofAchilles.png",
     "content": "<blockquote><em>I have heard such good things about Madeleine. Nothing prepared me for actually reading her books. Her writing flows uncomplicated, like drinking a warm cuppa and thick blanket on a rainy day. I tucked in and find myself eager to return to it.</em></blockquote>"
   },
   {

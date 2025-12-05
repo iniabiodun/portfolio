@@ -72,7 +72,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
                   >
                     <div className="flex items-start gap-2">
                       <img 
-                        src="/Bookshelf/pen-nib.svg" 
+                        src="/2. Bookshelf/pen-nib.svg" 
                         alt="" 
                         className={cn(
                           "w-3 h-3 transition-opacity duration-200 flex-shrink-0 mt-[0.35rem]",
