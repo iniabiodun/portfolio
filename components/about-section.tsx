@@ -93,7 +93,7 @@ export function AboutSection({ onNavigateToSpeaking }: AboutSectionProps) {
               <a href="https://open.spotify.com/show/0szIL4qmNk7DrrlAgMX0uV" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Growth Design Podcast</a>.
             </li>
             <li className="text-foreground">
-              Founding designer, Decimals, Coho, and News Decoder.
+              Founding designer, <a href="https://decimals.co/" target="_blank" rel="noopener noreferrer" className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid">Decimals</a>, Coho, and News Decoder.
             </li>
           </ol>
         </div>
