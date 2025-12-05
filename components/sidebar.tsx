@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils"
 import { ResizeHandle } from "./resize-handle"
 
-type Tab = "about" | "bookshelf" | "notes" | "case-studies" | "speaking"
+type Tab = "about" | "bookshelf" | "notes" | "case-studies" | "speaking" | "gallery"
 
 interface SidebarProps {
   activeTab: Tab
@@ -15,7 +15,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown, mobileMenuOpen }: SidebarProps) {
-  const tabs: Tab[] = ["about", "case-studies", "speaking", "bookshelf", "notes"]
+  const tabs: Tab[] = ["about", "case-studies", "speaking", "bookshelf", "notes", "gallery"]
 
   return (
     <aside
@@ -53,7 +53,7 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
                 activeTab === tab ? "text-foreground" : "text-foreground/40 hover:text-foreground/70",
               )}
             >
-              {tab === "case-studies" ? "Case Studies" : tab === "speaking" ? "Speaking" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === "case-studies" ? "Case Studies" : tab === "speaking" ? "Speaking" : tab === "gallery" ? "Gallery" : tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </nav>
@@ -88,7 +88,7 @@ export function MobileDrawer({
   isOpen: boolean
   onClose: () => void
 }) {
-  const tabs: Tab[] = ["about", "case-studies", "speaking", "bookshelf", "notes"]
+  const tabs: Tab[] = ["about", "case-studies", "speaking", "bookshelf", "notes", "gallery"]
 
   return (
     <>
@@ -137,7 +137,7 @@ export function MobileDrawer({
                 activeTab === tab ? "text-foreground font-medium" : "text-foreground/50",
               )}
             >
-              {tab === "case-studies" ? "Case Studies" : tab === "speaking" ? "Speaking" : tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === "case-studies" ? "Case Studies" : tab === "speaking" ? "Speaking" : tab === "gallery" ? "Gallery" : tab.charAt(0).toUpperCase() + tab.slice(1)}
             </button>
           ))}
         </nav>

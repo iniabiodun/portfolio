@@ -14,8 +14,9 @@ import { NoteReader } from "@/components/note-reader"
 import { BookReader } from "@/components/book-reader"
 import { CaseStudyReader } from "@/components/case-study-reader"
 import { ContentPanel } from "@/components/content-panel"
+import { GallerySection } from "@/components/gallery-section"
 
-type Tab = "about" | "bookshelf" | "notes" | "case-studies" | "speaking"
+type Tab = "about" | "bookshelf" | "notes" | "case-studies" | "speaking" | "gallery"
 
 export default function PersonalWebsite() {
   const [activeTab, setActiveTab] = useState<Tab>("about")
@@ -158,6 +159,8 @@ export default function PersonalWebsite() {
               </ContentPanel>
             )}
           </>
+        ) : activeTab === "gallery" ? (
+          <GallerySection />
         ) : (
           <main className="flex-1 px-5 md:px-16 w-full md:max-w-3xl overflow-y-auto pt-16 md:pt-16 flex flex-col justify-between min-h-screen pb-0">
             <AboutSection onNavigateToSpeaking={() => setActiveTab("speaking")} />
