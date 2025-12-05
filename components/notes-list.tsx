@@ -54,7 +54,7 @@ export function NotesList({ selectedNote, onSelectNote, width, isDragging, onMou
                     />
                     <h2 className="text-base font-medium text-foreground">{note.title}</h2>
                   </div>
-                  <p className="text-xs text-muted-foreground font-mono uppercase tracking-widest pl-5">{note.date}</p>
+                  <p className="text-xs text-muted-foreground font-sans uppercase tracking-widest pl-5">{note.date}</p>
                 </button>
                 {index < sortedNotes.length - 1 && (
                   <div className="h-px bg-border my-4" />
