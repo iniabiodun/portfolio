@@ -34,10 +34,11 @@ export function Sidebar({ activeTab, onTabChange, width, isDragging, onMouseDown
           <div
             className="w-full h-full relative overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, #1F0405, #2a0607 50%, #1F0405)',
-              border: '1px solid #1F0405',
+              backgroundImage: 'url("/3. Gallery/Bookmark-Material.jpeg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
               clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 12px), 0 100%)',
-              boxShadow: '2px 2px 6px rgba(0,0,0,0.3), inset -1px -1px 2px rgba(0,0,0,0.2)',
+              boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
             }}
           />
         </div>
@@ -114,10 +115,11 @@ export function MobileDrawer({
           <div
             className="w-full h-full relative overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, #1F0405, #2a0607 50%, #1F0405)',
-              border: '1px solid #1F0405',
+              backgroundImage: 'url("/3. Gallery/Bookmark-Material.jpeg")',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
               clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 10px), 0 100%)',
-              boxShadow: '2px 2px 6px rgba(0,0,0,0.3), inset -1px -1px 2px rgba(0,0,0,0.2)',
+              boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
             }}
           />
         </div>
