@@ -53,9 +53,9 @@ const deskDocuments: DeskDocument[] = [
     deskImage: "/1. About/worksheet-warm.png",
     deskImageSize: { width: 197, height: 245 },
     focusImage: "/1. About/Worksheet.jpg",
-    title: "Work in Progress",
+    title: "AI Conversation Navigation",
     description: "Self-initiated research exploring how users navigate complex AI conversations beyond linear chat.",
-    year: "2024 • Research",
+    year: "2025 • EXPERIMENT",
     clickable: true,
   },
   {
@@ -64,9 +64,8 @@ const deskDocuments: DeskDocument[] = [
     deskImage: "/1. About/work-history-warm.png",
     deskImageSize: { width: 291, height: 413 },
     focusImage: "/1. About/Work-History-card.jpg",
-    title: "Professional Journey",
+    title: "Work Experience",
     description: "Twelve years designing at scale; from founding roles to leading product design across B2B and B2C.",
-    year: "2012–Present",
     clickable: true,
   },
   {
@@ -86,8 +85,8 @@ const deskDocuments: DeskDocument[] = [
     deskImageSize: { width: 200, height: 249 },
     focusImage: "/1. About/Ini-Call-to-Nigerian-Bar.jpg",
     title: "Legal Foundation",
-    description: "Called to the Nigerian Bar, where systems thinking and pattern recognition first took root.",
-    year: "2016 • Abuja",
+    description: "Law school taught me systems thinking. The courtroom taught me pattern recognition. Both inform how I design today.",
+    year: "2016 • NIGERIAN BAR",
     clickable: true,
   },
   {
@@ -108,7 +107,7 @@ const deskDocuments: DeskDocument[] = [
     focusImage: "/1. About/Aso-Oke Design-Swatch 1.jpg",
     title: "Mosobalájé Heritage",
     description: "Traditional Yoruba hand-woven cloth from family lineage of master weavers; a reminder of craft and home.",
-    year: "Family Heirloom",
+    year: "FAMILY HEIRLOOM",
     clickable: true,
   },
 ]
