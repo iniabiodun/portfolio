@@ -284,19 +284,6 @@ export function StudyRoom() {
             </motion.div>
           ))}
         </nav>
-
-        {/* Wax Seal */}
-        <motion.div 
-          className="menu-sidebar__seal"
-          initial={false}
-          animate={menuOpen ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.3, delay: menuOpen ? 0.4 : 0 }}
-        >
-          <img 
-            src="/IniOluwa Seal 1.png" 
-            alt="OMÒ ASÍWAJU Seal" 
-          />
-        </motion.div>
       </aside>
 
       {/* Overlay when menu open */}
