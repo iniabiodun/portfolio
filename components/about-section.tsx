@@ -29,7 +29,7 @@ export function AboutSection() {
   const handleLeave = () => setShowImage(false)
 
   return (
-    <div className="flex flex-col justify-between min-h-full" onMouseMove={handleMouseMove}>
+    <div className="flex-1 min-h-screen flex flex-col justify-between px-5 md:px-16 pt-16 md:pt-16 pb-8" onMouseMove={handleMouseMove}>
       {/* Hover image with smooth animation */}
       <AnimatePresence>
         {showImage && (

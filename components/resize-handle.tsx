@@ -12,7 +12,7 @@ export function ResizeHandle({ onMouseDown, isDragging }: ResizeHandleProps) {
     <div
       onMouseDown={onMouseDown}
       className={cn(
-        "absolute right-0 top-0 bottom-0 w-16 cursor-col-resize transition-opacity",
+        "absolute right-0 top-0 bottom-0 w-16 cursor-col-resize transition-opacity z-[5]",
         isDragging ? "opacity-100" : "opacity-0 hover:opacity-100",
       )}
       style={{

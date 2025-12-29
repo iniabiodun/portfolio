@@ -1,0 +1,1101 @@
+/* Study Room Homepage Styles */
+
+.study-room {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #1a1412;
+  z-index: 1;
+}
+
+/* ============================================
+   MENU SIDEBAR (Push Navigation)
+   ============================================ */
+.menu-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  /* Width controlled by inline style from useResizable hook */
+  z-index: 60; /* Above overlay (55) */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  transform: translateX(-100%);
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode sidebar (Ambient) */
+.menu-sidebar--dark {
+  background: #14100e;
+  border-right: 1px solid rgba(255, 200, 120, 0.1);
+}
+
+/* Light mode sidebar (Warm/Natural) */
+.menu-sidebar--light {
+  background: #f9f4e9;
+  border-right: 1px solid rgba(139, 111, 76, 0.18);
+}
+
+.menu-sidebar.open {
+  transform: translateX(0);
+}
+
+/* Close button */
+.menu-sidebar__close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+/* Dark mode close button */
+.menu-sidebar--dark .menu-sidebar__close {
+  background: rgba(255, 200, 120, 0.08);
+  border: 1px solid rgba(255, 200, 120, 0.15);
+  color: rgba(245, 230, 211, 0.6);
+}
+
+.menu-sidebar--dark .menu-sidebar__close:hover {
+  background: rgba(255, 200, 120, 0.15);
+  border-color: rgba(255, 200, 120, 0.25);
+  color: #f5e6d3;
+}
+
+.menu-sidebar--dark .menu-sidebar__close:focus-visible {
+  outline: 2px solid rgba(255, 200, 120, 0.5);
+  outline-offset: 2px;
+}
+
+/* Light mode close button */
+.menu-sidebar--light .menu-sidebar__close {
+  background: rgba(139, 111, 76, 0.1);
+  border: 1px solid rgba(139, 111, 76, 0.18);
+  color: rgba(20, 16, 14, 0.55);
+}
+
+.menu-sidebar--light .menu-sidebar__close:hover {
+  background: rgba(139, 111, 76, 0.18);
+  border-color: rgba(139, 111, 76, 0.28);
+  color: #14100e;
+}
+
+.menu-sidebar--light .menu-sidebar__close:focus-visible {
+  outline: 2px solid rgba(139, 111, 76, 0.5);
+  outline-offset: 2px;
+}
+
+.menu-sidebar__close svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* Bookmark ribbon */
+.menu-sidebar__bookmark {
+  position: absolute;
+  top: 0;
+  left: 2rem;
+  width: 32px;
+  height: 160px;
+  z-index: 10;
+  perspective: 800px;
+}
+
+.menu-sidebar__bookmark-inner {
+  width: 100%;
+  height: 100%;
+}
+
+.menu-sidebar__bookmark-ribbon {
+  width: 100%;
+  height: 100%;
+  background-image: url("/3. Gallery/Bookmark-Material.jpeg");
+  background-size: cover;
+  background-position: center;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 12px), 0 100%);
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Navigation links */
+.menu-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 12rem;
+}
+
+.menu-sidebar__link {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Dark mode link colors */
+.menu-sidebar--dark .menu-sidebar__link {
+  color: rgba(245, 230, 211, 0.5);
+}
+
+.menu-sidebar--dark .menu-sidebar__link:hover,
+.menu-sidebar--dark .menu-sidebar__link:focus-visible {
+  color: #f5e6d3;
+  transform: translateX(4px);
+  outline: none;
+}
+
+/* Light mode link colors */
+.menu-sidebar--light .menu-sidebar__link {
+  color: rgba(20, 16, 14, 0.5);
+}
+
+.menu-sidebar--light .menu-sidebar__link:hover,
+.menu-sidebar--light .menu-sidebar__link:focus-visible {
+  color: #14100e;
+  transform: translateX(4px);
+  outline: none;
+}
+
+/* Wax seal */
+.menu-sidebar__seal {
+  position: absolute;
+  bottom: 2rem;
+  left: 1.5rem;
+}
+
+.menu-sidebar__seal img {
+  width: 104px;
+  height: 104px;
+  object-fit: contain;
+}
+
+/* ============================================
+   MENU OVERLAY
+   ============================================ */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 8, 6, 0.65);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+  z-index: 55; /* Above nav bar (50) */
+  cursor: pointer;
+  backdrop-filter: blur(2px);
+}
+
+.menu-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Background Image with Parallax */
+.study-room__bg {
+  position: absolute;
+  inset: -15px; /* Extend beyond viewport to hide edges during parallax */
+  z-index: 1;
+  will-change: transform;
+  backface-visibility: hidden; /* GPU acceleration */
+  -webkit-backface-visibility: hidden;
+}
+
+.study-room__image {
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Both images stack on top of each other */
+.study-room__image--on,
+.study-room__image--off {
+  position: absolute;
+  inset: 0;
+}
+
+/* Only show active image when loaded */
+.study-room__image.loaded.active {
+  opacity: 1;
+}
+
+/* Inactive image stays hidden */
+.study-room__image.loaded:not(.active) {
+  opacity: 0;
+}
+
+.study-room__warmth {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 40%,
+    rgba(255, 180, 100, 0.08) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+  pointer-events: none;
+}
+
+.study-room__warmth.active {
+  opacity: 1;
+}
+
+
+/* Hotspots Container */
+.study-room__hotspots {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
+/* Hide default cursor in study room */
+.study-room {
+  cursor: none;
+}
+
+/* Individual Hotspot - invisible clickable region */
+.hotspot {
+  position: absolute;
+  display: block;
+  text-decoration: none;
+  cursor: none; /* Hide default cursor in hotspot */
+  border-radius: 4px;
+  transition: background 0.2s ease-out;
+}
+
+.hotspot:hover {
+  background: transparent;
+}
+
+.hotspot:focus-visible {
+  outline: 2px solid rgba(255, 200, 120, 0.4);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   AMBIENT DUST PARTICLES
+   ============================================ */
+
+/* Floating dust motes in light areas - CSS only */
+.study-room__particles {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.study-room__particles::before,
+.study-room__particles::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background-image: 
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 220, 180, 0.4) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 25% 35%, rgba(255, 220, 180, 0.3) 50%, transparent 50%),
+    radial-gradient(1px 1px at 40% 15%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
+    radial-gradient(2px 2px at 55% 45%, rgba(255, 220, 180, 0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 70% 25%, rgba(255, 220, 180, 0.4) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 85% 55%, rgba(255, 220, 180, 0.3) 50%, transparent 50%),
+    radial-gradient(1px 1px at 15% 65%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
+    radial-gradient(1px 1px at 30% 80%, rgba(255, 220, 180, 0.3) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 60% 70%, rgba(255, 220, 180, 0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 80% 85%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
+    radial-gradient(1px 1px at 5% 45%, rgba(255, 220, 180, 0.3) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 95% 30%, rgba(255, 220, 180, 0.25) 50%, transparent 50%);
+  background-size: 300px 300px;
+  animation: dust-float-1 25s linear infinite;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.study-room__particles::after {
+  background-image: 
+    radial-gradient(1px 1px at 8% 12%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 22% 42%, rgba(255, 220, 180, 0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 38% 22%, rgba(255, 220, 180, 0.4) 50%, transparent 50%),
+    radial-gradient(1px 1px at 52% 58%, rgba(255, 220, 180, 0.3) 50%, transparent 50%),
+    radial-gradient(2px 2px at 68% 32%, rgba(255, 220, 180, 0.2) 50%, transparent 50%),
+    radial-gradient(1px 1px at 82% 48%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 12% 72%, rgba(255, 220, 180, 0.3) 50%, transparent 50%),
+    radial-gradient(1px 1px at 28% 88%, rgba(255, 220, 180, 0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 58% 78%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
+    radial-gradient(1.5px 1.5px at 78% 92%, rgba(255, 220, 180, 0.3) 50%, transparent 50%);
+  background-size: 250px 250px;
+  animation: dust-float-2 30s linear infinite;
+  animation-delay: -10s;
+}
+
+@keyframes dust-float-1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(-3%, 5%) rotate(2deg);
+  }
+  50% {
+    transform: translate(2%, -3%) rotate(-1deg);
+  }
+  75% {
+    transform: translate(-2%, -5%) rotate(1deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes dust-float-2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  33% {
+    transform: translate(4%, -4%) rotate(-2deg);
+  }
+  66% {
+    transform: translate(-3%, 3%) rotate(1deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+/* Particles visible in all modes - intensity varies */
+
+/* Warm mode - most visible (warm light catches dust) */
+.study-room[data-lighting="warm"] .study-room__particles::before,
+.study-room[data-lighting="warm"] .study-room__particles::after {
+  opacity: 0.7;
+}
+
+/* Ambient mode - medium visibility (night with lights) */
+.study-room[data-lighting="ambient"] .study-room__particles::before,
+.study-room[data-lighting="ambient"] .study-room__particles::after {
+  opacity: 0.45;
+}
+
+/* Natural mode - subtle but present (daylight dust) */
+.study-room[data-lighting="natural"] .study-room__particles::before,
+.study-room[data-lighting="natural"] .study-room__particles::after {
+  opacity: 0.25;
+}
+
+/* Custom cursor - always visible in study room */
+.custom-cursor {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* The yellow dot - always visible */
+.custom-cursor__dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 200, 120, 0.9);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 12px rgba(255, 180, 80, 0.7),
+    0 0 24px rgba(255, 180, 80, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  flex-shrink: 0;
+}
+
+/* Dot shrinks slightly when label appears */
+.custom-cursor.has-label .custom-cursor__dot {
+  width: 8px;
+  height: 8px;
+  box-shadow: 
+    0 0 10px rgba(255, 180, 80, 0.6),
+    0 0 20px rgba(255, 180, 80, 0.3);
+}
+
+/* Label pill - only shown on hotspots */
+.custom-cursor__label {
+  padding: 0.5rem 1rem;
+  background: rgba(20, 16, 14, 0.92);
+  backdrop-filter: blur(10px);
+  color: #f5e6d3;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border-radius: 100px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 200, 120, 0.2);
+}
+
+/* Help Overlay */
+.study-room__help {
+  position: fixed;
+  bottom: 7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.875rem 1.25rem;
+  background: rgba(20, 16, 14, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 100px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 200, 120, 0.15);
+}
+
+.study-room__help p {
+  margin: 0;
+  color: #f5e6d3;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.study-room__help-dismiss {
+  padding: 0.375rem 0.875rem;
+  background: rgba(255, 200, 120, 0.15);
+  border: none;
+  border-radius: 100px;
+  color: #f5e6d3;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.study-room__help-dismiss:hover {
+  background: rgba(255, 200, 120, 0.25);
+}
+
+/* ============================================
+   UNIFIED NAVIGATION BAR
+   ============================================ */
+.main-nav {
+  --duration: 0.25s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --primary: #f5e6d3;
+  --inactive: rgba(245, 230, 211, 0.4);
+  --ambient-color: #a8c0ff;
+  --warm-color: #ffb850;
+  --natural-color: #f5e6d3;
+  
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(20, 16, 14, 0.7) 0%,
+    rgba(20, 16, 14, 0) 100%
+  );
+}
+
+/* Left: Index Button */
+.nav-menu {
+  position: relative;
+  padding: 0.5rem 1rem;
+  background: rgba(20, 16, 14, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 200, 120, 0.12);
+  border-radius: 8px;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--duration) var(--ease);
+}
+
+.nav-menu:hover {
+  background: rgba(30, 24, 20, 0.8);
+  border-color: rgba(255, 200, 120, 0.25);
+}
+
+.nav-menu.open {
+  background: rgba(255, 200, 120, 0.12);
+  border-color: rgba(255, 200, 120, 0.25);
+}
+
+/* Center: Brand */
+.nav-brand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-serif);
+  font-size: 2.25rem;
+  font-weight: 400;
+  color: var(--primary);
+  letter-spacing: -1.9px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+/* Right: Lighting Controls */
+.nav-lighting {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 4px;
+  background: rgba(20, 16, 14, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 200, 120, 0.12);
+  border-radius: 8px;
+}
+
+/* Individual Lighting Tab */
+.lighting-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.lighting-tab__text {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--inactive);
+  transition: color var(--duration) var(--ease),
+              text-shadow var(--duration) var(--ease);
+}
+
+/* Icons - hidden on desktop, shown on mobile */
+.lighting-tab__icon {
+  display: none;
+  width: 18px;
+  height: 18px;
+  color: var(--inactive);
+  transition: color var(--duration) var(--ease),
+              filter var(--duration) var(--ease);
+}
+
+/* Light mask overlay - opacity transitions */
+.lighting-tab__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+  pointer-events: none;
+}
+
+/* Underline light */
+.lighting-tab__line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+  pointer-events: none;
+}
+
+/* Hide radio inputs */
+.lighting-tab input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Screen reader only text */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Divider between lighting tabs and music toggle */
+.nav-lighting__divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 200, 120, 0.2);
+  margin: 0 0.25rem;
+}
+
+/* ============================================
+   MUSIC TOGGLE - Vinyl Record
+   ============================================ */
+
+.music-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.music-toggle:hover {
+  transform: scale(1.1);
+}
+
+.music-toggle:focus-visible {
+  outline: 2px solid rgba(255, 200, 120, 0.5);
+  outline-offset: 2px;
+}
+
+/* Record player SVG container */
+.music-toggle__player {
+  width: 34px;
+  height: 28px;
+  transition: filter 0.3s ease;
+}
+
+/* Vinyl disc group */
+.music-toggle__vinyl {
+  transform-origin: 16px 16px;
+  transition: filter 0.3s ease;
+}
+
+/* Reflection arc */
+.music-toggle__reflection {
+  opacity: 0.3;
+  transform-origin: 16px 16px;
+}
+
+/* Tonearm group */
+.music-toggle__tonearm-arm {
+  transform-origin: 36px 4px;
+  transform: rotate(-25deg);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Spinning animation when playing - mode-specific filters override this */
+.music-toggle.playing .music-toggle__player {
+  /* Default glow, overridden by mode-specific styles */
+}
+
+.music-toggle.playing .music-toggle__vinyl {
+  animation: vinyl-spin 4s linear infinite;
+}
+
+/* Reflection follows vinyl spin */
+.music-toggle.playing .music-toggle__reflection {
+  opacity: 0.45;
+}
+
+/* Tonearm drops onto record when playing */
+.music-toggle.playing .music-toggle__tonearm-arm {
+  transform: rotate(0deg);
+}
+
+@keyframes vinyl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hover states - mode-specific hover filters in the mode sections below */
+.music-toggle:hover .music-toggle__vinyl {
+  /* Slight brightness boost on hover */
+  filter: brightness(1.1);
+}
+
+/* ============================================
+   VINYL LIGHTING MODE STYLES
+   ============================================ */
+
+/* Ambient mode - Cool moonlit blue glow */
+.music-toggle[data-mode="ambient"] .music-toggle__vinyl {
+  filter: sepia(0.1) hue-rotate(200deg) saturate(0.8);
+}
+
+.music-toggle[data-mode="ambient"]:hover .music-toggle__vinyl {
+  filter: sepia(0.1) hue-rotate(200deg) saturate(0.8) brightness(1.15);
+}
+
+.music-toggle[data-mode="ambient"] .music-toggle__reflection {
+  stroke: rgba(150, 180, 255, 0.5) !important;
+}
+
+.music-toggle.playing[data-mode="ambient"] .music-toggle__player {
+  filter: drop-shadow(0 0 8px rgba(120, 150, 220, 0.7));
+}
+
+.music-toggle.playing[data-mode="ambient"]:hover .music-toggle__player {
+  filter: drop-shadow(0 0 12px rgba(120, 150, 220, 0.9));
+}
+
+/* Warm mode - Golden warm glow */
+.music-toggle[data-mode="warm"] .music-toggle__vinyl {
+  filter: sepia(0.15) saturate(1.2);
+}
+
+.music-toggle[data-mode="warm"]:hover .music-toggle__vinyl {
+  filter: sepia(0.15) saturate(1.2) brightness(1.15);
+}
+
+.music-toggle[data-mode="warm"] .music-toggle__reflection {
+  stroke: rgba(255, 200, 120, 0.5) !important;
+}
+
+.music-toggle.playing[data-mode="warm"] .music-toggle__player {
+  filter: drop-shadow(0 0 8px rgba(255, 180, 80, 0.7));
+}
+
+.music-toggle.playing[data-mode="warm"]:hover .music-toggle__player {
+  filter: drop-shadow(0 0 12px rgba(255, 180, 80, 0.9));
+}
+
+/* Natural mode - Soft neutral daylight */
+.music-toggle[data-mode="natural"] .music-toggle__vinyl {
+  filter: saturate(0.7) brightness(1.1);
+}
+
+.music-toggle[data-mode="natural"]:hover .music-toggle__vinyl {
+  filter: saturate(0.7) brightness(1.25);
+}
+
+.music-toggle[data-mode="natural"] .music-toggle__reflection {
+  stroke: rgba(255, 255, 240, 0.4) !important;
+}
+
+.music-toggle.playing[data-mode="natural"] .music-toggle__player {
+  filter: drop-shadow(0 0 6px rgba(180, 170, 150, 0.6));
+}
+
+.music-toggle.playing[data-mode="natural"]:hover .music-toggle__player {
+  filter: drop-shadow(0 0 10px rgba(180, 170, 150, 0.8));
+}
+
+/* ============================================
+   LIGHTING TAB STATES
+   ============================================ */
+
+/* Hover state (all tabs) */
+.lighting-tab:hover .lighting-tab__text {
+  color: rgba(245, 230, 211, 0.7);
+}
+
+/* Focus state */
+.lighting-tab:has(input:focus-visible) {
+  outline: 2px solid rgba(255, 200, 120, 0.5);
+  outline-offset: 2px;
+}
+
+/* ---- AMBIENT (Night) Active ---- */
+.lighting-tab.active:nth-child(1) .lighting-tab__text {
+  color: var(--ambient-color);
+  text-shadow: 0 0 16px rgba(150, 180, 255, 0.8);
+}
+
+.lighting-tab.active:nth-child(1) .lighting-tab__glow {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(150, 180, 255, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.lighting-tab.active:nth-child(1) .lighting-tab__line {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ambient-color),
+    transparent
+  );
+  box-shadow: 0 0 12px var(--ambient-color),
+              0 0 24px rgba(150, 180, 255, 0.5);
+}
+
+/* ---- WARM (Day On) Active ---- */
+.lighting-tab.active:nth-child(2) .lighting-tab__text {
+  color: var(--warm-color);
+  text-shadow: 0 0 16px rgba(255, 180, 80, 0.8);
+}
+
+.lighting-tab.active:nth-child(2) .lighting-tab__glow {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(255, 180, 80, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.lighting-tab.active:nth-child(2) .lighting-tab__line {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--warm-color),
+    transparent
+  );
+  box-shadow: 0 0 12px var(--warm-color),
+              0 0 24px rgba(255, 180, 80, 0.5);
+}
+
+/* ---- NATURAL (Day Off) Active ---- */
+.lighting-tab.active:nth-child(3) .lighting-tab__text {
+  color: var(--natural-color);
+  text-shadow: 0 0 12px rgba(245, 230, 211, 0.5);
+}
+
+.lighting-tab.active:nth-child(3) .lighting-tab__glow {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(245, 230, 211, 0.15) 0%,
+    transparent 70%
+  );
+}
+
+.lighting-tab.active:nth-child(3) .lighting-tab__line {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--natural-color),
+    transparent
+  );
+  box-shadow: 0 0 8px rgba(245, 230, 211, 0.4),
+              0 0 16px rgba(245, 230, 211, 0.2);
+}
+
+/* View Transitions removed - using CSS opacity crossfade instead */
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+  .study-room__hotspots {
+    display: none;
+  }
+
+  /* Show default cursor on mobile */
+  .study-room {
+    cursor: auto;
+  }
+
+  .custom-cursor {
+    display: none;
+  }
+
+  .menu-sidebar {
+    width: 75vw !important; /* Override inline style on mobile */
+    max-width: 280px !important;
+    padding: 1.5rem;
+  }
+
+  .menu-sidebar__bookmark {
+    left: 1.5rem;
+    width: 28px;
+    height: 140px;
+  }
+
+  .menu-sidebar__nav {
+    margin-top: 10rem;
+  }
+
+  .menu-sidebar__link {
+    font-size: 0.7rem;
+  }
+
+  .menu-sidebar__seal {
+    left: 1rem;
+    bottom: 1.5rem;
+  }
+
+  .menu-sidebar__seal img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .main-nav {
+    padding: 0.75rem 1rem;
+  }
+
+  .nav-menu {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.7rem;
+    min-width: 64px;
+  }
+
+  .nav-brand {
+    font-size: 1.25rem;
+    letter-spacing: -1px;
+  }
+
+  .nav-lighting {
+    padding: 3px;
+    gap: 0.125rem;
+  }
+
+  .lighting-tab {
+    padding: 0.5rem;
+  }
+
+  /* Hide text, show icons on mobile */
+  .lighting-tab__text {
+    display: none;
+  }
+
+  .lighting-tab__icon {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Icon colors for active states on mobile */
+  .lighting-tab.active:nth-child(1) .lighting-tab__icon {
+    color: var(--ambient-color);
+    filter: drop-shadow(0 0 8px rgba(150, 180, 255, 0.8));
+  }
+
+  .lighting-tab.active:nth-child(2) .lighting-tab__icon {
+    color: var(--warm-color);
+    filter: drop-shadow(0 0 8px rgba(255, 180, 80, 0.8));
+  }
+
+  .lighting-tab.active:nth-child(3) .lighting-tab__icon {
+    color: var(--natural-color);
+    filter: drop-shadow(0 0 6px rgba(245, 230, 211, 0.5));
+  }
+
+  /* Music toggle mobile styles */
+  .nav-lighting__divider {
+    height: 16px;
+    margin: 0 0.125rem;
+  }
+
+  .music-toggle {
+    width: 32px;
+    height: 26px;
+  }
+
+  .music-toggle__player {
+    width: 30px;
+    height: 24px;
+  }
+
+  .study-room__help {
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+    justify-content: center;
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .study-room__bg,
+  .study-room__image,
+  .study-room__warmth,
+  .study-room__particles::before,
+  .study-room__particles::after,
+  .study-room__fairy-lights::before,
+  .study-room__fairy-lights::after,
+  .hotspot,
+  .custom-cursor,
+  .nav-menu,
+  .lighting-tab,
+  .lighting-tab__text,
+  .lighting-tab__glow,
+  .lighting-tab__line {
+    transition: none;
+    animation: none;
+  }
+  
+  /* Disable parallax for reduced motion */
+  .study-room__bg {
+    transform: none !important;
+  }
+  
+  /* Disable dust particles for reduced motion */
+  .study-room__particles::before,
+  .study-room__particles::after {
+    opacity: 0 !important;
+  }
+  
+  /* Disable fairy lights twinkle for reduced motion */
+  .study-room__fairy-lights::before,
+  .study-room__fairy-lights::after {
+    animation: none !important;
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  .hotspot:hover {
+    background: transparent;
+  }
+
+  .cursor-pill {
+    background: black;
+    color: white;
+    border-color: white;
+  }
+
+  .cursor-pill::before {
+    background: white;
+  }
+
+  .nav-menu,
+  .nav-brand,
+  .lighting-tab__text {
+    color: white;
+  }
+
+  .lighting-tab.active .lighting-tab__text {
+    text-shadow: none;
+  }
+
+  .lighting-tab__line {
+    background: white !important;
+  }
+}
+

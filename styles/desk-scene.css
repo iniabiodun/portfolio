@@ -1,0 +1,1193 @@
+/* Desk Scene - Interactive About Page */
+
+.desk-scene {
+  --duration: 0.25s;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --primary: #f5e6d3;
+  --inactive: rgba(245, 230, 211, 0.4);
+  --ambient-color: #a8c0ff;
+  --warm-color: #ffb850;
+  --natural-color: #f5e6d3;
+  
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0806;
+  cursor: none; /* Hide default cursor */
+}
+
+/* ============================================
+   LAYER 1: BACKGROUND - Empty desk images
+   ============================================ */
+
+.desk-scene__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.desk-scene__bg-image {
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+/* Only show active image when loaded */
+.desk-scene__bg-image.loaded.active {
+  opacity: 1;
+}
+
+/* Inactive images stay hidden */
+.desk-scene__bg-image.loaded:not(.active) {
+  opacity: 0;
+}
+
+/* ============================================
+   LAYER 2: DOCUMENTS - Layered on top of desk
+   ============================================ */
+
+.desk-scene__documents {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none; /* Let clicks pass through to individual docs */
+}
+
+.desk-scene__doc {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  pointer-events: auto;
+  cursor: none; /* Hide default cursor on docs too */
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.desk-scene__doc-img {
+  object-fit: contain;
+  transition: filter 0.5s ease-out, transform 0.3s ease, box-shadow 0.5s ease-out;
+}
+
+/* Clickable documents get hover effects */
+.desk-scene__doc.clickable {
+  cursor: none;
+}
+
+.desk-scene__doc.clickable:hover {
+  transform: scale(1.02) translateY(-2px);
+  z-index: 6;
+}
+
+/* Note: hover filters are defined per lighting mode below */
+
+.desk-scene__doc.clickable:focus-visible {
+  outline: 2px solid rgba(255, 200, 120, 0.5);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* Decorative documents (non-clickable) */
+.desk-scene__doc.decorative {
+  cursor: default;
+  pointer-events: none;
+}
+
+/* ============================================
+   LIGHTING MODE FILTERS FOR DOCUMENTS
+   Documents are exported in "warm" mode, 
+   CSS filters adjust for other modes
+   ============================================ */
+
+/* Warm mode - documents with warm golden shadows */
+.desk-scene[data-lighting="warm"] .desk-scene__doc-img {
+  filter: 
+    drop-shadow(4px 6px 12px rgba(60, 40, 20, 0.4))
+    drop-shadow(2px 3px 6px rgba(80, 50, 25, 0.25));
+}
+
+/* Warm hover - slightly brighter with enhanced shadow */
+.desk-scene[data-lighting="warm"] .desk-scene__doc.clickable:hover .desk-scene__doc-img {
+  filter: 
+    brightness(1.08)
+    drop-shadow(5px 7px 14px rgba(60, 40, 20, 0.45))
+    drop-shadow(2px 4px 7px rgba(80, 50, 25, 0.3));
+}
+
+/* Ambient mode - warm lamp glow in dark room, amber tint from desk lamp */
+.desk-scene[data-lighting="ambient"] .desk-scene__doc-img {
+  filter: 
+    brightness(0.72) 
+    saturate(0.85) 
+    sepia(0.25) 
+    hue-rotate(-5deg) 
+    contrast(1.15)
+    drop-shadow(2px 3px 6px rgba(30, 20, 15, 0.25))
+    drop-shadow(1px 1px 3px rgba(40, 25, 18, 0.15));
+}
+
+/* Ambient hover - lamp glow brightens slightly */
+.desk-scene[data-lighting="ambient"] .desk-scene__doc.clickable:hover .desk-scene__doc-img {
+  filter: 
+    brightness(0.82) 
+    saturate(0.9) 
+    sepia(0.28) 
+    hue-rotate(-5deg) 
+    contrast(1.12)
+    drop-shadow(2px 4px 8px rgba(35, 22, 15, 0.3))
+    drop-shadow(1px 2px 4px rgba(45, 28, 18, 0.2));
+}
+
+/* Natural mode - neutral daylight, slightly cooler than warm */
+.desk-scene[data-lighting="natural"] .desk-scene__doc-img {
+  filter: 
+    brightness(0.92) 
+    saturate(0.88) 
+    contrast(1.02)
+    drop-shadow(3px 5px 10px rgba(50, 45, 40, 0.35))
+    drop-shadow(1px 2px 5px rgba(60, 50, 45, 0.2));
+}
+
+/* Natural hover - slightly brighter */
+.desk-scene[data-lighting="natural"] .desk-scene__doc.clickable:hover .desk-scene__doc-img {
+  filter: 
+    brightness(1.0) 
+    saturate(0.9) 
+    contrast(1.02)
+    drop-shadow(4px 6px 12px rgba(50, 45, 40, 0.4))
+    drop-shadow(2px 3px 6px rgba(60, 50, 45, 0.25));
+}
+
+/* ============================================
+   LAMP-LIT ITEMS - Notepad & Aso-oke under direct lamp light
+   These items are closer to the lamp, so they receive
+   more warm light, appear brighter, and cast sharper shadows
+   ============================================ */
+
+/* WARM MODE - Lamp-lit items: brighter, warmer, distinct shadow from lamp */
+.desk-scene[data-lighting="warm"] .desk-scene__doc[data-doc-id="notepad"] .desk-scene__doc-img,
+.desk-scene[data-lighting="warm"] .desk-scene__doc[data-doc-id="aso-oke-swatch"] .desk-scene__doc-img {
+  filter: 
+    brightness(1.08) 
+    saturate(1.05) 
+    sepia(0.1)
+    drop-shadow(-3px 4px 8px rgba(80, 50, 20, 0.5))
+    drop-shadow(-1px 2px 4px rgba(100, 60, 25, 0.35));
+}
+
+/* Warm mode lamp-lit hover */
+.desk-scene[data-lighting="warm"] .desk-scene__doc[data-doc-id="notepad"]:hover .desk-scene__doc-img,
+.desk-scene[data-lighting="warm"] .desk-scene__doc[data-doc-id="aso-oke-swatch"]:hover .desk-scene__doc-img {
+  filter: 
+    brightness(1.15) 
+    saturate(1.1) 
+    sepia(0.12)
+    drop-shadow(-4px 5px 10px rgba(80, 50, 20, 0.55))
+    drop-shadow(-2px 3px 5px rgba(100, 60, 25, 0.4));
+}
+
+/* AMBIENT MODE - Lamp-lit items: brightest, warmest glow, subtle lamp shadow */
+.desk-scene[data-lighting="ambient"] .desk-scene__doc[data-doc-id="notepad"] .desk-scene__doc-img,
+.desk-scene[data-lighting="ambient"] .desk-scene__doc[data-doc-id="aso-oke-swatch"] .desk-scene__doc-img {
+  filter: 
+    brightness(0.95) 
+    saturate(1.05) 
+    sepia(0.4) 
+    hue-rotate(5deg) 
+    contrast(1.1)
+    drop-shadow(-2px 3px 5px rgba(40, 25, 15, 0.3))
+    drop-shadow(-1px 1px 3px rgba(50, 30, 18, 0.2));
+}
+
+/* Ambient mode lamp-lit hover */
+.desk-scene[data-lighting="ambient"] .desk-scene__doc[data-doc-id="notepad"]:hover .desk-scene__doc-img,
+.desk-scene[data-lighting="ambient"] .desk-scene__doc[data-doc-id="aso-oke-swatch"]:hover .desk-scene__doc-img {
+  filter: 
+    brightness(1.05) 
+    saturate(1.1) 
+    sepia(0.42) 
+    hue-rotate(5deg) 
+    contrast(1.08)
+    drop-shadow(-2px 4px 6px rgba(45, 28, 15, 0.35))
+    drop-shadow(-1px 2px 4px rgba(55, 32, 18, 0.25));
+}
+
+/* NATURAL MODE - Lamp-lit items: subtle warmth, soft directional shadow */
+.desk-scene[data-lighting="natural"] .desk-scene__doc[data-doc-id="notepad"] .desk-scene__doc-img,
+.desk-scene[data-lighting="natural"] .desk-scene__doc[data-doc-id="aso-oke-swatch"] .desk-scene__doc-img {
+  filter: 
+    brightness(1.02) 
+    saturate(0.98) 
+    sepia(0.06) 
+    contrast(1.0)
+    drop-shadow(-2px 4px 8px rgba(60, 50, 40, 0.4))
+    drop-shadow(-1px 2px 4px rgba(70, 55, 45, 0.25));
+}
+
+/* Natural mode lamp-lit hover */
+.desk-scene[data-lighting="natural"] .desk-scene__doc[data-doc-id="notepad"]:hover .desk-scene__doc-img,
+.desk-scene[data-lighting="natural"] .desk-scene__doc[data-doc-id="aso-oke-swatch"]:hover .desk-scene__doc-img {
+  filter: 
+    brightness(1.08) 
+    saturate(1.0) 
+    sepia(0.08) 
+    contrast(1.0)
+    drop-shadow(-3px 5px 10px rgba(60, 50, 40, 0.45))
+    drop-shadow(-2px 3px 5px rgba(70, 55, 45, 0.3));
+}
+
+/* ============================================
+   CUSTOM CURSOR - Following dot with label pill
+   ============================================ */
+
+.desk-scene__cursor {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* The glowing dot - always visible */
+.desk-scene__cursor-dot {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 200, 120, 0.9);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 12px rgba(255, 180, 80, 0.7),
+    0 0 24px rgba(255, 180, 80, 0.4);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, width 0.15s ease, height 0.15s ease;
+  flex-shrink: 0;
+}
+
+/* Dot shrinks slightly when label appears */
+.desk-scene__cursor.has-label .desk-scene__cursor-dot {
+  width: 8px;
+  height: 8px;
+  box-shadow: 
+    0 0 10px rgba(255, 180, 80, 0.6),
+    0 0 20px rgba(255, 180, 80, 0.3);
+}
+
+/* Label pill - only shown when hovering clickable docs */
+.desk-scene__cursor-label {
+  padding: 0.5rem 1rem;
+  background: rgba(20, 16, 14, 0.92);
+  backdrop-filter: blur(10px);
+  color: #f5e6d3;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border-radius: 100px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 200, 120, 0.2);
+}
+
+/* Cursor color variations by lighting mode */
+.desk-scene[data-lighting="ambient"] .desk-scene__cursor-dot {
+  background: rgba(168, 192, 255, 0.9);
+  box-shadow: 
+    0 0 12px rgba(150, 180, 255, 0.7),
+    0 0 24px rgba(150, 180, 255, 0.4);
+}
+
+.desk-scene[data-lighting="ambient"] .desk-scene__cursor.has-label .desk-scene__cursor-dot {
+  box-shadow: 
+    0 0 10px rgba(150, 180, 255, 0.6),
+    0 0 20px rgba(150, 180, 255, 0.3);
+}
+
+.desk-scene[data-lighting="ambient"] .desk-scene__cursor-label {
+  border-color: rgba(168, 192, 255, 0.2);
+}
+
+.desk-scene[data-lighting="natural"] .desk-scene__cursor-dot {
+  background: rgba(245, 230, 211, 0.85);
+  box-shadow: 
+    0 0 10px rgba(245, 230, 211, 0.5),
+    0 0 20px rgba(245, 230, 211, 0.3);
+}
+
+.desk-scene[data-lighting="natural"] .desk-scene__cursor.has-label .desk-scene__cursor-dot {
+  box-shadow: 
+    0 0 8px rgba(245, 230, 211, 0.4),
+    0 0 16px rgba(245, 230, 211, 0.2);
+}
+
+/* ============================================
+   BACKDROP - Blurred overlay when item focused
+   ============================================ */
+
+.desk-scene__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  background: rgba(10, 8, 6, 0.4);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  cursor: pointer;
+}
+
+/* ============================================
+   FOCUSED ITEM - Expanded document view
+   ============================================ */
+
+.desk-scene__focus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 90vw;
+  max-height: 85vh;
+  padding: 1rem;
+  cursor: auto; /* Show cursor in modal */
+}
+
+/* Close button */
+.desk-scene__focus-close {
+  position: absolute;
+  top: -3rem;
+  right: -1rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 16, 14, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 200, 120, 0.25);
+  border-radius: 50%;
+  color: rgba(245, 230, 211, 0.85);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.desk-scene__focus-close:hover {
+  background: rgba(40, 32, 28, 0.95);
+  border-color: rgba(255, 200, 120, 0.35);
+  color: #f5e6d3;
+  transform: scale(1.05);
+}
+
+.desk-scene__focus-close:focus-visible {
+  outline: 2px solid rgba(255, 200, 120, 0.5);
+  outline-offset: 2px;
+}
+
+/* Document image container */
+.desk-scene__focus-image {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.desk-scene__focus-img {
+  display: block;
+  max-width: 100%;
+  max-height: 65vh;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Work Spotlight - larger in focus mode */
+.desk-scene__focus-img[alt="Work Spotlight"] {
+  max-height: 75vh;
+  max-width: 85vw;
+}
+
+/* Info panel below image */
+.desk-scene__focus-info {
+  text-align: center;
+  max-width: 480px;
+  padding: 0 1rem;
+}
+
+.desk-scene__focus-title {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  color: #f5e6d3;
+  margin: 0 0 0.5rem 0;
+}
+
+.desk-scene__focus-desc {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: rgba(245, 230, 211, 0.7);
+  margin: 0 0 0.75rem 0;
+}
+
+.desk-scene__focus-year {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 200, 120, 0.12);
+  border: 1px solid rgba(255, 200, 120, 0.15);
+  border-radius: 100px;
+  color: rgba(255, 200, 120, 0.85);
+}
+
+/* ============================================
+   PLACED MESSAGES - Visitor notes on desk
+   ============================================ */
+
+.desk-scene__messages {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.desk-scene__message {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  padding: 0.875rem 1rem 0.75rem;
+  background: linear-gradient(135deg, #fff9c4 0%, #ffee58 100%);
+  border-radius: 2px;
+  box-shadow: 
+    2px 4px 12px rgba(60, 40, 20, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.15),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.05);
+  max-width: 140px;
+  min-width: 80px;
+  pointer-events: auto;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.desk-scene__message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(255,235,59,0.8) 0%, rgba(255,193,7,0.9) 100%);
+  border-radius: 2px 2px 0 0;
+}
+
+.desk-scene__message:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 
+    3px 6px 16px rgba(60, 40, 20, 0.35),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.desk-scene__message-delete {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(60, 50, 40, 0.9);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.15s ease;
+}
+
+.desk-scene__message:hover .desk-scene__message-delete {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.desk-scene__message-delete:hover {
+  background: #c62828;
+}
+
+.desk-scene__message-text {
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 1.125rem;
+  line-height: 1.35;
+  color: #37474f;
+  word-wrap: break-word;
+  display: block;
+}
+
+/* Sticky preview while placing */
+.desk-scene__sticky-preview {
+  position: absolute;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  padding: 0.875rem 1rem 0.75rem;
+  background: linear-gradient(135deg, #fff9c4 0%, #ffee58 100%);
+  border-radius: 2px;
+  box-shadow: 
+    4px 6px 20px rgba(60, 40, 20, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+  max-width: 140px;
+  min-width: 80px;
+  pointer-events: none;
+  border: 2px dashed rgba(255, 193, 7, 0.6);
+}
+
+.desk-scene__sticky-preview::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, rgba(255,235,59,0.8) 0%, rgba(255,193,7,0.9) 100%);
+  border-radius: 2px 2px 0 0;
+}
+
+/* Message lighting adjustments */
+.desk-scene[data-lighting="ambient"] .desk-scene__message {
+  background: #f5f0e0;
+  box-shadow: 
+    2px 3px 6px rgba(30, 20, 15, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.desk-scene[data-lighting="ambient"] .desk-scene__message-text {
+  color: #3a3530;
+}
+
+/* ============================================
+   NOTEPAD MODAL - Leave a message interface
+   ============================================ */
+
+.desk-scene__notepad {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.desk-scene__notepad-close {
+  position: absolute;
+  top: 0;
+  right: -2.5rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(20, 16, 14, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 200, 120, 0.25);
+  border-radius: 50%;
+  color: rgba(245, 230, 211, 0.85);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.desk-scene__notepad-close:hover {
+  background: rgba(40, 32, 28, 0.95);
+  border-color: rgba(255, 200, 120, 0.4);
+  color: #f5e6d3;
+}
+
+/* Notepad paper with image */
+.desk-scene__notepad-paper {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.desk-scene__notepad-img {
+  display: block;
+  max-height: 50vh;
+  width: auto;
+  height: auto;
+}
+
+.desk-scene__notepad-overlay {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+  right: 10%;
+  bottom: 20%;
+  display: flex;
+  align-items: flex-start;
+  padding: 0.5rem;
+}
+
+.desk-scene__notepad-input {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-family: 'Nanum Pen Script', cursive;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: #37474f;
+  resize: none;
+}
+
+.desk-scene__notepad-input::placeholder {
+  color: rgba(55, 71, 79, 0.4);
+}
+
+.desk-scene__notepad-input:focus {
+  outline: none;
+}
+
+.desk-scene__notepad-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  padding: 0 0.5rem;
+}
+
+.desk-scene__notepad-count {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: rgba(245, 230, 211, 0.5);
+}
+
+.desk-scene__notepad-place {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, #fff9c4 0%, #ffee58 100%);
+  border: none;
+  border-radius: 100px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #37474f;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 235, 59, 0.3);
+}
+
+.desk-scene__notepad-place svg {
+  stroke: #37474f;
+}
+
+.desk-scene__notepad-place:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 235, 59, 0.4);
+}
+
+.desk-scene__notepad-place:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ============================================
+   PLACING MODE - Cursor changes when placing
+   ============================================ */
+
+.desk-scene[data-placing="true"] {
+  cursor: crosshair;
+}
+
+.desk-scene[data-placing="true"] .desk-scene__doc {
+  pointer-events: none;
+}
+
+.desk-scene__placing-hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  padding: 0.75rem 1.5rem;
+  background: rgba(42, 37, 32, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 200, 120, 0.2);
+  border-radius: 100px;
+  color: #f5e6d3;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   HINT - First-time visitor prompt
+   ============================================ */
+
+.desk-scene__hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 0.625rem 1.25rem;
+  background: rgba(20, 16, 14, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 200, 120, 0.12);
+  border-radius: 100px;
+  color: rgba(245, 230, 211, 0.65);
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================
+   NAV - Top Right (matches homepage main-nav)
+   ============================================ */
+
+.desk-scene__nav {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  cursor: auto;
+}
+
+/* Nav lighting container - matches homepage */
+.desk-scene .nav-lighting {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 4px;
+  background: rgba(20, 16, 14, 0.6);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 200, 120, 0.12);
+  border-radius: 8px;
+}
+
+/* Lighting tab - matches homepage */
+.desk-scene .lighting-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.desk-scene .lighting-tab__text {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--inactive);
+  transition: color var(--duration) var(--ease),
+              text-shadow var(--duration) var(--ease);
+}
+
+.desk-scene .lighting-tab__icon {
+  display: none;
+  width: 18px;
+  height: 18px;
+  color: var(--inactive);
+  transition: color var(--duration) var(--ease),
+              filter var(--duration) var(--ease);
+}
+
+.desk-scene .lighting-tab__glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease);
+  pointer-events: none;
+}
+
+/* Line under active tab - matches homepage (bottom: 0, width: 60%) */
+.desk-scene .lighting-tab__line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  border-radius: 1px;
+  opacity: 0;
+  transition: opacity var(--duration) var(--ease),
+              background var(--duration) var(--ease);
+}
+
+/* Active states using :nth-child to match homepage */
+.desk-scene .lighting-tab.active:nth-child(1) .lighting-tab__text {
+  color: var(--ambient-color);
+  text-shadow: 0 0 16px rgba(150, 180, 255, 0.8);
+}
+
+.desk-scene .lighting-tab.active:nth-child(1) .lighting-tab__glow {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(150, 180, 255, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.desk-scene .lighting-tab.active:nth-child(1) .lighting-tab__line {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ambient-color),
+    transparent
+  );
+}
+
+/* Warm (2nd tab) */
+.desk-scene .lighting-tab.active:nth-child(2) .lighting-tab__text {
+  color: var(--warm-color);
+  text-shadow: 0 0 16px rgba(255, 180, 80, 0.8);
+}
+
+.desk-scene .lighting-tab.active:nth-child(2) .lighting-tab__glow {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(255, 180, 80, 0.2) 0%,
+    transparent 70%
+  );
+}
+
+.desk-scene .lighting-tab.active:nth-child(2) .lighting-tab__line {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--warm-color),
+    transparent
+  );
+}
+
+/* Natural (3rd tab) */
+.desk-scene .lighting-tab.active:nth-child(3) .lighting-tab__text {
+  color: var(--natural-color);
+  text-shadow: 0 0 12px rgba(245, 230, 211, 0.5);
+}
+
+.desk-scene .lighting-tab.active:nth-child(3) .lighting-tab__glow {
+  opacity: 1;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(245, 230, 211, 0.15) 0%,
+    transparent 70%
+  );
+}
+
+.desk-scene .lighting-tab.active:nth-child(3) .lighting-tab__line {
+  opacity: 1;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--natural-color),
+    transparent
+  );
+}
+
+/* Hover state for inactive tabs */
+.desk-scene .lighting-tab:hover .lighting-tab__text {
+  color: rgba(245, 230, 211, 0.7);
+}
+
+/* Divider between lighting tabs and music toggle */
+.desk-scene .nav-lighting__divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 200, 120, 0.2);
+  margin: 0 0.25rem;
+}
+
+/* Music toggle - vinyl player (copied from homepage) */
+.desk-scene .music-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
+}
+
+.desk-scene .music-toggle:hover {
+  transform: scale(1.1);
+}
+
+.desk-scene .music-toggle:focus-visible {
+  outline: 2px solid rgba(255, 200, 120, 0.5);
+  outline-offset: 2px;
+}
+
+.desk-scene .music-toggle__player {
+  width: 34px;
+  height: 28px;
+  transition: filter 0.3s ease;
+}
+
+.desk-scene .music-toggle__vinyl {
+  transform-origin: 16px 16px;
+  transition: filter 0.3s ease;
+}
+
+.desk-scene .music-toggle__reflection {
+  opacity: 0.3;
+  transform-origin: 16px 16px;
+}
+
+.desk-scene .music-toggle__tonearm-arm {
+  transform-origin: 36px 4px;
+  transform: rotate(-25deg);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Playing state */
+.desk-scene .music-toggle.playing .music-toggle__vinyl {
+  animation: vinyl-spin 4s linear infinite;
+}
+
+.desk-scene .music-toggle.playing .music-toggle__reflection {
+  opacity: 0.45;
+}
+
+.desk-scene .music-toggle.playing .music-toggle__tonearm-arm {
+  transform: rotate(0deg);
+}
+
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Music toggle mode-specific colors */
+.desk-scene .music-toggle[data-mode="ambient"] .music-toggle__vinyl {
+  filter: sepia(0.1) hue-rotate(200deg) saturate(0.8);
+}
+
+.desk-scene .music-toggle[data-mode="ambient"]:hover .music-toggle__vinyl {
+  filter: sepia(0.1) hue-rotate(200deg) saturate(0.8) brightness(1.15);
+}
+
+.desk-scene .music-toggle.playing[data-mode="ambient"] .music-toggle__player {
+  filter: drop-shadow(0 0 8px rgba(120, 150, 220, 0.7));
+}
+
+.desk-scene .music-toggle[data-mode="warm"] .music-toggle__vinyl {
+  filter: sepia(0.15) saturate(1.2);
+}
+
+.desk-scene .music-toggle[data-mode="warm"]:hover .music-toggle__vinyl {
+  filter: sepia(0.15) saturate(1.2) brightness(1.15);
+}
+
+.desk-scene .music-toggle.playing[data-mode="warm"] .music-toggle__player {
+  filter: drop-shadow(0 0 8px rgba(255, 180, 80, 0.7));
+}
+
+.desk-scene .music-toggle[data-mode="natural"] .music-toggle__vinyl {
+  filter: saturate(0.7) brightness(1.1);
+}
+
+.desk-scene .music-toggle[data-mode="natural"]:hover .music-toggle__vinyl {
+  filter: saturate(0.7) brightness(1.25);
+}
+
+.desk-scene .music-toggle.playing[data-mode="natural"] .music-toggle__player {
+  filter: drop-shadow(0 0 6px rgba(180, 170, 150, 0.6));
+}
+
+/* ============================================
+   MOBILE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  /* Show default cursor on mobile */
+  .desk-scene {
+    cursor: auto;
+  }
+
+  .desk-scene__doc {
+    cursor: pointer;
+  }
+
+  .desk-scene__cursor {
+    display: none;
+  }
+
+  .desk-scene__focus {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .desk-scene__focus-close {
+    top: -2.5rem;
+    right: -0.5rem;
+  }
+
+  .desk-scene__focus-img {
+    max-height: 50vh;
+  }
+
+  .desk-scene__focus-title {
+    font-size: 1.25rem;
+  }
+
+  .desk-scene__focus-desc {
+    font-size: 0.8125rem;
+  }
+
+  .desk-scene__hint {
+    bottom: 1.5rem;
+    left: 1rem;
+    right: 1rem;
+    transform: none;
+    text-align: center;
+    font-size: 0.75rem;
+  }
+
+  /* Nav mobile adjustments */
+  .desk-scene__nav {
+    top: 0.75rem;
+    right: 4rem;
+  }
+
+  .desk-scene .nav-lighting {
+    padding: 3px;
+    gap: 0.125rem;
+  }
+
+  .desk-scene .lighting-tab {
+    padding: 0.5rem;
+  }
+
+  /* Show icons, hide text on mobile */
+  .desk-scene .lighting-tab__text {
+    display: none;
+  }
+
+  .desk-scene .lighting-tab__icon {
+    display: block;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Active icon colors - using nth-child like homepage */
+  .desk-scene .lighting-tab.active:nth-child(1) .lighting-tab__icon {
+    color: var(--ambient-color);
+    filter: drop-shadow(0 0 8px rgba(150, 180, 255, 0.8));
+  }
+
+  .desk-scene .lighting-tab.active:nth-child(2) .lighting-tab__icon {
+    color: var(--warm-color);
+    filter: drop-shadow(0 0 8px rgba(255, 180, 80, 0.8));
+  }
+
+  .desk-scene .lighting-tab.active:nth-child(3) .lighting-tab__icon {
+    color: var(--natural-color);
+    filter: drop-shadow(0 0 6px rgba(245, 230, 211, 0.5));
+  }
+
+  /* Music toggle mobile */
+  .desk-scene .nav-lighting__divider {
+    height: 16px;
+    margin: 0 0.125rem;
+  }
+
+  .desk-scene .music-toggle {
+    width: 32px;
+    height: 26px;
+  }
+
+  .desk-scene .music-toggle__player {
+    width: 30px;
+    height: 24px;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .desk-scene__bg-image,
+  .desk-scene__doc,
+  .desk-scene__doc-img,
+  .desk-scene__cursor,
+  .desk-scene__cursor-dot,
+  .desk-scene__focus-close {
+    transition: none;
+  }
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  .desk-scene__doc.clickable:hover {
+    outline: 2px solid white;
+    outline-offset: 2px;
+  }
+
+  .desk-scene__backdrop {
+    background: rgba(0, 0, 0, 0.95);
+  }
+
+  .desk-scene__focus-title,
+  .desk-scene__focus-desc {
+    color: white;
+  }
+
+  .desk-scene__focus-close {
+    background: black;
+    border-color: white;
+    color: white;
+  }
+
+  .desk-scene__cursor-dot {
+    background: white;
+    box-shadow: none;
+  }
+
+  .desk-scene__cursor-label {
+    background: black;
+    color: white;
+    border-color: white;
+  }
+}

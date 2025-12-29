@@ -1,14 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
+import { LightingProvider } from "@/lib/lighting-context"
+import { MusicProvider } from "@/lib/music-context"
 import "./globals.css"
 
-const zalandoSans = {
-  className: "zalando-sans",
+const ppRadioGrotesk = {
+  className: "pp-radio-grotesk",
   variable: "--font-sans",
 }
-const hedvigLettersSerif = {
-  className: "hedvig-letters-serif",
+const ppKyoto = {
+  className: "pp-kyoto",
   variable: "--font-serif",
 }
 
@@ -32,12 +34,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Hedvig+Letters+Serif&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Nanum+Pen+Script&display=swap"
           rel="stylesheet"
         />
       </head>
-      <body className={`${hedvigLettersSerif.variable} ${zalandoSans.variable} font-sans antialiased`}>
-        {children}
+      <body className={`${ppKyoto.variable} ${ppRadioGrotesk.variable} font-sans antialiased`}>
+        <LightingProvider>
+          <MusicProvider>
+            {children}
+          </MusicProvider>
+        </LightingProvider>
         <Analytics />
       </body>
     </html>

@@ -6,7 +6,7 @@ export function GallerySection() {
   return (
     <div 
       className="flex-1 min-h-screen flex flex-col px-5 md:px-16"
-      style={{ backgroundColor: '#2A0107' }}
+      style={{ backgroundColor: '#271111' }}
     >
       <main className="flex-1 flex flex-col items-center justify-center py-16">
         <p className="font-mono text-xs uppercase tracking-widest mb-8 text-white/80">

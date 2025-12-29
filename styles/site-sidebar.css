@@ -1,0 +1,103 @@
+/* ============================================
+   SITE SIDEBAR - Matches Homepage Menu Sidebar
+   ============================================ */
+
+/* Base sidebar styles */
+.site-sidebar {
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Dark mode - matches homepage menu-sidebar */
+.site-sidebar--dark {
+  background: #14100e;
+  border-right: 1px solid rgba(255, 200, 120, 0.1);
+}
+
+/* Light mode - warm paper aesthetic */
+.site-sidebar--light {
+  background: #f9f4e9;
+  border-right: 1px solid rgba(139, 111, 76, 0.18);
+}
+
+/* Navigation link styles */
+.site-sidebar__link {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+/* Dark mode links */
+.site-sidebar--dark .site-sidebar__link {
+  color: rgba(245, 230, 211, 0.5);
+}
+
+.site-sidebar--dark .site-sidebar__link:hover,
+.site-sidebar--dark .site-sidebar__link:focus-visible {
+  color: #f5e6d3;
+  transform: translateX(4px);
+}
+
+.site-sidebar--dark .site-sidebar__link--active {
+  color: #f5e6d3;
+}
+
+/* Light mode links */
+.site-sidebar--light .site-sidebar__link {
+  color: rgba(20, 16, 14, 0.5);
+}
+
+.site-sidebar--light .site-sidebar__link:hover,
+.site-sidebar--light .site-sidebar__link:focus-visible {
+  color: #14100e;
+  transform: translateX(4px);
+}
+
+.site-sidebar--light .site-sidebar__link--active {
+  color: #14100e;
+}
+
+/* ============================================
+   MOBILE SIDEBAR
+   ============================================ */
+
+/* Dark mode mobile */
+.site-sidebar-mobile--dark {
+  background: #14100e;
+  border-right: 1px solid rgba(255, 200, 120, 0.1);
+}
+
+/* Light mode mobile */
+.site-sidebar-mobile--light {
+  background: #f9f4e9;
+  border-right: 1px solid rgba(139, 111, 76, 0.18);
+}
+
+/* Mobile navigation links inherit from main sidebar */
+.site-sidebar-mobile--dark .site-sidebar__link {
+  color: rgba(245, 230, 211, 0.5);
+}
+
+.site-sidebar-mobile--dark .site-sidebar__link:hover,
+.site-sidebar-mobile--dark .site-sidebar__link:focus-visible {
+  color: #f5e6d3;
+}
+
+.site-sidebar-mobile--dark .site-sidebar__link--active {
+  color: #f5e6d3;
+}
+
+.site-sidebar-mobile--light .site-sidebar__link {
+  color: rgba(20, 16, 14, 0.5);
+}
+
+.site-sidebar-mobile--light .site-sidebar__link:hover,
+.site-sidebar-mobile--light .site-sidebar__link:focus-visible {
+  color: #14100e;
+}
+
+.site-sidebar-mobile--light .site-sidebar__link--active {
+  color: #14100e;
+}
+
