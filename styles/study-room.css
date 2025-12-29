@@ -544,12 +544,13 @@
   border-color: rgba(255, 200, 120, 0.25);
 }
 
-/* Center: Brand */
+/* Brand - fixed at top center (outside nav for mobile compatibility) */
 .nav-brand {
-  position: absolute;
+  position: fixed;
+  top: 1.25rem;
   left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
+  z-index: 50;
   font-family: var(--font-serif);
   font-size: 2.25rem;
   font-weight: 400;
@@ -971,12 +972,9 @@
     display: none;
   }
 
-  /* Brand at top center on mobile */
+  /* Brand smaller on mobile */
   .nav-brand {
-    position: fixed;
     top: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
     font-size: 1.25rem;
     letter-spacing: -1px;
   }

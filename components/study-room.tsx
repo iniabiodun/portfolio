@@ -400,6 +400,11 @@ export function StudyRoom() {
 
       </div>
 
+      {/* Brand - separate for mobile positioning */}
+      <div className="nav-brand">
+        <span>Atelier ÌníOlúwa</span>
+      </div>
+
       {/* Unified Navigation Bar - Outside study-room for proper z-index stacking */}
       <nav className="main-nav" aria-label="Main navigation">
         {/* Left: Index */}
@@ -414,11 +419,6 @@ export function StudyRoom() {
         >
           <span className="nav-menu__text">Index</span>
         </button>
-
-        {/* Center: Brand */}
-        <div className="nav-brand">
-          <span>Atelier ÌníOlúwa</span>
-        </div>
 
         {/* Right: Lighting Controls */}
         <div className="nav-lighting" role="group" aria-label="Lighting mode">
