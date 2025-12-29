@@ -4,10 +4,17 @@
 
 /* Base sidebar styles - matches .menu-sidebar */
 .site-sidebar {
-  display: flex;
+  display: none; /* Hidden on mobile by default */
   flex-direction: column;
   padding: 2rem;
   transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Show sidebar on desktop */
+@media (min-width: 768px) {
+  .site-sidebar {
+    display: flex;
+  }
 }
 
 /* Bookmark - matches .menu-sidebar__bookmark */
