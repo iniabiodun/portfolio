@@ -554,7 +554,7 @@
   font-family: var(--font-serif);
   font-size: 2.25rem;
   font-weight: 400;
-  color: var(--primary);
+  color: #f5e6d3;
   letter-spacing: -1.9px;
   text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
 }
@@ -657,8 +657,9 @@
   margin: 0 0.25rem;
 }
 
-/* Hamburger - hidden on desktop, shown on mobile */
-.nav-hamburger {
+/* Hamburger and its divider - hidden on desktop, shown on mobile */
+.nav-hamburger,
+.nav-hamburger-divider {
   display: none;
 }
 
@@ -972,11 +973,11 @@
     display: none;
   }
 
-  /* Brand smaller on mobile */
+  /* Brand on mobile */
   .nav-brand {
     top: 1rem;
-    font-size: 1.25rem;
-    letter-spacing: -1px;
+    font-size: 1.75rem;
+    letter-spacing: -1.2px;
   }
 
   /* Nav lighting centered on mobile */
@@ -998,15 +999,19 @@
     height: 28px;
     background: transparent;
     border: none;
-    color: var(--primary);
+    color: #f5e6d3;
     cursor: pointer;
     padding: 0;
-    margin-left: 0.25rem;
     transition: color 0.2s ease;
   }
 
   .nav-hamburger:hover {
     color: rgba(255, 200, 120, 0.9);
+  }
+
+  /* Show divider after hamburger on mobile */
+  .nav-hamburger-divider {
+    display: block;
   }
 
   .lighting-tab {
