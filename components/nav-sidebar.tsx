@@ -164,7 +164,7 @@ export function MobileNavDrawer({
       {/* Backdrop */}
       <div 
         className={cn(
-          "fixed inset-0 z-40 md:hidden transition-opacity duration-300",
+          "fixed inset-0 z-40 transition-opacity duration-300",
           isDarkMode ? "bg-black/50" : "bg-black/10",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         )}
@@ -174,7 +174,7 @@ export function MobileNavDrawer({
       {/* Drawer */}
       <div
         className={cn(
-          "site-sidebar-mobile fixed left-0 top-0 h-screen w-[75vw] max-w-[300px] z-50 md:hidden",
+          "site-sidebar-mobile fixed left-0 top-0 h-screen w-[75vw] max-w-[300px] z-50",
           "transform transition-transform duration-300 ease-out",
           "shadow-xl",
           isDarkMode ? "site-sidebar-mobile--dark" : "site-sidebar-mobile--light",
