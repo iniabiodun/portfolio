@@ -113,13 +113,13 @@ export function NavSidebar({ width, isDragging, onMouseDown }: NavSidebarProps) 
           </motion.div>
         </div>
 
-        <nav className="site-sidebar__nav flex flex-col gap-2 p-8 pt-54">
+        <nav className="site-sidebar__nav">
           {tabs.map((tab) => (
             <Link
               key={tab.id}
               href={tab.href}
               className={cn(
-                "site-sidebar__link text-left py-1 transition-all uppercase tracking-widest text-xs",
+                "site-sidebar__link",
                 activeTab === tab.id ? "site-sidebar__link--active" : "",
               )}
             >
@@ -223,14 +223,14 @@ export function MobileNavDrawer({
           </motion.div>
         </div>
 
-        <nav className="site-sidebar__nav flex flex-col gap-3 p-6 pt-40">
+        <nav className="site-sidebar__nav site-sidebar__nav--mobile">
           {tabs.map((tab) => (
             <Link
               key={tab.id}
               href={tab.href}
               onClick={onClose}
               className={cn(
-                "site-sidebar__link text-left py-2 transition-all uppercase tracking-widest text-sm",
+                "site-sidebar__link",
                 activeTab === tab.id ? "site-sidebar__link--active" : "",
               )}
             >

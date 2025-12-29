@@ -19,12 +19,24 @@
   border-right: 1px solid rgba(139, 111, 76, 0.18);
 }
 
-/* Navigation link styles */
+/* Navigation - matches .menu-sidebar__nav exactly */
+.site-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 12rem;
+  padding: 0 2rem;
+}
+
+/* Navigation link styles - matches .menu-sidebar__link exactly */
 .site-sidebar__link {
   font-family: var(--font-sans);
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.12em;
+  text-transform: uppercase;
   text-decoration: none;
+  padding: 0.5rem 0;
   transition: color 0.2s ease, transform 0.2s ease;
 }
 
@@ -61,6 +73,17 @@
 /* ============================================
    MOBILE SIDEBAR
    ============================================ */
+
+/* Mobile nav adjustments */
+.site-sidebar__nav--mobile {
+  margin-top: 10rem;
+  padding: 0 1.5rem;
+}
+
+.site-sidebar__nav--mobile .site-sidebar__link {
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+}
 
 /* Dark mode mobile */
 .site-sidebar-mobile--dark {
