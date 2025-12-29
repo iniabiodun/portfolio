@@ -4,25 +4,10 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
-import { useResizable } from "@/hooks/use-resizable"
-import { ResizeHandle } from "./resize-handle"
 import { useLighting } from "@/lib/lighting-context"
 import { useMusic } from "@/lib/music-context"
+import { MobileNavDrawer } from "./nav-sidebar"
 
-// Module-level flag to track if homepage menu bookmark has unfurled this session
-// Persists across client-side navigations but resets on hard refresh
-let hasUnfurledHomepageMenu = false
-
-// Menu navigation links
-const menuLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About" },
-  { href: "/case-studies", label: "Case Studies" },
-  { href: "/speaking", label: "Speaking" },
-  { href: "/bookshelf", label: "Bookshelf" },
-  { href: "/notes", label: "Notes" },
-  { href: "/gallery", label: "Gallery" },
-]
 
 // Hotspot regions as percentages - larger areas with z-index layering
 // Gallery hotspot: Art frame on left wall (colorful woman with sunglasses)
@@ -120,13 +105,9 @@ export function StudyRoom() {
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [showCursor, setShowCursor] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
-  const [hasMenuBookmarkUnfurled, setHasMenuBookmarkUnfurled] = useState(hasUnfurledHomepageMenu)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
-  
-  // Resizable sidebar - matches site sidebar settings
-  const sidebar = useResizable({ initialWidth: 192, minWidth: 150, maxWidth: 400 })
   
   // Framer Motion values for parallax
   const mouseX = useMotionValue(0)
@@ -144,14 +125,6 @@ export function StudyRoom() {
   useEffect(() => {
     if (menuOpen) {
       document.body.style.overflow = 'hidden'
-      // Mark bookmark as unfurled after animation completes
-      if (!hasUnfurledHomepageMenu) {
-        const timer = setTimeout(() => {
-          hasUnfurledHomepageMenu = true
-          setHasMenuBookmarkUnfurled(true)
-        }, 500)
-        return () => clearTimeout(timer)
-      }
     } else {
       document.body.style.overflow = ''
     }
@@ -214,84 +187,8 @@ export function StudyRoom() {
 
   return (
     <>
-      {/* Push Menu Sidebar */}
-      <aside 
-        className={`menu-sidebar ${menuOpen ? "open" : ""} ${isDarkMode ? "menu-sidebar--dark" : "menu-sidebar--light"}`} 
-        aria-hidden={!menuOpen}
-        style={{ width: `${sidebar.width}px` }}
-      >
-        {/* Resize Handle */}
-        <ResizeHandle onMouseDown={sidebar.handleMouseDown} isDragging={sidebar.isDragging} />
-        
-        {/* Close Button */}
-        <button 
-          className="menu-sidebar__close"
-          onClick={() => setMenuOpen(false)}
-          aria-label="Close index"
-        >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L13 13M1 13L13 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
-        </button>
-
-        {/* Ribbon Bookmark */}
-        <div className="menu-sidebar__bookmark">
-          <motion.div
-            initial={hasMenuBookmarkUnfurled ? { rotateX: 0, opacity: 1 } : { rotateX: -90, opacity: 0 }}
-            animate={menuOpen ? { rotateX: 0, opacity: 1 } : (hasMenuBookmarkUnfurled ? { rotateX: 0, opacity: 1 } : { rotateX: -90, opacity: 0 })}
-            transition={!hasMenuBookmarkUnfurled ? { 
-              type: "spring", 
-              stiffness: 120, 
-              damping: 14,
-              delay: menuOpen ? 0.2 : 0 
-            } : { duration: 0 }}
-            style={{ transformOrigin: "top center", transformStyle: "preserve-3d" }}
-            className="menu-sidebar__bookmark-inner"
-          >
-            <motion.div
-              animate={menuOpen ? { rotateZ: [0, 1, 0, -1, 0] } : { rotateZ: 0 }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: !hasMenuBookmarkUnfurled ? 1 : 0
-              }}
-              style={{ transformOrigin: "top center" }}
-              className="menu-sidebar__bookmark-ribbon"
-            />
-          </motion.div>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className="menu-sidebar__nav">
-          {menuLinks.map((link, index) => (
-            <motion.div
-              key={link.href}
-              initial={false}
-              animate={menuOpen ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-              transition={{ 
-                duration: 0.3,
-                delay: menuOpen ? 0.1 + index * 0.05 : 0
-              }}
-            >
-              <Link
-                href={link.href}
-                className="menu-sidebar__link"
-                onClick={() => setMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            </motion.div>
-          ))}
-        </nav>
-      </aside>
-
-      {/* Overlay when menu open */}
-      <div 
-        className={`menu-overlay ${menuOpen ? "visible" : ""}`}
-        onClick={() => setMenuOpen(false)}
-        aria-hidden="true"
-      />
+      {/* Navigation Drawer - Same as rest of site */}
+      <MobileNavDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <div 
         className="study-room"
