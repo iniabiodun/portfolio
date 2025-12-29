@@ -1,40 +1,22 @@
 "use client"
 
-import { useState } from "react"
-import { Menu, X } from "lucide-react"
 import { useResizable } from "@/hooks/use-resizable"
-import { NavSidebar, MobileNavDrawer } from "./nav-sidebar"
+import { NavSidebar } from "./nav-sidebar"
 
 interface SiteLayoutProps {
   children: React.ReactNode
 }
 
 export function SiteLayout({ children }: SiteLayoutProps) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const sidebar = useResizable({ initialWidth: 192, minWidth: 150, maxWidth: 400 })
 
   return (
     <div className="flex min-h-screen">
-      {/* Mobile hamburger button */}
-      <button
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="fixed top-5 right-5 z-[60] md:hidden bg-background border border-border rounded-lg p-2.5 hover:bg-muted shadow-md"
-        aria-label="Toggle menu"
-      >
-        {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-      </button>
-
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar - mobile nav handled by page components */}
       <NavSidebar
         width={sidebar.width}
         isDragging={sidebar.isDragging}
         onMouseDown={sidebar.handleMouseDown}
-      />
-
-      {/* Mobile drawer */}
-      <MobileNavDrawer
-        isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
       />
 
       {/* Main content area */}
