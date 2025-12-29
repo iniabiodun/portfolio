@@ -128,18 +128,6 @@ export function NavSidebar({ width, isDragging, onMouseDown }: NavSidebarProps) 
           ))}
         </nav>
 
-        {/* Wax Seal - only show when not on About or Gallery page */}
-        {activeTab !== "about" && activeTab !== "gallery" && activeTab !== "home" && (
-          <div className="absolute bottom-8 left-6 z-10">
-            <img 
-              src="/IniOluwa Seal 1.png" 
-              alt="OMÒ ASÍWAJU Seal" 
-              className="object-contain"
-              style={{ width: '104px', height: '104px' }}
-            />
-          </div>
-        )}
-
         <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />
       </div>
     </aside>
@@ -250,18 +238,6 @@ export function MobileNavDrawer({
             </Link>
           ))}
         </nav>
-
-        {/* Wax Seal on mobile - only show when not on About or Gallery page */}
-        {activeTab !== "about" && activeTab !== "gallery" && activeTab !== "home" && (
-          <div className="absolute bottom-6 left-6 z-10">
-            <img 
-              src="/IniOluwa Seal 1.png" 
-              alt="OMÒ ASÍWAJU Seal" 
-              className="object-contain"
-              style={{ width: '80px', height: '80px' }}
-            />
-          </div>
-        )}
       </div>
     </>
   )
