@@ -7,7 +7,7 @@ import { NotesList } from "@/components/notes-list"
 import { NoteReader } from "@/components/note-reader"
 import { ContentPanel } from "@/components/content-panel"
 
-export default function NotesPage() {
+export default function EssaysPage() {
   const [selectedNote, setSelectedNote] = useState<string | null>(null)
   const notesList = useResizable({
     initialWidth: 600,
@@ -25,7 +25,11 @@ export default function NotesPage() {
         onMouseDown={notesList.handleMouseDown}
       />
       {selectedNote && (
-        <ContentPanel onClose={() => setSelectedNote(null)}>
+        <ContentPanel 
+          onClose={() => setSelectedNote(null)}
+          onMouseDown={notesList.handleMouseDown}
+          isDragging={notesList.isDragging}
+        >
           <NoteReader slug={selectedNote} />
         </ContentPanel>
       )}

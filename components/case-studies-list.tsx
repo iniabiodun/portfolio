@@ -47,13 +47,13 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
       <div
         style={{ width: `${width}px` }}
         className={cn(
-          "list-container relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:w-full",
+          "list-container relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:w-full max-md:pt-20",
           selectedCaseStudy && "max-md:hidden",
         )}
       >
       <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
         <div>
-          <h1 className="text-4xl font-serif mb-8">Case Studies</h1>
+          <h1 className="text-4xl font-serif mb-8">Work Log</h1>
           <p className="text-muted-foreground mb-8">Selected projects & design work.</p>
           <div className="space-y-0">
             {sortedCaseStudies.map((caseStudy, index) => (
@@ -61,7 +61,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
                 {caseStudy.disabled ? (
                   <div className="w-full text-left space-y-1.5 py-3 opacity-50 cursor-not-allowed">
                     <div className="flex items-baseline gap-2">
-                      <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
+                      <h2 className="text-lg font-medium text-foreground">{caseStudy.title}</h2>
                     </div>
                     <p className="text-xs text-muted-foreground font-sans uppercase tracking-widest">{formatDateForList(caseStudy.date)}</p>
                   </div>
@@ -75,11 +75,11 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
                         src="/2. Bookshelf/pen-nib.svg" 
                         alt="" 
                         className={cn(
-                          "w-3 h-3 transition-opacity duration-200 flex-shrink-0 mt-[0.35rem]",
+                          "pen-nib-icon w-4 h-4 transition-opacity duration-200 flex-shrink-0 mt-[0.2rem]",
                           selectedCaseStudy === caseStudy.slug ? "opacity-100" : "opacity-0 group-hover:opacity-50"
                         )}
                       />
-                      <h2 className="text-base font-medium text-foreground">{caseStudy.title}</h2>
+                      <h2 className="text-lg font-medium text-foreground">{caseStudy.title}</h2>
                     </div>
                     <p className="text-xs text-muted-foreground font-sans uppercase tracking-widest pl-5">{formatDateForList(caseStudy.date)}</p>
                   </button>
@@ -95,7 +95,7 @@ export function CaseStudiesList({ selectedCaseStudy, onSelectCaseStudy, width, i
         <Footer />
       </div>
 
-      {selectedCaseStudy && <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />}
+      <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />
     </div>
     </>
   )

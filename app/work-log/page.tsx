@@ -7,7 +7,7 @@ import { CaseStudiesList } from "@/components/case-studies-list"
 import { CaseStudyReader } from "@/components/case-study-reader"
 import { ContentPanel } from "@/components/content-panel"
 
-export default function CaseStudiesPage() {
+export default function WorkLogPage() {
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<string | null>(null)
   const caseStudiesList = useResizable({
     initialWidth: 600,
@@ -25,7 +25,11 @@ export default function CaseStudiesPage() {
         onMouseDown={caseStudiesList.handleMouseDown}
       />
       {selectedCaseStudy && (
-        <ContentPanel onClose={() => setSelectedCaseStudy(null)}>
+        <ContentPanel 
+          onClose={() => setSelectedCaseStudy(null)}
+          onMouseDown={caseStudiesList.handleMouseDown}
+          isDragging={caseStudiesList.isDragging}
+        >
           <CaseStudyReader slug={selectedCaseStudy} />
         </ContentPanel>
       )}

@@ -1,13 +1,47 @@
 /* Study Room Homepage Styles */
 
-.study-room {
+/* ============================================
+   SCENE WRAPPER & CONTAINER - Hybrid Scaling
+   Desktop: Fixed 1920×1080, scaled to fit viewport
+   Mobile: Natural cover behavior
+   ============================================ */
+
+.scene-wrapper {
   position: relative;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
   background: #1a1412;
-  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top for scaling */
+}
+
+/* Scene container - fixed design dimensions */
+.scene-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: none;
+}
+
+/* Desktop: Fixed 1920×1080 with scaling */
+@media (min-width: 769px) {
+  .scene-container {
+    width: 1920px;
+    height: 1080px;
+    transform: scale(calc(100vw / 1920));
+    transform-origin: top center;
+    will-change: transform;
+  }
+  
+  /* Background keeps cover but scaled container ensures consistent positioning */
+  .scene-container__image {
+    object-fit: cover;
+    object-position: center top; /* Align to top to match shelf positions */
+  }
 }
 
 /* ============================================
@@ -203,40 +237,38 @@
 }
 
 /* Background Image with Parallax */
-.study-room__bg {
+.scene-container__bg {
   position: absolute;
   inset: -15px; /* Extend beyond viewport to hide edges during parallax */
   z-index: 1;
   will-change: transform;
   backface-visibility: hidden; /* GPU acceleration */
   -webkit-backface-visibility: hidden;
+  /* Required for Next.js Image fill to work */
+  display: block;
 }
 
-.study-room__image {
+.scene-container__image {
   object-fit: cover;
   object-position: center;
   opacity: 0;
   transition: opacity 0.5s ease-out;
-}
-
-/* Both images stack on top of each other */
-.study-room__image--on,
-.study-room__image--off {
+  /* All images stack on top of each other */
   position: absolute;
   inset: 0;
 }
 
 /* Only show active image when loaded */
-.study-room__image.loaded.active {
+.scene-container__image.loaded.active {
   opacity: 1;
 }
 
 /* Inactive image stays hidden */
-.study-room__image.loaded:not(.active) {
+.scene-container__image.loaded:not(.active) {
   opacity: 0;
 }
 
-.study-room__warmth {
+.scene-container__warmth {
   position: absolute;
   inset: 0;
   background: radial-gradient(
@@ -249,21 +281,145 @@
   pointer-events: none;
 }
 
-.study-room__warmth.active {
+.scene-container__warmth.active {
   opacity: 1;
 }
 
+/* ============================================
+   SHELF ITEMS - Layered decorative objects
+   ============================================ */
+
+.scene-container__shelf-items {
+  position: absolute;
+  inset: 0;
+  z-index: 8; /* Above background images, below hotspots */
+  pointer-events: none;
+}
+
+/* Desktop: shelf items position relative to 1920×1080 container */
+@media (min-width: 769px) {
+  .scene-container__shelf-items {
+    /* Items positioned at 1920×1080 design dimensions */
+    /* The uniform scale transform handles all viewport sizes */
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+  }
+}
+
+.shelf-item {
+  position: absolute;
+  pointer-events: auto;
+  cursor: none;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.shelf-item.interactive {
+  cursor: none;
+}
+
+.shelf-item.interactive:hover {
+  transform: scale(1.05) translateY(-2px);
+  z-index: 9;
+}
+
+.shelf-item__image {
+  object-fit: contain;
+  transition: filter 0.5s ease-out;
+}
+
+/* Shelf item tooltip */
+.shelf-item__tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 0.5rem 0.75rem;
+  background: rgba(20, 16, 14, 0.92);
+  backdrop-filter: blur(10px);
+  color: #f5e6d3;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 200, 120, 0.15);
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Lighting mode filters for shelf items */
+/* Warm mode - golden shadows */
+.scene-container__shelf-items[data-lighting="warm"] .shelf-item__image {
+  filter: 
+    drop-shadow(2px 3px 6px rgba(60, 40, 20, 0.35))
+    drop-shadow(1px 1px 3px rgba(80, 50, 25, 0.2));
+}
+
+.scene-container__shelf-items[data-lighting="warm"] .shelf-item.interactive:hover .shelf-item__image {
+  filter: 
+    brightness(1.1)
+    drop-shadow(3px 4px 8px rgba(60, 40, 20, 0.4))
+    drop-shadow(1px 2px 4px rgba(80, 50, 25, 0.25));
+}
+
+/* Ambient mode - warm lamp glow, darker overall */
+.scene-container__shelf-items[data-lighting="ambient"] .shelf-item__image {
+  filter: 
+    brightness(0.7)
+    saturate(0.85)
+    sepia(0.2)
+    hue-rotate(-5deg)
+    contrast(1.1)
+    drop-shadow(1px 2px 4px rgba(30, 20, 15, 0.3));
+}
+
+.scene-container__shelf-items[data-lighting="ambient"] .shelf-item.interactive:hover .shelf-item__image {
+  filter: 
+    brightness(0.8)
+    saturate(0.9)
+    sepia(0.22)
+    hue-rotate(-5deg)
+    contrast(1.08)
+    drop-shadow(2px 3px 6px rgba(35, 22, 15, 0.35));
+}
+
+/* Natural mode - sunlight from right, left shelf in shadow */
+.scene-container__shelf-items[data-lighting="natural"] .shelf-item__image {
+  filter: 
+    brightness(0.65)
+    saturate(0.75)
+    contrast(1.08)
+    sepia(0.08)
+    drop-shadow(-3px 2px 8px rgba(30, 25, 20, 0.5))
+    drop-shadow(-1px 1px 3px rgba(20, 15, 10, 0.3));
+}
+
+.scene-container__shelf-items[data-lighting="natural"] .shelf-item.interactive:hover .shelf-item__image {
+  filter: 
+    brightness(0.75)
+    saturate(0.8)
+    contrast(1.06)
+    sepia(0.06)
+    drop-shadow(-4px 3px 10px rgba(30, 25, 20, 0.55))
+    drop-shadow(-2px 2px 4px rgba(20, 15, 10, 0.35));
+}
+
+/* Mobile: hide shelf items (they're too small to see/interact with) */
+@media (max-width: 768px) {
+  .scene-container__shelf-items {
+    display: none;
+  }
+}
 
 /* Hotspots Container */
-.study-room__hotspots {
+.scene-container__hotspots {
   position: absolute;
   inset: 0;
   z-index: 10;
-}
-
-/* Hide default cursor in study room */
-.study-room {
-  cursor: none;
 }
 
 /* Individual Hotspot - invisible clickable region */
@@ -290,7 +446,7 @@
    ============================================ */
 
 /* Floating dust motes in light areas - CSS only */
-.study-room__particles {
+.scene-container__particles {
   position: absolute;
   inset: 0;
   z-index: 5;
@@ -298,8 +454,8 @@
   overflow: hidden;
 }
 
-.study-room__particles::before,
-.study-room__particles::after {
+.scene-container__particles::before,
+.scene-container__particles::after {
   content: '';
   position: absolute;
   width: 200%;
@@ -325,7 +481,7 @@
   transition: opacity 1s ease;
 }
 
-.study-room__particles::after {
+.scene-container__particles::after {
   background-image: 
     radial-gradient(1px 1px at 8% 12%, rgba(255, 220, 180, 0.35) 50%, transparent 50%),
     radial-gradient(1.5px 1.5px at 22% 42%, rgba(255, 220, 180, 0.25) 50%, transparent 50%),
@@ -378,20 +534,20 @@
 /* Particles visible in all modes - intensity varies */
 
 /* Warm mode - most visible (warm light catches dust) */
-.study-room[data-lighting="warm"] .study-room__particles::before,
-.study-room[data-lighting="warm"] .study-room__particles::after {
+.scene-container[data-lighting="warm"] .scene-container__particles::before,
+.scene-container[data-lighting="warm"] .scene-container__particles::after {
   opacity: 0.7;
 }
 
 /* Ambient mode - medium visibility (night with lights) */
-.study-room[data-lighting="ambient"] .study-room__particles::before,
-.study-room[data-lighting="ambient"] .study-room__particles::after {
+.scene-container[data-lighting="ambient"] .scene-container__particles::before,
+.scene-container[data-lighting="ambient"] .scene-container__particles::after {
   opacity: 0.45;
 }
 
 /* Natural mode - subtle but present (daylight dust) */
-.study-room[data-lighting="natural"] .study-room__particles::before,
-.study-room[data-lighting="natural"] .study-room__particles::after {
+.scene-container[data-lighting="natural"] .scene-container__particles::before,
+.scene-container[data-lighting="natural"] .scene-container__particles::after {
   opacity: 0.25;
 }
 
@@ -490,6 +646,37 @@
 }
 
 /* ============================================
+   HOMEPAGE SIDEBAR OVERLAY (Desktop)
+   ============================================ */
+
+.homepage-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  background: rgba(10, 8, 6, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.homepage-sidebar-wrapper {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  z-index: 60;
+}
+
+/* Override NavSidebar positioning when used in overlay */
+.homepage-sidebar-wrapper .site-sidebar {
+  display: flex !important;
+  position: relative !important; /* Override fixed to allow wrapper animation */
+  left: auto !important;
+  top: auto !important;
+  height: 100%;
+  z-index: auto;
+}
+
+/* ============================================
    UNIFIED NAVIGATION BAR
    ============================================ */
 .main-nav {
@@ -551,12 +738,31 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  text-align: center;
+}
+
+.nav-brand__title {
   font-family: var(--font-serif);
   font-size: 2.25rem;
   font-weight: 400;
-  color: #f5e6d3;
+  color: #ffffff;
   letter-spacing: -1.9px;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  line-height: 1;
+}
+
+.nav-brand__tagline {
+  margin-top: 12px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  color: rgba(245, 230, 211, 0.5);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 /* Right: Lighting Controls */
@@ -928,12 +1134,25 @@
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
-  .study-room__hotspots {
+  /* Mobile: natural cover behavior, no scaling */
+  .scene-container {
+    width: 100%;
+    height: 100%;
+    transform: none;
+  }
+  
+  /* Mobile uses cover for immersive feel */
+  .scene-container__image {
+    object-fit: cover !important;
+    min-height: 100vh;
+  }
+
+  .scene-container__hotspots {
     display: none;
   }
 
   /* Show default cursor on mobile */
-  .study-room {
+  .scene-container {
     cursor: auto;
   }
 
@@ -991,6 +1210,9 @@
   /* Brand on mobile */
   .nav-brand {
     top: 1rem;
+  }
+
+  .nav-brand__title {
     font-size: 1.75rem;
     letter-spacing: -1.2px;
   }
@@ -1071,13 +1293,13 @@
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .study-room__bg,
-  .study-room__image,
-  .study-room__warmth,
-  .study-room__particles::before,
-  .study-room__particles::after,
-  .study-room__fairy-lights::before,
-  .study-room__fairy-lights::after,
+  .scene-container__bg,
+  .scene-container__image,
+  .scene-container__warmth,
+  .scene-container__particles::before,
+  .scene-container__particles::after,
+  .scene-container__fairy-lights::before,
+  .scene-container__fairy-lights::after,
   .hotspot,
   .custom-cursor,
   .nav-menu,
@@ -1090,19 +1312,19 @@
   }
   
   /* Disable parallax for reduced motion */
-  .study-room__bg {
+  .scene-container__bg {
     transform: none !important;
   }
   
   /* Disable dust particles for reduced motion */
-  .study-room__particles::before,
-  .study-room__particles::after {
+  .scene-container__particles::before,
+  .scene-container__particles::after {
     opacity: 0 !important;
   }
   
   /* Disable fairy lights twinkle for reduced motion */
-  .study-room__fairy-lights::before,
-  .study-room__fairy-lights::after {
+  .scene-container__fairy-lights::before,
+  .scene-container__fairy-lights::after {
     animation: none !important;
   }
 }
@@ -1138,3 +1360,388 @@
   }
 }
 
+/* ============================================
+   INTRO / ONBOARDING OVERLAY
+   ============================================ */
+
+/* ============================================
+   PRELOADER - Desktop Only
+   ============================================ */
+
+.preloader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 250;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #1F0405;
+  overflow: hidden;
+}
+
+/* Container for counter + copy - centered to page */
+.preloader__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Large centered counter - PP Kyoto ExtraLight */
+.preloader__counter {
+  font-family: "PP Kyoto", var(--font-serif), Georgia, serif;
+  font-size: clamp(10rem, 28vw, 24rem);
+  font-weight: 200;
+  color: #F5E6D3;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  user-select: none;
+  min-width: 3ch;
+  text-align: center;
+}
+
+/* Copy - 24px below counter, mono */
+.preloader__footer {
+  margin-top: 24px;
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  color: #F5E6D3;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Hide preloader on mobile - they get direct load */
+@media (max-width: 768px) {
+  .preloader {
+    display: none;
+  }
+}
+
+/* Dark overlay for CRT TV turn-on effect */
+.intro-darkness {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #1F0405;
+  pointer-events: none;
+}
+
+/* CRT reveal - horizontal line expansion */
+.intro-darkness.crt-reveal {
+  will-change: clip-path, opacity;
+}
+
+/* Bright scanline effect during CRT turn-on */
+.crt-scanline {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 3px;
+  transform: translateY(-50%);
+  z-index: 201;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.4) 20%,
+    rgba(255, 255, 255, 0.8) 50%,
+    rgba(255, 255, 255, 0.4) 80%,
+    transparent 100%
+  );
+  box-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.5),
+    0 0 40px rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+/* Hide shelf items during intro to prevent distracting pop-in */
+.scene-container.intro-active .scene-container__shelf-items {
+  opacity: 0;
+  transition: opacity 0.8s ease-out;
+}
+
+.scene-container.intro-complete .scene-container__shelf-items {
+  opacity: 1;
+  transition: opacity 1.5s ease-out 0.5s; /* Fade in after overlay dismisses */
+}
+
+/* Removed lamp glow - using TV flicker effect instead */
+
+/* Blur backdrop for welcome modal */
+.intro-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 201;
+  background: rgba(10, 8, 6, 0.3);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* Welcome modal - Frosted glass effect */
+.intro-modal {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 202;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 3rem 3.5rem;
+  width: 90%;
+  max-width: 480px;
+  margin: 0 !important;
+  /* Frosted glass effect - warm tinted translucent */
+  background: rgba(30, 24, 20, 0.65);
+  backdrop-filter: blur(24px) saturate(1.2);
+  -webkit-backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid rgba(255, 200, 120, 0.12);
+  border-radius: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.intro-modal__greeting {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: #f5e6d3;
+  letter-spacing: -0.02em;
+}
+
+.intro-modal__message {
+  margin: 0 0 1rem;
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  color: rgba(245, 230, 211, 0.75);
+  line-height: 1.65;
+}
+
+.intro-modal__hint {
+  margin: 0 0 2rem;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: rgba(245, 230, 211, 0.5);
+  font-style: italic;
+}
+
+/* Step Inside button - matches nav-lighting style (subtle border, context-aware) */
+.intro-modal__button {
+  position: relative;
+  padding: 0.75rem 1.5rem;
+  background: rgba(20, 16, 14, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 200, 120, 0.12); /* Matches nav-lighting border */
+  border-radius: 8px;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+/* Default warm glow (will be overridden by context) */
+.intro-modal__button {
+  color: #ffb850;
+  text-shadow: 0 0 16px rgba(255, 180, 80, 0.8);
+}
+
+/* Glow background effect */
+.intro-modal__button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  opacity: 1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(255, 180, 80, 0.12) 0%,
+    transparent 70%
+  );
+}
+
+/* Underline glow */
+.intro-modal__button::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  border-radius: 1px;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, #ffb850, transparent);
+  box-shadow: 0 0 12px #ffb850, 0 0 24px rgba(255, 180, 80, 0.5);
+}
+
+.intro-modal__button:hover {
+  background: rgba(30, 24, 20, 0.8);
+  border-color: rgba(255, 200, 120, 0.25);
+}
+
+.intro-modal__button:active {
+  transform: scale(0.98);
+}
+
+/* ---- AMBIENT MODE Button ---- */
+.intro-modal[data-lighting="ambient"] .intro-modal__button {
+  color: #a8c0ff;
+  text-shadow: 0 0 16px rgba(150, 180, 255, 0.8);
+}
+
+.intro-modal[data-lighting="ambient"] .intro-modal__button::before {
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(150, 180, 255, 0.12) 0%,
+    transparent 70%
+  );
+}
+
+.intro-modal[data-lighting="ambient"] .intro-modal__button::after {
+  background: linear-gradient(90deg, transparent, #a8c0ff, transparent);
+  box-shadow: 0 0 12px #a8c0ff, 0 0 24px rgba(150, 180, 255, 0.5);
+}
+
+/* ---- WARM MODE Button ---- */
+.intro-modal[data-lighting="warm"] .intro-modal__button {
+  color: #ffb850;
+  text-shadow: 0 0 16px rgba(255, 180, 80, 0.8);
+}
+
+.intro-modal[data-lighting="warm"] .intro-modal__button::before {
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(255, 180, 80, 0.12) 0%,
+    transparent 70%
+  );
+}
+
+.intro-modal[data-lighting="warm"] .intro-modal__button::after {
+  background: linear-gradient(90deg, transparent, #ffb850, transparent);
+  box-shadow: 0 0 12px #ffb850, 0 0 24px rgba(255, 180, 80, 0.5);
+}
+
+/* ---- NATURAL MODE Button ---- */
+.intro-modal[data-lighting="natural"] .intro-modal__button {
+  color: #f5e6d3;
+  text-shadow: 0 0 12px rgba(245, 230, 211, 0.5);
+}
+
+.intro-modal[data-lighting="natural"] .intro-modal__button::before {
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(245, 230, 211, 0.1) 0%,
+    transparent 70%
+  );
+}
+
+.intro-modal[data-lighting="natural"] .intro-modal__button::after {
+  background: linear-gradient(90deg, transparent, #f5e6d3, transparent);
+  box-shadow: 0 0 8px rgba(245, 230, 211, 0.4), 0 0 16px rgba(245, 230, 211, 0.2);
+}
+
+.intro-modal__countdown {
+  margin: 1.5rem 0 0;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: rgba(245, 230, 211, 0.35);
+  letter-spacing: 0.02em;
+}
+
+/* Mobile adjustments for intro */
+@media (max-width: 768px) {
+  .nav-brand__tagline {
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    margin-top: 8px;
+    max-width: 200px;
+  }
+
+  .intro-modal {
+    margin: 0 1rem;
+    padding: 2rem 1.5rem;
+    max-width: calc(100vw - 2rem);
+  }
+
+  .intro-modal__greeting {
+    font-size: 1.5rem;
+  }
+
+  .intro-modal__message {
+    font-size: 0.875rem;
+  }
+
+  .intro-modal__hint {
+    font-size: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-modal__button {
+    padding: 0.75rem 1.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .intro-modal__countdown {
+    font-size: 0.6875rem;
+  }
+}
+
+/* Hover to Explore hint - bottom of screen */
+.hover-explore-hint {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 50;
+  pointer-events: none;
+}
+
+.hover-explore-hint__text {
+  font-family: var(--font-mono, 'SF Mono', 'Monaco', 'Inconsolata', monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  animation: hover-explore-fade 2.5s ease-in-out infinite;
+}
+
+@keyframes hover-explore-fade {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .hover-explore-hint {
+    display: none;
+  }
+}

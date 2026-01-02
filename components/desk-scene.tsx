@@ -169,6 +169,7 @@ export function DeskScene() {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setFocusedDoc(null)
+        setMenuOpen(false) // Also close sidebar
       }
     }
     document.addEventListener("keydown", handleEscape)
@@ -177,7 +178,7 @@ export function DeskScene() {
 
   // Lock body scroll when doc is focused
   useEffect(() => {
-    if (focusedDoc) {
+    if (focusedDoc || menuOpen) {
       document.body.style.overflow = "hidden"
     } else {
       document.body.style.overflow = ""
@@ -185,7 +186,7 @@ export function DeskScene() {
     return () => {
       document.body.style.overflow = ""
     }
-  }, [focusedDoc])
+  }, [focusedDoc, menuOpen])
 
   const handleDocClick = useCallback((doc: DeskDocument) => {
     if (doc.clickable) {
@@ -565,8 +566,26 @@ export function DeskScene() {
       {/* Lighting Controls - Top Right (matches homepage) */}
       <nav className="desk-scene__nav" aria-label="Lighting controls">
         <div className="nav-lighting" role="group" aria-label="Lighting mode">
+          {/* Mobile Hamburger Menu - first item like homepage */}
+          <button
+            className="nav-hamburger"
+            onClick={(e) => {
+              e.stopPropagation()
+              setMenuOpen(!menuOpen)
+            }}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+          >
+            <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
+              <path d="M1 1h18M1 7h18M1 13h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+            </svg>
+          </button>
+
+          {/* Divider after hamburger */}
+          <div className="nav-lighting__divider nav-hamburger-divider" aria-hidden="true" />
+
           {/* Ambient (Moon) */}
-          <label className={`lighting-tab ${mode === "ambient" ? "active" : ""}`}>
+          <label className={`lighting-tab ${mode === "ambient" ? "active" : ""}`} data-mode="ambient">
             <input
               type="radio"
               name="lighting"
@@ -583,7 +602,7 @@ export function DeskScene() {
           </label>
 
           {/* Warm (Sun) */}
-          <label className={`lighting-tab ${mode === "warm" ? "active" : ""}`}>
+          <label className={`lighting-tab ${mode === "warm" ? "active" : ""}`} data-mode="warm">
             <input
               type="radio"
               name="lighting"
@@ -608,7 +627,7 @@ export function DeskScene() {
           </label>
 
           {/* Natural (Sun dim - no rays) */}
-          <label className={`lighting-tab ${mode === "natural" ? "active" : ""}`}>
+          <label className={`lighting-tab ${mode === "natural" ? "active" : ""}`} data-mode="natural">
             <input
               type="radio"
               name="lighting"
@@ -678,23 +697,13 @@ export function DeskScene() {
               </g>
             </svg>
           </button>
-
-          {/* Mobile Hamburger Menu */}
-          <button
-            className="nav-hamburger"
-            onClick={(e) => {
-              e.stopPropagation()
-              setMenuOpen(!menuOpen)
-            }}
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-          >
-            <svg width="20" height="14" viewBox="0 0 20 14" fill="none">
-              <path d="M1 1h18M1 7h18M1 13h18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-          </button>
         </div>
       </nav>
+
+      {/* Brand for mobile (matches homepage) */}
+      <div className="desk-scene__brand">
+        <span>Atelier ÌníOlúwa</span>
+      </div>
 
       {/* Mobile Navigation Drawer */}
       <MobileNavDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />

@@ -106,10 +106,10 @@ export function AboutSection() {
             LinkedIn
           </a>
           <Link
-            href="/speaking"
+            href="/events"
             className="text-foreground opacity-70 underline decoration-dotted decoration-1 underline-offset-2 transition-all hover:opacity-100 hover:decoration-solid"
           >
-            Speaking
+            Events
           </Link>
           <a
             href="mailto:ini.faithabiodun@gmail.com"

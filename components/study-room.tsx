@@ -6,7 +6,7 @@ import Link from "next/link"
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion"
 import { useLighting } from "@/lib/lighting-context"
 import { useMusic } from "@/lib/music-context"
-import { MobileNavDrawer } from "./nav-sidebar"
+import { NavSidebar, MobileNavDrawer } from "./nav-sidebar"
 
 
 // Hotspot regions as percentages - larger areas with z-index layering
@@ -21,9 +21,9 @@ const hotspots = [
   },
   {
     id: "bookshelf-left-top",
-    href: "/case-studies",
-    label: "Case Studies",
-    // Top two rows of left shelf → links to case studies
+    href: "/work-log",
+    label: "Work Log",
+    // Top two rows of left shelf → links to work log
     bounds: { left: 0, top: 5, width: 28, height: 35 },
     zIndex: 12,
   },
@@ -37,9 +37,9 @@ const hotspots = [
   },
   {
     id: "bookshelf-right-top",
-    href: "/bookshelf",
-    label: "Bookshelf",
-    // Top two rows of right shelf → links to bookshelf
+    href: "/library",
+    label: "Library",
+    // Top two rows of right shelf → links to library
     bounds: { left: 72, top: 5, width: 28, height: 35 },
     zIndex: 12,
   },
@@ -48,10 +48,10 @@ const hotspots = [
 
 const navLinks = [
   { href: "/about", label: "About" },
-  { href: "/case-studies", label: "Work" },
-  { href: "/speaking", label: "Speaking" },
-  { href: "/bookshelf", label: "Bookshelf" },
-  { href: "/notes", label: "Notes" },
+  { href: "/work-log", label: "Work Log" },
+  { href: "/events", label: "Events" },
+  { href: "/library", label: "Library" },
+  { href: "/essays", label: "Essays" },
   { href: "/gallery", label: "Gallery" },
 ]
 
@@ -69,6 +69,20 @@ const images: Record<SceneKey, string> = {
   dayOff: "/study/day-light-off.jpg",
   nightOn: "/study/night-light-on.jpg",
 }
+
+// Shelf items - layered on top of the background
+// Positions calculated as percentages of 3765×2100 background
+interface ShelfItem {
+  id: string
+  image: string
+  position: { left: number; top: number; width: number; height: number }
+  label: string
+  interactive?: boolean // Can be clicked/hovered
+  href?: string // Link destination if clickable
+  easterEgg?: string // Tooltip message for easter eggs
+}
+
+const shelfItems: ShelfItem[] = []
 
 // Parallax settings
 const PARALLAX_INTENSITY = 8 // Max pixels of movement
@@ -101,13 +115,59 @@ export function StudyRoom() {
   const isDarkMode = mode === "ambient"
   
   const [isLoaded, setIsLoaded] = useState(false)
+  
+  // Fallback: Set isLoaded after a short delay if onLoad doesn't fire (cached images)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (!isLoaded) {
+        setIsLoaded(true)
+      }
+    }, 100) // Short delay to allow onLoad to fire first
+    return () => clearTimeout(timer)
+  }, [isLoaded])
+  
   const [hoveredSpot, setHoveredSpot] = useState<string | null>(null)
+  const [hoveredShelfItem, setHoveredShelfItem] = useState<ShelfItem | null>(null)
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
   const [showCursor, setShowCursor] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [isTouchDevice, setIsTouchDevice] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+  const [isDesktopChecked, setIsDesktopChecked] = useState(false)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  
+  // Onboarding state - CRT TV Turn-On: preloader → reveal → ready
+  // Start with null to prevent flash - don't render intro until visitor check completes
+  const [showIntro, setShowIntro] = useState<boolean | null>(null)
+  const [introPhase, setIntroPhase] = useState<'preloader' | 'dark' | 'reveal' | 'ready'>('ready')
+  const [countdown, setCountdown] = useState(10)
+  const [hasCheckedVisitor, setHasCheckedVisitor] = useState(false)
+  
+  // Preloader state (desktop only) - using motion value for smooth animation
+  const preloaderMotionValue = useMotionValue(0)
+  // Spring config tuned for ~3s animation to 100 (Eva Sánchez speed)
+  const preloaderSpring = useSpring(preloaderMotionValue, { 
+    stiffness: 12,  // Moderate stiffness = faster approach
+    damping: 18,    // Smooth deceleration
+    mass: 1.2       // Balanced momentum
+  })
+  const [preloaderProgress, setPreloaderProgress] = useState(0)
+  const [preloaderTransitioning, setPreloaderTransitioning] = useState(false)
+  const [preloaderComplete, setPreloaderComplete] = useState(false)
+  
+  // Subscribe to spring changes to update displayed value
+  useEffect(() => {
+    const unsubscribe = preloaderSpring.on("change", (latest) => {
+      setPreloaderProgress(Math.round(latest))
+      
+      // Mark complete when we hit 100
+      if (latest >= 99.5 && !preloaderComplete) {
+        setPreloaderComplete(true)
+      }
+    })
+    return () => unsubscribe()
+  }, [preloaderSpring, preloaderComplete])
   
   // Framer Motion values for parallax
   const mouseX = useMotionValue(0)
@@ -144,10 +204,115 @@ export function StudyRoom() {
     return () => document.removeEventListener('keydown', handleEscape)
   }, [])
 
-  // Detect touch device and reduced motion preference
+  // Detect touch device, desktop, and reduced motion preference
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window)
     setPrefersReducedMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches)
+    
+    // Check if desktop (768px breakpoint)
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768)
+    checkDesktop()
+    setIsDesktopChecked(true)
+    window.addEventListener('resize', checkDesktop)
+    return () => window.removeEventListener('resize', checkDesktop)
+  }, [])
+
+  // Check if first-time visitor and run intro sequence
+  useEffect(() => {
+    // Wait until we've determined if this is desktop
+    if (!isDesktopChecked) return
+    
+    // Debug mode: ?debug=preloader forces preloader to show
+    const urlParams = new URLSearchParams(window.location.search)
+    const debugPreloader = urlParams.get('debug') === 'preloader'
+    
+    const hasVisited = localStorage.getItem('atelier-visited')
+    
+    if (hasVisited && !debugPreloader) {
+      // Returning visitor - skip intro entirely (showIntro stays false, phase stays ready)
+      setShowIntro(false)
+    } else {
+      // First-time visitor (or debug mode) - show intro (start with preloader on desktop)
+      setIntroPhase(isDesktop ? 'preloader' : 'dark')
+      setShowIntro(true)
+    }
+    setHasCheckedVisitor(true)
+  }, [isDesktop, isDesktopChecked])
+
+  // Preloader animation - set target to 100, spring physics handles the smooth animation
+  useEffect(() => {
+    if (!showIntro || !isDesktop || introPhase !== 'preloader') return
+    
+    // Reset and set target - spring physics will smoothly animate to 100
+    preloaderMotionValue.set(0)
+    
+    // Small delay then set target to 100 - spring handles the rest
+    const startTimer = setTimeout(() => {
+      preloaderMotionValue.set(100)
+    }, 100)
+
+    return () => clearTimeout(startTimer)
+  }, [showIntro, isDesktop, introPhase, preloaderMotionValue])
+  
+  // Handle transition when preloader completes - CRT TV turn-on effect
+  useEffect(() => {
+    if (!preloaderComplete || introPhase !== 'preloader') return
+    
+    // Brief hold at 100, then play TV sound and start turn-on animation
+    const transitionTimer = setTimeout(() => {
+      // Play TV turn-on sound
+      const tvSound = new Audio('/study/tvon-108126.mp3')
+      tvSound.volume = 0.5
+      tvSound.play().catch(() => {}) // Ignore if blocked by autoplay policy
+      
+      // Go to TV turn-on phase (collapse then expand)
+      setIntroPhase('reveal')
+    }, 400)
+    
+    return () => clearTimeout(transitionTimer)
+  }, [preloaderComplete, introPhase])
+
+  // Intro animation sequence - CRT TV turn-on: reveal → ready
+  // Desktop: preloader → reveal → ready
+  // Mobile: dark → reveal → ready
+  useEffect(() => {
+    if (!showIntro) return
+    
+    // From reveal → ready (after CRT collapse animation completes)
+    if (introPhase === 'reveal') {
+      const timer = setTimeout(() => setIntroPhase('ready'), 700)
+      return () => clearTimeout(timer)
+    }
+    
+    // Mobile: dark → reveal (after 800ms)
+    if (introPhase === 'dark') {
+      const timer = setTimeout(() => setIntroPhase('reveal'), 800)
+      return () => clearTimeout(timer)
+    }
+  }, [showIntro, introPhase])
+
+  // Countdown timer for auto-dismiss
+  useEffect(() => {
+    if (!showIntro || introPhase !== 'ready') return
+
+    const countdownInterval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(countdownInterval)
+          handleDismissIntro()
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(countdownInterval)
+  }, [showIntro, introPhase])
+
+  // Dismiss intro and mark as visited
+  const handleDismissIntro = useCallback(() => {
+    setShowIntro(false)
+    localStorage.setItem('atelier-visited', 'true')
   }, [])
 
 
@@ -187,11 +352,47 @@ export function StudyRoom() {
 
   return (
     <>
-      {/* Navigation Drawer - Same as rest of site */}
-      <MobileNavDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      {/* Navigation Sidebar/Drawer - Desktop uses NavSidebar, Mobile uses MobileNavDrawer */}
+      {isDesktop ? (
+        // Desktop: NavSidebar in overlay
+        <AnimatePresence>
+          {menuOpen && (
+            <>
+              {/* Backdrop */}
+          <motion.div
+                className="homepage-sidebar-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setMenuOpen(false)}
+              />
+              {/* NavSidebar */}
+              <motion.div
+                className="homepage-sidebar-wrapper"
+                initial={{ x: -192 }}
+                animate={{ x: 0 }}
+                exit={{ x: -192 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <NavSidebar
+                  width={192}
+                  isDragging={false}
+                  onMouseDown={() => {}} // No resize on homepage overlay
+          />
+        </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      ) : (
+        // Mobile: MobileNavDrawer
+        <MobileNavDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      )}
 
-      <div 
-        className="study-room"
+      {/* Scene Wrapper - handles overflow and centering */}
+      <div className="scene-wrapper">
+        {/* Scene Container - fixed 1920×1080, scales on desktop */}
+        <div 
+          className={`scene-container ${showIntro ? 'intro-active' : 'intro-complete'}`}
         data-lighting={lightingMode}
         onMouseMove={(e) => {
           if (containerRef.current) {
@@ -212,7 +413,7 @@ export function StudyRoom() {
       >
         {/* Background images with parallax - all 3 always rendered, opacity toggled via CSS */}
         <motion.div 
-          className="study-room__bg"
+            className="scene-container__bg"
           style={{ 
             x: isTouchDevice || prefersReducedMotion ? 0 : bgX, 
             y: isTouchDevice || prefersReducedMotion ? 0 : bgY,
@@ -228,23 +429,60 @@ export function StudyRoom() {
               priority
               quality={95}
               onLoad={() => setIsLoaded(true)}
-              className={`study-room__image ${isLoaded ? "loaded" : ""} ${activeScene === key ? "active" : ""}`}
+                className={`scene-container__image ${isLoaded ? "loaded" : ""} ${activeScene === key ? "active" : ""}`}
             />
           ))}
           
           {/* Warm overlay when lights are on */}
           <div 
-            className={`study-room__warmth ${lightsOn ? "active" : ""}`}
+              className={`scene-container__warmth ${lightsOn ? "active" : ""}`}
             aria-hidden="true"
           />
           
           
           {/* Ambient dust particles - visible in Warm/Ambient modes */}
-          <div className="study-room__particles" aria-hidden="true" />
+            <div className="scene-container__particles" aria-hidden="true" />
+            
+            {/* Shelf Items - INSIDE parallax div so they move with background */}
+            <div className="scene-container__shelf-items" data-lighting={mode}>
+              {shelfItems.map((item) => (
+                <div
+                  key={item.id}
+                  className={`shelf-item ${item.interactive ? "interactive" : ""} ${hoveredShelfItem?.id === item.id ? "hovered" : ""}`}
+                  style={{
+                    left: `${item.position.left}%`,
+                    top: `${item.position.top}%`,
+                    width: `${item.position.width}%`,
+                    height: `${item.position.height}%`,
+                  }}
+                  onMouseEnter={() => item.interactive && setHoveredShelfItem(item)}
+                  onMouseLeave={() => setHoveredShelfItem(null)}
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.label}
+                    fill
+                    sizes={`${item.position.width}vw`}
+                    className="shelf-item__image"
+                  />
+                  {/* Easter egg tooltip */}
+                  {item.interactive && item.easterEgg && hoveredShelfItem?.id === item.id && (
+                    <motion.div
+                      className="shelf-item__tooltip"
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 5 }}
+                    >
+                      {item.easterEgg}
+                    </motion.div>
+                  )}
+                </div>
+              ))}
+            </div>
         </motion.div>
 
       {/* Interactive hotspots - cursor-following pills */}
-      <div className="study-room__hotspots">
+          <div className="scene-container__hotspots">
         {hotspots.map((spot) => (
           <Link
             key={spot.id}
@@ -295,15 +533,154 @@ export function StudyRoom() {
         </AnimatePresence>
       </div>
 
+        </div>
       </div>
 
       {/* Brand - separate for mobile positioning */}
-      <div className="nav-brand">
-        <span>Atelier ÌníOlúwa</span>
-      </div>
+      <motion.div 
+        className="nav-brand"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: introPhase === 'ready' || !showIntro ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <span className="nav-brand__title">Atelier ÌníOlúwa</span>
+      </motion.div>
+
+      {/* Hover to Explore hint - bottom of screen */}
+      <motion.div 
+        className="hover-explore-hint"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: introPhase === 'ready' || !showIntro ? 1 : 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      >
+        <span className="hover-explore-hint__text">[HOVER TO EXPLORE]</span>
+      </motion.div>
+
+      {/* Preloader - Desktop Only with CRT TV turn-on exit */}
+      <AnimatePresence>
+        {showIntro && introPhase === 'preloader' && isDesktop && (
+          <motion.div
+            className="preloader"
+            initial={{ scaleY: 1, opacity: 1 }}
+            exit={{ 
+              scaleY: 0,
+              opacity: 1,
+              transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
+            }}
+            style={{ originY: 0.5 }}
+          >
+            <div className="preloader__content">
+              {/* Large centered counter */}
+              <div className="preloader__counter">
+                {preloaderProgress.toString().padStart(3, '0')}
+              </div>
+              
+              {/* Copy - 24px below counter */}
+              <div className="preloader__footer">
+                YOU ARE ENTERING THE DESIGN WORKSHOP & ARCHIVE OF ÌNÍOLÚWA ABÍÓDÚN
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* CRT TV Turn-On Effect - darkness collapses to line, revealing site from center */}
+      <AnimatePresence>
+        {showIntro && introPhase !== 'ready' && introPhase !== 'preloader' && (
+          <>
+            {/* Dark overlay that collapses */}
+            <motion.div
+              className="intro-darkness crt-reveal"
+              initial={{ 
+                clipPath: 'inset(0% 0% 0% 0%)',
+                opacity: 1 
+              }}
+              animate={{ 
+                // CRT turn-on: darkness collapses to horizontal line from center
+                clipPath: introPhase === 'dark' 
+                  ? 'inset(0% 0% 0% 0%)' // Full darkness
+                  : 'inset(49.5% 0% 49.5% 0%)', // Collapse to thin horizontal line
+                opacity: 1
+              }}
+              exit={{ 
+                opacity: 0,
+                transition: { duration: 0.15, delay: 0.05 }
+              }}
+              transition={{ 
+                clipPath: {
+                  duration: 0.45,
+                  ease: [0.16, 1, 0.3, 1] // Smooth ease-out
+                }
+              }}
+            />
+            {/* Bright scanline that appears during reveal */}
+            {introPhase === 'reveal' && (
+              <motion.div
+                className="crt-scanline"
+                initial={{ opacity: 0, scaleX: 0.3 }}
+                animate={{ opacity: [0, 1, 1, 0], scaleX: [0.3, 1, 1, 1] }}
+                transition={{ 
+                  duration: 0.5,
+                  times: [0, 0.1, 0.7, 1],
+                  ease: "easeOut"
+                }}
+              />
+            )}
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Welcome Overlay */}
+      <AnimatePresence>
+        {showIntro && introPhase === 'ready' && (
+          <>
+            {/* Blur backdrop */}
+            <motion.div
+              className="intro-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            />
+            
+            {/* Welcome modal - using opacity only to not conflict with CSS centering */}
+            <motion.div
+              className="intro-modal"
+              data-lighting={lightingMode}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <p className="intro-modal__greeting">Hi, I am ÌníOlúwa.</p>
+              <p className="intro-modal__message">
+                Welcome to my active workshop and growing archive of work, thought, and craft.
+              </p>
+              <p className="intro-modal__hint">Hover on objects to explore.</p>
+              
+              <button 
+                className="intro-modal__button"
+                onClick={handleDismissIntro}
+              >
+                Step Inside
+            </button>
+              
+              <p className="intro-modal__countdown">
+                This message disappears in {countdown}...
+              </p>
+          </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Unified Navigation Bar - Outside study-room for proper z-index stacking */}
-      <nav className="main-nav" aria-label="Main navigation">
+      <motion.nav 
+        className="main-nav" 
+        aria-label="Main navigation"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: introPhase === 'ready' || !showIntro ? 1 : 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {/* Left: Index */}
         <button 
           className={`nav-menu ${menuOpen ? "open" : ""}`}
@@ -471,7 +848,7 @@ export function StudyRoom() {
           </button>
 
         </div>
-      </nav>
+      </motion.nav>
     </>
   )
 }

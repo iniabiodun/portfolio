@@ -7,7 +7,7 @@ import { BookshelfList } from "@/components/bookshelf-list"
 import { BookReader } from "@/components/book-reader"
 import { ContentPanel } from "@/components/content-panel"
 
-export default function BookshelfPage() {
+export default function LibraryPage() {
   const [selectedBook, setSelectedBook] = useState<string | null>(null)
   const bookList = useResizable({
     initialWidth: 600,
@@ -25,7 +25,11 @@ export default function BookshelfPage() {
         onMouseDown={bookList.handleMouseDown}
       />
       {selectedBook && (
-        <ContentPanel onClose={() => setSelectedBook(null)}>
+        <ContentPanel 
+          onClose={() => setSelectedBook(null)}
+          onMouseDown={bookList.handleMouseDown}
+          isDragging={bookList.isDragging}
+        >
           <BookReader slug={selectedBook} />
         </ContentPanel>
       )}

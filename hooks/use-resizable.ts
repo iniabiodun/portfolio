@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 
 interface UseResizableOptions {
   initialWidth: number
@@ -10,6 +10,7 @@ interface UseResizableOptions {
 export function useResizable({ initialWidth, minWidth, maxWidth, offsetX = 0 }: UseResizableOptions) {
   const [width, setWidth] = useState(initialWidth)
   const [isDragging, setIsDragging] = useState(false)
+  const rafRef = useRef<number | null>(null)
 
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -19,12 +20,22 @@ export function useResizable({ initialWidth, minWidth, maxWidth, offsetX = 0 }: 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
-        const newWidth = Math.max(minWidth, Math.min(maxWidth, e.clientX - offsetX))
-        setWidth(newWidth)
+        // Cancel any pending animation frame
+        if (rafRef.current) {
+          cancelAnimationFrame(rafRef.current)
+        }
+        // Schedule width update on next animation frame for smoother performance
+        rafRef.current = requestAnimationFrame(() => {
+          const newWidth = Math.max(minWidth, Math.min(maxWidth, e.clientX - offsetX))
+          setWidth(newWidth)
+        })
       }
     }
 
     const handleMouseUp = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
       setIsDragging(false)
     }
 
@@ -40,6 +51,9 @@ export function useResizable({ initialWidth, minWidth, maxWidth, offsetX = 0 }: 
       document.removeEventListener("mouseup", handleMouseUp)
       document.body.style.cursor = ""
       document.body.style.userSelect = ""
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current)
+      }
     }
   }, [isDragging, minWidth, maxWidth, offsetX])
 

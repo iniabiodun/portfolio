@@ -13,7 +13,7 @@ import { useLighting } from "@/lib/lighting-context"
 let hasUnfurledDesktop = false
 let hasUnfurledMobile = false
 
-type Tab = "home" | "about" | "case-studies" | "speaking" | "bookshelf" | "notes" | "gallery"
+type Tab = "home" | "about" | "work-log" | "library" | "events" | "essays" | "gallery"
 
 interface NavSidebarProps {
   width: number
@@ -24,20 +24,20 @@ interface NavSidebarProps {
 const tabs: { id: Tab; label: string; href: string }[] = [
   { id: "home", label: "Home", href: "/" },
   { id: "about", label: "About", href: "/about" },
-  { id: "case-studies", label: "Case Studies", href: "/case-studies" },
-  { id: "speaking", label: "Speaking", href: "/speaking" },
-  { id: "bookshelf", label: "Bookshelf", href: "/bookshelf" },
-  { id: "notes", label: "Notes", href: "/notes" },
+  { id: "work-log", label: "Work Log", href: "/work-log" },
+  { id: "library", label: "Library", href: "/library" },
+  { id: "events", label: "Events", href: "/events" },
+  { id: "essays", label: "Essays", href: "/essays" },
   { id: "gallery", label: "Gallery", href: "/gallery" },
 ]
 
 function getActiveTab(pathname: string): Tab {
   if (pathname === "/") return "home"
   if (pathname.startsWith("/about")) return "about"
-  if (pathname.startsWith("/case-studies")) return "case-studies"
-  if (pathname.startsWith("/speaking")) return "speaking"
-  if (pathname.startsWith("/bookshelf")) return "bookshelf"
-  if (pathname.startsWith("/notes")) return "notes"
+  if (pathname.startsWith("/work-log")) return "work-log"
+  if (pathname.startsWith("/library")) return "library"
+  if (pathname.startsWith("/events")) return "events"
+  if (pathname.startsWith("/essays")) return "essays"
   if (pathname.startsWith("/gallery")) return "gallery"
   return "home"
 }
@@ -132,7 +132,9 @@ export function NavSidebar({ width, isDragging, onMouseDown }: NavSidebarProps) 
   )
 }
 
-// Mobile drawer component
+// Sidebar drawer component - works on both desktop and mobile
+// On desktop: matches NavSidebar styling with fixed width
+// On mobile: slides in from left with narrower width
 export function MobileNavDrawer({ 
   isOpen, 
   onClose 
@@ -144,20 +146,6 @@ export function MobileNavDrawer({
   const activeTab = getActiveTab(pathname)
   const { mode } = useLighting()
   const isDarkMode = mode === "ambient"
-  
-  // Track if this is the first time the drawer opens for the unfurl animation
-  const [hasOpenedOnce, setHasOpenedOnce] = useState(hasUnfurledMobile)
-  
-  useEffect(() => {
-    // When drawer opens for the first time, mark it as unfurled
-    if (isOpen && !hasUnfurledMobile) {
-      const timer = setTimeout(() => {
-        hasUnfurledMobile = true
-        setHasOpenedOnce(true)
-      }, 500) // After animation completes
-      return () => clearTimeout(timer)
-    }
-  }, [isOpen])
 
   return (
     <>
@@ -171,57 +159,55 @@ export function MobileNavDrawer({
         onClick={onClose}
       />
       
-      {/* Drawer */}
+      {/* Drawer - slides from left */}
       <div
         className={cn(
-          "site-sidebar-mobile fixed left-0 top-0 h-screen w-[75vw] max-w-[300px] z-[70]",
+          "site-sidebar-drawer fixed left-0 top-0 h-screen z-[70]",
+          "w-[60vw] max-w-[240px]",
           "transform transition-transform duration-300 ease-out",
           "shadow-xl",
           isDarkMode ? "site-sidebar-mobile--dark" : "site-sidebar-mobile--light",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        {/* Ribbon Bookmark with sway animation */}
-        <div className="absolute top-0 left-6 w-6 h-32 z-10" style={{ perspective: '800px' }}>
+        {/* X close button - top left */}
+        <button
+          onClick={onClose}
+          className="mobile-drawer__close"
+          aria-label="Close menu"
+        >
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </button>
+
+        {/* Bookmark ribbon - top right of drawer */}
+        <div className="mobile-drawer__bookmark" style={{ perspective: '400px' }}>
           <motion.div
-            initial={hasOpenedOnce ? { rotateX: 0, opacity: 1 } : { rotateX: -90, opacity: 0 }}
-            animate={isOpen ? { rotateX: 0, opacity: 1 } : (hasOpenedOnce ? { rotateX: 0, opacity: 1 } : { rotateX: -90, opacity: 0 })}
-            transition={!hasOpenedOnce ? { 
-              type: "spring", 
-              stiffness: 120, 
-              damping: 14,
-              delay: isOpen ? 0.15 : 0 
-            } : { duration: 0 }}
-            style={{ transformOrigin: "top center", transformStyle: "preserve-3d" }}
+            animate={{ rotateZ: [0, 0.5, 0, -0.5, 0] }}
+            transition={{ 
+              duration: 4, 
+              repeat: Infinity, 
+              ease: "easeInOut"
+            }}
+            style={{ transformOrigin: "top center" }}
             className="w-full h-full"
           >
-            {/* Inner div with pendulum sway animation */}
-            <motion.div
-              animate={isOpen ? { rotateZ: [0, 1, 0, -1, 0] } : { rotateZ: 0 }}
-              transition={{ 
-                duration: 4, 
-                repeat: Infinity, 
-                ease: "easeInOut",
-                delay: !hasOpenedOnce ? 0.8 : 0
+            <div
+              className="w-full h-full relative overflow-hidden"
+              style={{
+                backgroundImage: 'url("/3. Gallery/Bookmark-Material.jpeg")',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 10px), 0 100%)',
+                boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
               }}
-              style={{ transformOrigin: "top center" }}
-              className="w-full h-full"
-            >
-              <div
-                className="w-full h-full relative overflow-hidden"
-                style={{
-                  backgroundImage: 'url("/3. Gallery/Bookmark-Material.jpeg")',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  clipPath: 'polygon(0 0, 100% 0, 100% 100%, 50% calc(100% - 10px), 0 100%)',
-                  boxShadow: '2px 2px 6px rgba(0,0,0,0.3)',
-                }}
-              />
-            </motion.div>
+            />
           </motion.div>
         </div>
 
-        <nav className="site-sidebar__nav site-sidebar__nav--mobile">
+        {/* Navigation links */}
+        <nav className="site-sidebar__nav site-sidebar-drawer__nav">
           {tabs.map((tab) => (
             <Link
               key={tab.id}

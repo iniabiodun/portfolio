@@ -28,13 +28,13 @@ export function SpeakingList({ selectedSpeaking, onSelectSpeaking, width, isDrag
     <div
       style={{ width: `${width}px` }}
       className={cn(
-        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full",
+        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full max-md:pt-20",
         selectedSpeaking && "max-md:hidden",
       )}
     >
       <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
         <div>
-          <h1 className="text-4xl font-serif mb-8">Speaking</h1>
+          <h1 className="text-4xl font-serif mb-8">Events</h1>
           <p className="text-muted-foreground mb-8">Talks, workshops, and presentations.</p>
           <div className="space-y-0">
             {sortedSpeaking.map((item, index) => (
@@ -48,11 +48,11 @@ export function SpeakingList({ selectedSpeaking, onSelectSpeaking, width, isDrag
                       src="/2. Bookshelf/pen-nib.svg" 
                       alt="" 
                       className={cn(
-                        "w-3 h-3 transition-opacity duration-200 flex-shrink-0 mt-[0.35rem]",
+                        "pen-nib-icon w-4 h-4 transition-opacity duration-200 flex-shrink-0 mt-[0.2rem]",
                         selectedSpeaking === item.slug ? "opacity-100" : "opacity-0 group-hover:opacity-50"
                       )}
                     />
-                    <h2 className="text-base font-medium text-foreground">{item.title}</h2>
+                    <h2 className="text-lg font-medium text-foreground">{item.title}</h2>
                   </div>
                   <p className="text-xs text-muted-foreground font-sans uppercase tracking-widest pl-5">{item.date}</p>
                 </button>
@@ -67,7 +67,7 @@ export function SpeakingList({ selectedSpeaking, onSelectSpeaking, width, isDrag
         <Footer />
       </div>
 
-      {selectedSpeaking && <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />}
+      <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />
     </div>
   )
 }

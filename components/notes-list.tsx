@@ -28,14 +28,14 @@ export function NotesList({ selectedNote, onSelectNote, width, isDragging, onMou
     <div
       style={{ width: `${width}px` }}
       className={cn(
-        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full",
+        "relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:!w-full max-md:pt-20",
         selectedNote && "max-md:hidden",
       )}
     >
       <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
         <div>
-          <h1 className="text-4xl font-serif mb-8">Notes</h1>
-          <p className="text-muted-foreground mb-8">Thoughts, essays and insights.</p>
+          <h1 className="text-4xl font-serif mb-8">Essays</h1>
+          <p className="text-muted-foreground mb-8">Thoughts, notes and insights.</p>
           <div className="space-y-0">
             {sortedNotes.map((note, index) => (
               <div key={note.slug} className="relative">
@@ -48,11 +48,11 @@ export function NotesList({ selectedNote, onSelectNote, width, isDragging, onMou
                       src="/2. Bookshelf/pen-nib.svg" 
                       alt="" 
                       className={cn(
-                        "w-3 h-3 transition-opacity duration-200 flex-shrink-0 mt-[0.35rem]",
+                        "pen-nib-icon w-4 h-4 transition-opacity duration-200 flex-shrink-0 mt-[0.2rem]",
                         selectedNote === note.slug ? "opacity-100" : "opacity-0 group-hover:opacity-50"
                       )}
                     />
-                    <h2 className="text-base font-medium text-foreground">{note.title}</h2>
+                    <h2 className="text-lg font-medium text-foreground">{note.title}</h2>
                   </div>
                   <p className="text-xs text-muted-foreground font-sans uppercase tracking-widest pl-5">{note.date}</p>
                 </button>
@@ -67,7 +67,7 @@ export function NotesList({ selectedNote, onSelectNote, width, isDragging, onMou
         <Footer />
       </div>
 
-      {selectedNote && <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />}
+      <ResizeHandle onMouseDown={onMouseDown} isDragging={isDragging} />
     </div>
   )
 }

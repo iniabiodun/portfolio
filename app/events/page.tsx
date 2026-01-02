@@ -7,7 +7,7 @@ import { SpeakingList } from "@/components/speaking-list"
 import { SpeakingReader } from "@/components/speaking-reader"
 import { ContentPanel } from "@/components/content-panel"
 
-export default function SpeakingPage() {
+export default function EventsPage() {
   const [selectedSpeaking, setSelectedSpeaking] = useState<string | null>(null)
   const speakingList = useResizable({
     initialWidth: 600,
@@ -25,7 +25,11 @@ export default function SpeakingPage() {
         onMouseDown={speakingList.handleMouseDown}
       />
       {selectedSpeaking && (
-        <ContentPanel onClose={() => setSelectedSpeaking(null)}>
+        <ContentPanel 
+          onClose={() => setSelectedSpeaking(null)}
+          onMouseDown={speakingList.handleMouseDown}
+          isDragging={speakingList.isDragging}
+        >
           <SpeakingReader slug={selectedSpeaking} />
         </ContentPanel>
       )}
