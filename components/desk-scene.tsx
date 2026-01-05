@@ -5,7 +5,7 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { useLighting } from "@/lib/lighting-context"
 import { useMusic } from "@/lib/music-context"
-import { MobileNavDrawer } from "./nav-sidebar"
+import { NavSidebar, MobileNavDrawer } from "./nav-sidebar"
 
 // Desk document type
 type DeskDocId = "sketchbook" | "worksheet" | "work-history" | "about-me-card" | "call-to-bar" | "notepad" | "aso-oke-swatch"
@@ -137,6 +137,7 @@ export function DeskScene() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [focusedDoc, setFocusedDoc] = useState<DeskDocument | null>(null)
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
+  const [isDesktop, setIsDesktop] = useState(false)
   
   // Cursor tracking state
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 })
@@ -159,9 +160,15 @@ export function DeskScene() {
     setLoadedImages(prev => new Set([...prev, imageId]))
   }, [])
 
-  // Detect touch device
+  // Detect touch device and desktop
   useEffect(() => {
     setIsTouchDevice('ontouchstart' in window)
+    
+    // Check if desktop (768px breakpoint)
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768)
+    checkDesktop()
+    window.addEventListener('resize', checkDesktop)
+    return () => window.removeEventListener('resize', checkDesktop)
   }, [])
 
   // Close on Escape key
@@ -563,10 +570,24 @@ export function DeskScene() {
         )}
       </AnimatePresence>
 
-      {/* Lighting Controls - Top Right (matches homepage) */}
-      <nav className="desk-scene__nav" aria-label="Lighting controls">
+      {/* Unified Navigation Bar - EXACT same structure as homepage */}
+      <nav className="main-nav" aria-label="Main navigation">
+        {/* Left: Index */}
+        <button 
+          className={`nav-menu ${menuOpen ? "open" : ""}`}
+          onClick={(e) => {
+            e.stopPropagation()
+            setMenuOpen(!menuOpen)
+          }}
+          aria-expanded={menuOpen}
+          aria-label={menuOpen ? "Close index" : "Open index"}
+        >
+          <span className="nav-menu__text">Index</span>
+        </button>
+
+        {/* Right: Lighting Controls */}
         <div className="nav-lighting" role="group" aria-label="Lighting mode">
-          {/* Mobile Hamburger Menu - first item like homepage */}
+          {/* Mobile Hamburger Menu - before lighting tabs */}
           <button
             className="nav-hamburger"
             onClick={(e) => {
@@ -700,13 +721,46 @@ export function DeskScene() {
         </div>
       </nav>
 
-      {/* Brand for mobile (matches homepage) */}
-      <div className="desk-scene__brand">
-        <span>Atelier ÌníOlúwa</span>
+      {/* Brand - EXACT same structure as homepage */}
+      <div className="nav-brand">
+        <span className="nav-brand__title">Atelier ÌníOlúwa</span>
       </div>
 
-      {/* Mobile Navigation Drawer */}
-      <MobileNavDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      {/* Navigation Sidebar/Drawer - Desktop uses NavSidebar overlay, Mobile uses MobileNavDrawer */}
+      {isDesktop ? (
+        // Desktop: NavSidebar in overlay (matches homepage behavior)
+        <AnimatePresence>
+          {menuOpen && (
+            <>
+              {/* Backdrop */}
+              <motion.div
+                className="homepage-sidebar-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setMenuOpen(false)}
+              />
+              {/* NavSidebar */}
+              <motion.div
+                className="homepage-sidebar-wrapper"
+                initial={{ x: -192 }}
+                animate={{ x: 0 }}
+                exit={{ x: -192 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              >
+                <NavSidebar
+                  width={192}
+                  isDragging={false}
+                  onMouseDown={() => {}} // No resize on about page overlay
+                />
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      ) : (
+        // Mobile: MobileNavDrawer
+        <MobileNavDrawer isOpen={menuOpen} onClose={() => setMenuOpen(false)} />
+      )}
     </div>
   )
 }

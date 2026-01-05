@@ -196,6 +196,13 @@
   transition: all 0.2s ease;
 }
 
+/* Hide on desktop - hamburger should only show on mobile */
+@media (min-width: 768px) {
+  .mobile-menu-trigger {
+    display: none !important;
+  }
+}
+
 .mobile-menu-trigger:hover {
   background: rgba(220, 210, 196, 1);
   border-color: rgba(0, 0, 0, 0.12);

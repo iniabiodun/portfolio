@@ -537,14 +537,9 @@ export function StudyRoom() {
       </div>
 
       {/* Brand - separate for mobile positioning */}
-      <motion.div 
-        className="nav-brand"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: introPhase === 'ready' || !showIntro ? 1 : 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="nav-brand">
         <span className="nav-brand__title">Atelier ÌníOlúwa</span>
-      </motion.div>
+      </div>
 
       {/* Hover to Explore hint - bottom of screen */}
       <motion.div 

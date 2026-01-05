@@ -49,3 +49,4 @@ export default function EssayDetailPage({ params }: { params: Promise<{ slug: st
   )
 }
 
+

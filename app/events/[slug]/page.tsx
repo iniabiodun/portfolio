@@ -49,3 +49,4 @@ export default function EventDetailPage({ params }: { params: Promise<{ slug: st
   )
 }
 
+

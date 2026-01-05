@@ -600,6 +600,45 @@
   border: 1px solid rgba(255, 200, 120, 0.2);
 }
 
+/* ============================================
+   CURSOR LIGHTING MODE VARIATIONS
+   Match cursor glow to current lighting mode
+   ============================================ */
+
+/* Ambient mode - cool blue glow */
+.scene-container[data-lighting="ambient"] .custom-cursor__dot {
+  background: rgba(168, 192, 255, 0.9);
+  box-shadow: 
+    0 0 12px rgba(150, 180, 255, 0.7),
+    0 0 24px rgba(150, 180, 255, 0.4);
+}
+
+.scene-container[data-lighting="ambient"] .custom-cursor.has-label .custom-cursor__dot {
+  box-shadow: 
+    0 0 10px rgba(150, 180, 255, 0.6),
+    0 0 20px rgba(150, 180, 255, 0.3);
+}
+
+.scene-container[data-lighting="ambient"] .custom-cursor__label {
+  border-color: rgba(168, 192, 255, 0.2);
+}
+
+/* Natural mode - soft cream glow */
+.scene-container[data-lighting="natural"] .custom-cursor__dot {
+  background: rgba(245, 230, 211, 0.85);
+  box-shadow: 
+    0 0 10px rgba(245, 230, 211, 0.5),
+    0 0 20px rgba(245, 230, 211, 0.3);
+}
+
+.scene-container[data-lighting="natural"] .custom-cursor.has-label .custom-cursor__dot {
+  box-shadow: 
+    0 0 8px rgba(245, 230, 211, 0.4),
+    0 0 16px rgba(245, 230, 211, 0.2);
+}
+
+/* Warm mode is default - golden glow (already styled above) */
+
 /* Help Overlay */
 .study-room__help {
   position: fixed;
