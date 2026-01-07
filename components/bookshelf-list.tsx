@@ -17,13 +17,6 @@ export function BookshelfList() {
     []
   )
 
-  // Debug: Check production data
-  if (typeof window !== 'undefined') {
-    const circe = books.find(b => b.slug === 'circe');
-    console.log('[DEBUG] Circe data:', { cover: circe?.coverImage, spine: circe?.spineImage });
-    console.log('[DEBUG] Books with covers:', booksWithCovers.length, booksWithCovers.map(b => b.slug));
-  }
-
   // Get books without 3D covers (for text list)
   const booksWithoutCovers = useMemo(() => 
     books.filter(book => !book.coverImage || !book.spineImage),
