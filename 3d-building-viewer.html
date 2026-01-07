@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Haussmann Building Viewer</title>
+    <style>
+        body { margin: 0; overflow: hidden; font-family: sans-serif; background: #111; }
+        #ui { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); 
+              background: rgba(0,0,0,0.7); padding: 20px; border-radius: 10px; color: white; 
+              display: flex; flex-direction: column; align-items: center; width: 300px; }
+        input { width: 100%; cursor: pointer; }
+        label { margin-bottom: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <label id="time-label">Time of Day: 12:00 PM</label>
+        <input type="range" id="time-slider" min="0" max="24" step="0.1" value="12">
+    </div>
+
+    <!-- Load Three.js from CDN -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true; // Enable shadows
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        camera.position.set(0, 2, 10);
+        controls.update();
+
+        // --- BUILDING MODEL ---
+        const textureLoader = new THREE.TextureLoader();
+        const buildingTexture = textureLoader.load('building.png'); // PLACE YOUR IMAGE HERE
+
+        // Create a box geometry (Height is roughly 2.5x width based on photo)
+        const geometry = new THREE.BoxGeometry(4, 10, 2); 
+        
+        // Apply texture only to the front face
+        const materials = [
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Right
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Left
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Top
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Bottom
+            new THREE.MeshStandardMaterial({ map: buildingTexture }), // Front (Your Image)
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Back
+        ];
+        
+        const building = new THREE.Mesh(geometry, materials);
+        building.castShadow = true;
+        building.receiveShadow = true;
+        scene.add(building);
+
+        // Ground floor
+        const groundGeo = new THREE.PlaneGeometry(50, 50);
+        const groundMat = new THREE.MeshStandardMaterial({ color: 0x222222 });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -5;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // --- LIGHTING (Time of Day System) ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
+        scene.add(ambientLight);
+
+        const sunLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        sunLight.castShadow = true;
+        sunLight.shadow.mapSize.width = 2048;
+        sunLight.shadow.mapSize.height = 2048;
+        scene.add(sunLight);
+
+        // --- TIME OF DAY LOGIC ---
+        const slider = document.getElementById('time-slider');
+        const label = document.getElementById('time-label');
+
+        function updateTime() {
+            const time = parseFloat(slider.value);
+            const hour = Math.floor(time);
+            const minutes = Math.floor((time % 1) * 60);
+            label.innerText = `Time of Day: ${hour % 12 || 12}:${minutes.toString().padStart(2, '0')} ${hour >= 12 ? 'PM' : 'AM'}`;
+
+            // Calculate Sun Position (Simple Arc)
+            const angle = (time / 24) * Math.PI * 2 - (Math.PI / 2);
+            const x = Math.cos(angle) * 15;
+            const y = Math.sin(angle) * 15;
+            const z = 10; // Keep light slightly in front for visibility
+
+            sunLight.position.set(x, y, z);
+
+            // Change Light Color based on time (Warm sunset, Blue night, Bright noon)
+            if (time > 5 && time < 8) sunLight.color.setHex(0xffaa55); // Sunrise
+            else if (time >= 8 && time <= 16) sunLight.color.setHex(0xffffff); // Noon
+            else if (time > 16 && time < 20) sunLight.color.setHex(0xff7733); // Sunset
+            else sunLight.color.setHex(0x4444ff); // Night (Moonlight)
+
+            // Adjust intensity
+            sunLight.intensity = (y > 0) ? 1.5 : 0.2; 
+            scene.background = new THREE.Color(y > 0 ? 0x87ceeb : 0x050510); // Simple Sky color change
+        }
+
+        slider.addEventListener('input', updateTime);
+        updateTime(); // Initial call
+
+        // --- ANIMATION LOOP ---
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
+
