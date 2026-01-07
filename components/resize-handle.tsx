@@ -12,7 +12,7 @@ export function ResizeHandle({ onMouseDown, isDragging }: ResizeHandleProps) {
     <div
       onMouseDown={onMouseDown}
       className={cn(
-        "absolute right-0 top-0 bottom-0 w-16 cursor-col-resize transition-opacity z-[5]",
+        "absolute right-0 top-0 bottom-0 w-8 cursor-col-resize transition-opacity z-10",
         isDragging ? "opacity-100" : "opacity-0 hover:opacity-100",
       )}
       style={{
@@ -20,6 +20,9 @@ export function ResizeHandle({ onMouseDown, isDragging }: ResizeHandleProps) {
         backgroundSize: '4px 4px',
         backgroundRepeat: 'repeat',
       }}
-    />
+    >
+      {/* Larger grab area extending beyond visible pattern */}
+      <div className="absolute -left-2 -right-2 top-0 bottom-0" />
+    </div>
   )
 }

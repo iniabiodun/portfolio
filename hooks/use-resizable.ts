@@ -1,42 +1,49 @@
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 
 interface UseResizableOptions {
   initialWidth: number
   minWidth: number
   maxWidth: number
-  offsetX?: number // Optional offset for calculating width (e.g., sidebar width for nested panels)
 }
 
-export function useResizable({ initialWidth, minWidth, maxWidth, offsetX = 0 }: UseResizableOptions) {
+export function useResizable({ initialWidth, minWidth, maxWidth }: UseResizableOptions) {
   const [width, setWidth] = useState(initialWidth)
   const [isDragging, setIsDragging] = useState(false)
-  const rafRef = useRef<number | null>(null)
+  const containerRef = useRef<HTMLElement | null>(null)
+  const startXRef = useRef(0)
+  const startWidthRef = useRef(0)
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
+    e.stopPropagation()
+    
+    // Find the container element (the one with the width style)
+    const target = e.currentTarget as HTMLElement
+    const container = target.closest('[style*="width"]') as HTMLElement
+    
+    if (container) {
+      containerRef.current = container
+      startXRef.current = e.clientX
+      startWidthRef.current = width
+    }
+    
     setIsDragging(true)
-  }
+  }, [width])
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
-        // Cancel any pending animation frame
-        if (rafRef.current) {
-          cancelAnimationFrame(rafRef.current)
-        }
-        // Schedule width update on next animation frame for smoother performance
-        rafRef.current = requestAnimationFrame(() => {
-          const newWidth = Math.max(minWidth, Math.min(maxWidth, e.clientX - offsetX))
-          setWidth(newWidth)
-        })
-      }
+      if (!isDragging) return
+      
+      // Calculate delta from start position
+      const deltaX = e.clientX - startXRef.current
+      const newWidth = Math.max(minWidth, Math.min(maxWidth, startWidthRef.current + deltaX))
+      
+      setWidth(newWidth)
     }
 
     const handleMouseUp = () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
       setIsDragging(false)
+      containerRef.current = null
     }
 
     if (isDragging) {
@@ -51,11 +58,8 @@ export function useResizable({ initialWidth, minWidth, maxWidth, offsetX = 0 }: 
       document.removeEventListener("mouseup", handleMouseUp)
       document.body.style.cursor = ""
       document.body.style.userSelect = ""
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-      }
     }
-  }, [isDragging, minWidth, maxWidth, offsetX])
+  }, [isDragging, minWidth, maxWidth])
 
   return {
     width,

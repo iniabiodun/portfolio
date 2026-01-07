@@ -44,11 +44,6 @@ export function BookCarousel({ books, selectedBookSlug, onSelectBook }: BookCaro
     })
   }
 
-  // Get selected book data
-  const selectedBook = selectedBookSlug 
-    ? books.find(b => b.slug === selectedBookSlug) 
-    : null
-
   // Find selected index
   const selectedIndex = selectedBookSlug 
     ? books.findIndex(b => b.slug === selectedBookSlug)
@@ -176,47 +171,6 @@ export function BookCarousel({ books, selectedBookSlug, onSelectBook }: BookCaro
         </div>
       </div>
 
-      {/* Expanded Notes Panel */}
-      <AnimatePresence mode="wait">
-        {selectedBook && (
-          <motion.div
-            key={selectedBook.slug}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="pt-8 pb-4 border-t border-border mt-4"
-          >
-            {/* Book Header */}
-            <div className="mb-6">
-              <h3 className="text-2xl font-serif mb-2">{selectedBook.title}</h3>
-              <p className="text-muted-foreground">
-                {selectedBook.author} · {selectedBook.year}
-              </p>
-            </div>
-
-            {/* Notes Content */}
-            {selectedBook.hasNotes && selectedBook.content ? (
-              <div 
-                className="prose prose-sm dark:prose-invert max-w-none"
-                dangerouslySetInnerHTML={{ __html: selectedBook.content }}
-              />
-            ) : (
-              <p className="text-muted-foreground italic">
-                No notes yet for this book.
-              </p>
-            )}
-
-            {/* Close button */}
-            <button
-              onClick={() => onSelectBook(null)}
-              className="mt-6 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              ← Back to shelf
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   )
 }
