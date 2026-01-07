@@ -74,8 +74,8 @@ export const books: Book[] = [
     "lastUpdated": "01-04-2026",
     "hasNotes": true,
     "isReading": true,
-    "coverImage": "/2. Bookshelf/book-covers-for-folio/circe-cover.png",
-    "spineImage": "/2. Bookshelf/book-covers-for-folio/circe-spine.png",
+    "coverImage": "/Bookshelf/book-covers-for-folio/circe-cover.png",
+    "spineImage": "/Bookshelf/book-covers-for-folio/circe-spine.png",
     "content": "<p>I am loving the modern retellings of these Greek mythologies. Madeline Miller is an absolute beast of a writer.</p><blockquote><em>My favourite quote: \"I will not be like a bird bred in a cage, I thought, too dull to fly even when the door stands open. I stepped into those woods and my life began.\"</em></blockquote><p><strong>Woman. Witch. Myth. Mortal. Outcast. Lover. Destroyer. Survivor. CIRCE.</strong></p><p>We see Circe as she grows in what is considered strangeness for her ilk and kind. She's not powerful or terrible like her father. She's not gorgeous, manipulative and calculating like her mother or siblings.</p><p>She's scorned and rejected. And Circe grows up in the shadows at home in neither the world of gods nor mortals. Infact, her voice is described as being so soft, she's compared to mortals; unlike the thunderous voices of gods and titans.</p><p>But Circe has a dark power of her own, witchcraft. And when this gift threatens the gods, she is banished to the island of Aiaia, where she hones her craft, casting spells, gathering strange herbs, taming wild beasts.</p><p>Yet as we know a woman who stands alone will never be left in peace for long. And among her island's many guests who get turned into swine, there is an unexpected but prophesied visitor: the mortal Odysseus for whom Circe will risk everything.</p><p>This is a story, a vivid mesmerizing epic of family rivalry, of love and loss, and a defiant inextinguishable song of a woman burning hot and bright through the darkness of a man's world.</p>"
   },
   {
@@ -85,8 +85,8 @@ export const books: Book[] = [
     "year": 2022,
     "hasNotes": false,
     "isReading": true,
-    "coverImage": "/2. Bookshelf/book-covers-for-folio/firstborn-of-the-sun-cover.png",
-    "spineImage": "/2. Bookshelf/book-covers-for-folio/firstborn-of-the-sun-spine.png",
+    "coverImage": "/Bookshelf/book-covers-for-folio/firstborn-of-the-sun-cover.png",
+    "spineImage": "/Bookshelf/book-covers-for-folio/firstborn-of-the-sun-spine.png",
     "content": ""
   },
   {
@@ -96,8 +96,8 @@ export const books: Book[] = [
     "year": 2023,
     "hasNotes": false,
     "isReading": true,
-    "coverImage": "/2. Bookshelf/book-covers-for-folio/girl-goddess-queen-cover.png",
-    "spineImage": "/2. Bookshelf/book-covers-for-folio/girl-goddess-queen-spine.png",
+    "coverImage": "/Bookshelf/book-covers-for-folio/girl-goddess-queen-cover.png",
+    "spineImage": "/Bookshelf/book-covers-for-folio/girl-goddess-queen-spine.png",
     "content": ""
   },
   {
@@ -162,8 +162,8 @@ export const books: Book[] = [
     "lastUpdated": "12-05-2025",
     "hasNotes": true,
     "isReading": true,
-    "coverImage": "/2. Bookshelf/book-covers-for-folio/song-of-achilles-cover.png",
-    "spineImage": "/2. Bookshelf/book-covers-for-folio/song-of-achilles-spine.png",
+    "coverImage": "/Bookshelf/book-covers-for-folio/song-of-achilles-cover.png",
+    "spineImage": "/Bookshelf/book-covers-for-folio/song-of-achilles-spine.png",
     "content": "<blockquote><em>I have heard such good things about Madeleine. Nothing prepared me for actually reading her books. Her writing flows uncomplicated, like drinking a warm cuppa and thick blanket on a rainy day. I tucked in and find myself eager to return to it.</em></blockquote>"
   },
   {
@@ -182,8 +182,8 @@ export const books: Book[] = [
     "year": 2021,
     "hasNotes": false,
     "isReading": true,
-    "coverImage": "/2. Bookshelf/book-covers-for-folio/women-of-troy-cover.png",
-    "spineImage": "/2. Bookshelf/book-covers-for-folio/women-of-troy-spine.png",
+    "coverImage": "/Bookshelf/book-covers-for-folio/women-of-troy-cover.png",
+    "spineImage": "/Bookshelf/book-covers-for-folio/women-of-troy-spine.png",
     "content": ""
   }
 ]
