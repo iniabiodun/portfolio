@@ -17,14 +17,6 @@ export function BookshelfList() {
     []
   )
 
-  // Debug: Log to browser console (works in production)
-  if (typeof window !== 'undefined') {
-    console.log('[PROD DEBUG] Total books:', books.length);
-    console.log('[PROD DEBUG] Books with covers:', booksWithCovers.length);
-    console.log('[PROD DEBUG] Sample book coverImage:', books.find(b => b.slug === 'circe')?.coverImage);
-    console.log('[PROD DEBUG] Sample book spineImage:', books.find(b => b.slug === 'circe')?.spineImage);
-  }
-
   // Get books without 3D covers (for text list)
   const booksWithoutCovers = useMemo(() => 
     books.filter(book => !book.coverImage || !book.spineImage),
