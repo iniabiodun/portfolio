@@ -137,23 +137,10 @@ export function StudyRoom() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   
-  // Onboarding state - CRT TV Turn-On: preloader → reveal → ready
+  // Onboarding state - simplified: just show welcome modal for first-time visitors
   // Start with null to prevent flash - don't render intro until visitor check completes
   const [showIntro, setShowIntro] = useState<boolean | null>(null)
-  const [introPhase, setIntroPhase] = useState<'preloader' | 'dark' | 'reveal' | 'ready'>('ready')
-  const [countdown, setCountdown] = useState(10)
   const [hasCheckedVisitor, setHasCheckedVisitor] = useState(false)
-  
-  // Preloader state - rotating phrases
-  const preloaderPhrases = [
-    "Unlocking the atelier...",
-    "Adjusting the lighting...",
-    "Arranging the artifacts...",
-    "Opening the journal...",
-    "Preparing the workspace...",
-  ]
-  const [preloaderPhraseIndex, setPreloaderPhraseIndex] = useState(0)
-  const [preloaderComplete, setPreloaderComplete] = useState(false)
   
   // Framer Motion values for parallax
   const mouseX = useMotionValue(0)
@@ -203,100 +190,26 @@ export function StudyRoom() {
     return () => window.removeEventListener('resize', checkDesktop)
   }, [])
 
-  // Check if first-time visitor and run intro sequence
+  // Check if first-time visitor and show welcome modal
   useEffect(() => {
     // Wait until we've determined if this is desktop
     if (!isDesktopChecked) return
     
-    // Debug mode: ?debug=preloader forces preloader to show
+    // Debug mode: ?debug=intro forces intro to show
     const urlParams = new URLSearchParams(window.location.search)
-    const debugPreloader = urlParams.get('debug') === 'preloader'
+    const debugIntro = urlParams.get('debug') === 'intro'
     
     const hasVisited = localStorage.getItem('atelier-visited')
     
-    if (hasVisited && !debugPreloader) {
-      // Returning visitor - skip intro entirely (showIntro stays false, phase stays ready)
+    if (hasVisited && !debugIntro) {
+      // Returning visitor - skip intro entirely
       setShowIntro(false)
     } else {
-      // First-time visitor (or debug mode) - show intro (start with preloader on desktop)
-      setIntroPhase(isDesktop ? 'preloader' : 'dark')
+      // First-time visitor (or debug mode) - show welcome modal
       setShowIntro(true)
     }
     setHasCheckedVisitor(true)
   }, [isDesktop, isDesktopChecked])
-
-  // Preloader animation - rotate through phrases
-  useEffect(() => {
-    if (!showIntro || !isDesktop || introPhase !== 'preloader') return
-    
-    const phraseInterval = setInterval(() => {
-      setPreloaderPhraseIndex(prev => {
-        if (prev >= preloaderPhrases.length - 1) {
-          clearInterval(phraseInterval)
-          setPreloaderComplete(true)
-          return prev
-        }
-        return prev + 1
-      })
-    }, 800) // Change phrase every 800ms
-    
-    return () => clearInterval(phraseInterval)
-  }, [showIntro, isDesktop, introPhase, preloaderPhrases.length])
-  
-  // Handle transition when preloader completes - CRT TV turn-on effect
-  useEffect(() => {
-    if (!preloaderComplete || introPhase !== 'preloader') return
-    
-    // Brief hold at 100, then play TV sound and start turn-on animation
-    const transitionTimer = setTimeout(() => {
-      // Play TV turn-on sound
-      const tvSound = new Audio('/study/tvon-108126.mp3')
-      tvSound.volume = 0.5
-      tvSound.play().catch(() => {}) // Ignore if blocked by autoplay policy
-      
-      // Go to TV turn-on phase (collapse then expand)
-      setIntroPhase('reveal')
-    }, 400)
-    
-    return () => clearTimeout(transitionTimer)
-  }, [preloaderComplete, introPhase])
-
-  // Intro animation sequence - CRT TV turn-on: reveal → ready
-  // Desktop: preloader → reveal → ready
-  // Mobile: dark → reveal → ready
-  useEffect(() => {
-    if (!showIntro) return
-    
-    // From reveal → ready (after CRT collapse animation completes)
-    if (introPhase === 'reveal') {
-      const timer = setTimeout(() => setIntroPhase('ready'), 700)
-      return () => clearTimeout(timer)
-    }
-    
-    // Mobile: dark → reveal (after 800ms)
-    if (introPhase === 'dark') {
-      const timer = setTimeout(() => setIntroPhase('reveal'), 800)
-      return () => clearTimeout(timer)
-    }
-  }, [showIntro, introPhase])
-
-  // Countdown timer for auto-dismiss
-  useEffect(() => {
-    if (!showIntro || introPhase !== 'ready') return
-
-    const countdownInterval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownInterval)
-          handleDismissIntro()
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-
-    return () => clearInterval(countdownInterval)
-  }, [showIntro, introPhase])
 
   // Dismiss intro and mark as visited
   const handleDismissIntro = useCallback(() => {
@@ -525,102 +438,29 @@ export function StudyRoom() {
         </div>
       </div>
 
-      {/* Brand - separate for mobile positioning */}
-      <div className="nav-brand">
+      {/* Brand - separate for mobile positioning, fades in after intro */}
+      <motion.div 
+        className="nav-brand"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: !showIntro ? 1 : 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         <span className="nav-brand__title">Atelier ÌníOlúwa</span>
-      </div>
+      </motion.div>
 
       {/* Hover to Explore hint - bottom of screen */}
       <motion.div 
         className="hover-explore-hint"
         initial={{ opacity: 0 }}
-        animate={{ opacity: introPhase === 'ready' || !showIntro ? 1 : 0 }}
+        animate={{ opacity: !showIntro ? 1 : 0 }}
         transition={{ duration: 0.8, delay: 0.5 }}
       >
         <span className="hover-explore-hint__text">[HOVER TO EXPLORE]</span>
       </motion.div>
 
-      {/* Preloader - Desktop Only with CRT TV turn-on exit */}
-      <AnimatePresence>
-        {showIntro && introPhase === 'preloader' && isDesktop && (
-          <motion.div
-            className="preloader"
-            initial={{ scaleY: 1, opacity: 1 }}
-            exit={{ 
-              scaleY: 0,
-              opacity: 1,
-              transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] }
-            }}
-            style={{ originY: 0.5 }}
-          >
-            <div className="preloader__content">
-              {/* Rotating phrase */}
-              <AnimatePresence mode="wait">
-                <motion.div 
-                  key={preloaderPhraseIndex}
-                  className="preloader__phrase"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.25 }}
-                >
-                  {preloaderPhrases[preloaderPhraseIndex]}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* CRT TV Turn-On Effect - darkness collapses to line, revealing site from center */}
-      <AnimatePresence>
-        {showIntro && introPhase !== 'ready' && introPhase !== 'preloader' && (
-          <>
-            {/* Dark overlay that collapses */}
-            <motion.div
-              className="intro-darkness crt-reveal"
-              initial={{ 
-                clipPath: 'inset(0% 0% 0% 0%)',
-                opacity: 1 
-              }}
-              animate={{ 
-                // CRT turn-on: darkness collapses to horizontal line from center
-                clipPath: introPhase === 'dark' 
-                  ? 'inset(0% 0% 0% 0%)' // Full darkness
-                  : 'inset(49.5% 0% 49.5% 0%)', // Collapse to thin horizontal line
-                opacity: 1
-              }}
-              exit={{ 
-                opacity: 0,
-                transition: { duration: 0.15, delay: 0.05 }
-              }}
-              transition={{ 
-                clipPath: {
-                  duration: 0.45,
-                  ease: [0.16, 1, 0.3, 1] // Smooth ease-out
-                }
-              }}
-            />
-            {/* Bright scanline that appears during reveal */}
-            {introPhase === 'reveal' && (
-              <motion.div
-                className="crt-scanline"
-                initial={{ opacity: 0, scaleX: 0.3 }}
-                animate={{ opacity: [0, 1, 1, 0], scaleX: [0.3, 1, 1, 1] }}
-                transition={{ 
-                  duration: 0.5,
-                  times: [0, 0.1, 0.7, 1],
-                  ease: "easeOut"
-                }}
-              />
-            )}
-          </>
-        )}
-      </AnimatePresence>
-
       {/* Welcome Overlay */}
       <AnimatePresence>
-        {showIntro && introPhase === 'ready' && (
+        {showIntro && (
           <>
             {/* Blur backdrop */}
             <motion.div
@@ -631,7 +471,7 @@ export function StudyRoom() {
               transition={{ duration: 0.4 }}
             />
             
-            {/* Welcome modal - using opacity only to not conflict with CSS centering */}
+            {/* Welcome modal */}
             <motion.div
               className="intro-modal"
               data-lighting={lightingMode}
@@ -640,23 +480,63 @@ export function StudyRoom() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
             >
-              <p className="intro-modal__greeting">Hi, I am ÌníOlúwa.</p>
+              <p className="intro-modal__greeting">Hi, I am ÌníOlúwa</p>
               <p className="intro-modal__message">
-                Welcome to my active workshop and growing archive of work, thought, and craft.
+                Welcome to my digital workshop and archive.
               </p>
-              <p className="intro-modal__hint">Hover on objects to explore.</p>
+              
+              {/* Lighting selector */}
+              <div className="intro-modal__lighting">
+                <p className="intro-modal__lighting-label">Choose your lighting:</p>
+                <div className="intro-modal__lighting-options">
+                  <label className={`intro-modal__radio ${mode === 'ambient' ? 'intro-modal__radio--selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="lighting"
+                      value="ambient"
+                      checked={mode === 'ambient'}
+                      onChange={() => setMode('ambient')}
+                    />
+                    <span className="intro-modal__radio-indicator" data-mode="ambient" />
+                    <span className="intro-modal__radio-text">Ambient</span>
+                  </label>
+                  <label className={`intro-modal__radio ${mode === 'warm' ? 'intro-modal__radio--selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="lighting"
+                      value="warm"
+                      checked={mode === 'warm'}
+                      onChange={() => setMode('warm')}
+                    />
+                    <span className="intro-modal__radio-indicator" data-mode="warm" />
+                    <span className="intro-modal__radio-text">Warm</span>
+                  </label>
+                  <label className={`intro-modal__radio ${mode === 'natural' ? 'intro-modal__radio--selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="lighting"
+                      value="natural"
+                      checked={mode === 'natural'}
+                      onChange={() => setMode('natural')}
+                    />
+                    <span className="intro-modal__radio-indicator" data-mode="natural" />
+                    <span className="intro-modal__radio-text">Natural</span>
+                  </label>
+                </div>
+              </div>
               
               <button 
                 className="intro-modal__button"
                 onClick={handleDismissIntro}
               >
-                Step Inside
-            </button>
+                Enter the Atelier →
+              </button>
               
-              <p className="intro-modal__countdown">
-                This message disappears in {countdown}...
+              <p className="intro-modal__hint">
+                <span className="intro-modal__hint-desktop">Hover on hotspots to explore the site.</span>
+                <span className="intro-modal__hint-mobile">Use desktop for immersive experience.</span>
               </p>
-          </motion.div>
+            </motion.div>
           </>
         )}
       </AnimatePresence>
@@ -666,7 +546,7 @@ export function StudyRoom() {
         className="main-nav" 
         aria-label="Main navigation"
         initial={{ opacity: 0 }}
-        animate={{ opacity: introPhase === 'ready' || !showIntro ? 1 : 0 }}
+        animate={{ opacity: !showIntro ? 1 : 0 }}
         transition={{ duration: 0.5 }}
       >
         {/* Left: Index */}

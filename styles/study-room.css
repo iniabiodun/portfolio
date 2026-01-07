@@ -1404,104 +1404,8 @@
    ============================================ */
 
 /* ============================================
-   PRELOADER - Desktop Only
+   WELCOME MODAL - First-time visitor popup
    ============================================ */
-
-.preloader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 250;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #1F0405;
-  overflow: hidden;
-}
-
-/* Container for counter + copy - centered to page */
-.preloader__content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Rotating phrase text */
-.preloader__phrase {
-  font-family: var(--font-serif), Georgia, serif;
-  font-size: clamp(1.25rem, 3vw, 1.75rem);
-  font-weight: 300;
-  color: #F5E6D3;
-  letter-spacing: 0.05em;
-  text-align: center;
-  user-select: none;
-  text-align: center;
-}
-
-
-/* Hide preloader on mobile - they get direct load */
-@media (max-width: 768px) {
-  .preloader {
-    display: none;
-  }
-}
-
-/* Dark overlay for CRT TV turn-on effect */
-.intro-darkness {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  background: #1F0405;
-  pointer-events: none;
-}
-
-/* CRT reveal - horizontal line expansion */
-.intro-darkness.crt-reveal {
-  will-change: clip-path, opacity;
-}
-
-/* Bright scanline effect during CRT turn-on */
-.crt-scanline {
-  position: fixed;
-  top: 50%;
-  left: 0;
-  right: 0;
-  height: 3px;
-  transform: translateY(-50%);
-  z-index: 201;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.4) 20%,
-    rgba(255, 255, 255, 0.8) 50%,
-    rgba(255, 255, 255, 0.4) 80%,
-    transparent 100%
-  );
-  box-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.5),
-    0 0 40px rgba(255, 255, 255, 0.3);
-  pointer-events: none;
-}
-
-/* Hide shelf items during intro to prevent distracting pop-in */
-.scene-container.intro-active .scene-container__shelf-items {
-  opacity: 0;
-  transition: opacity 0.8s ease-out;
-}
-
-.scene-container.intro-complete .scene-container__shelf-items {
-  opacity: 1;
-  transition: opacity 1.5s ease-out 0.5s; /* Fade in after overlay dismisses */
-}
-
-/* Removed lamp glow - using TV flicker effect instead */
 
 /* Blur backdrop for welcome modal */
 .intro-backdrop {
@@ -1532,7 +1436,7 @@
   max-width: 480px;
   margin: 0 !important;
   /* Frosted glass effect - warm tinted translucent */
-  background: rgba(30, 24, 20, 0.65);
+  background: rgba(30, 24, 20, 0.75);
   backdrop-filter: blur(24px) saturate(1.2);
   -webkit-backdrop-filter: blur(24px) saturate(1.2);
   border: 1px solid rgba(255, 200, 120, 0.12);
@@ -1543,33 +1447,212 @@
 }
 
 .intro-modal__greeting {
-  margin: 0 0 1.25rem;
+  margin: 0 0 16px;
   font-family: var(--font-serif);
-  font-size: 1.75rem;
+  font-size: 42px;
   font-weight: 400;
+  line-height: 1.2;
   color: #f5e6d3;
   letter-spacing: -0.02em;
 }
 
 .intro-modal__message {
-  margin: 0 0 1rem;
+  margin: 0 0 40px;
   font-family: var(--font-sans);
-  font-size: 0.9375rem;
-  font-weight: 400;
+  font-size: 18px;
+  font-weight: 300;
   color: rgba(245, 230, 211, 0.75);
-  line-height: 1.65;
+  line-height: 1.5;
 }
 
 .intro-modal__hint {
-  margin: 0 0 2rem;
+  margin: 24px 0 0;
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: rgba(245, 230, 211, 0.5);
+  font-size: 13px;
+  font-weight: 300;
   font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
 }
 
-/* Step Inside button - matches nav-lighting style (subtle border, context-aware) */
+/* Show desktop hint on desktop, hide on mobile */
+.intro-modal__hint-desktop {
+  display: inline;
+}
+.intro-modal__hint-mobile {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .intro-modal__hint-desktop {
+    display: none;
+  }
+  .intro-modal__hint-mobile {
+    display: inline;
+  }
+}
+
+/* Lighting selector */
+.intro-modal__lighting {
+  margin: 0 0 32px;
+  text-align: center;
+}
+
+.intro-modal__lighting-label {
+  margin: 0 0 16px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.intro-modal__lighting-options {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.intro-modal__radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.intro-modal__radio:hover {
+  opacity: 1;
+}
+
+.intro-modal__radio input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-modal__radio-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(245, 230, 211, 0.25);
+  background: rgba(20, 16, 14, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Reflective shine overlay */
+.intro-modal__radio-indicator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Inner glow fill when selected */
+.intro-modal__radio-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+/* Show shine on selection */
+.intro-modal__radio--selected .intro-modal__radio-indicator::before {
+  opacity: 1;
+}
+
+/* ---- NATURAL mode indicator - soft cream ---- */
+.intro-modal__radio-indicator[data-mode="natural"] {
+  border-color: rgba(245, 230, 211, 0.25);
+}
+.intro-modal__radio--selected .intro-modal__radio-indicator[data-mode="natural"] {
+  border-color: rgba(245, 230, 211, 0.6);
+  background: rgba(245, 230, 211, 0.08);
+  box-shadow: 
+    0 0 12px rgba(245, 230, 211, 0.3),
+    0 0 24px rgba(245, 230, 211, 0.15),
+    inset 0 0 8px rgba(245, 230, 211, 0.1);
+}
+.intro-modal__radio--selected .intro-modal__radio-indicator[data-mode="natural"]::after {
+  background: radial-gradient(circle, #f5e6d3 0%, rgba(245, 230, 211, 0.7) 100%);
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 
+    0 0 8px rgba(245, 230, 211, 0.8),
+    0 0 16px rgba(245, 230, 211, 0.4);
+}
+
+/* ---- WARM mode indicator - golden amber ---- */
+.intro-modal__radio-indicator[data-mode="warm"] {
+  border-color: rgba(255, 184, 80, 0.25);
+}
+.intro-modal__radio--selected .intro-modal__radio-indicator[data-mode="warm"] {
+  border-color: rgba(255, 184, 80, 0.6);
+  background: rgba(255, 184, 80, 0.08);
+  box-shadow: 
+    0 0 12px rgba(255, 184, 80, 0.4),
+    0 0 24px rgba(255, 184, 80, 0.2),
+    inset 0 0 8px rgba(255, 184, 80, 0.1);
+}
+.intro-modal__radio--selected .intro-modal__radio-indicator[data-mode="warm"]::after {
+  background: radial-gradient(circle, #ffb850 0%, rgba(255, 184, 80, 0.7) 100%);
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 
+    0 0 8px rgba(255, 184, 80, 1),
+    0 0 16px rgba(255, 184, 80, 0.5);
+}
+
+/* ---- AMBIENT mode indicator - cool blue ---- */
+.intro-modal__radio-indicator[data-mode="ambient"] {
+  border-color: rgba(168, 192, 255, 0.25);
+}
+.intro-modal__radio--selected .intro-modal__radio-indicator[data-mode="ambient"] {
+  border-color: rgba(168, 192, 255, 0.6);
+  background: rgba(168, 192, 255, 0.08);
+  box-shadow: 
+    0 0 12px rgba(168, 192, 255, 0.4),
+    0 0 24px rgba(168, 192, 255, 0.2),
+    inset 0 0 8px rgba(168, 192, 255, 0.1);
+}
+.intro-modal__radio--selected .intro-modal__radio-indicator[data-mode="ambient"]::after {
+  background: radial-gradient(circle, #a8c0ff 0%, rgba(168, 192, 255, 0.7) 100%);
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 
+    0 0 8px rgba(168, 192, 255, 1),
+    0 0 16px rgba(168, 192, 255, 0.5);
+}
+
+.intro-modal__radio-text {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 400;
+  color: rgba(245, 230, 211, 0.7);
+  transition: color 0.2s ease;
+}
+
+.intro-modal__radio--selected .intro-modal__radio-text {
+  color: rgba(245, 230, 211, 0.9);
+}
+
+/* Enter the Atelier button - matches nav-lighting style (subtle border, context-aware) */
 .intro-modal__button {
   position: relative;
   padding: 0.75rem 1.5rem;
@@ -1579,9 +1662,9 @@
   border: 1px solid rgba(255, 200, 120, 0.12); /* Matches nav-lighting border */
   border-radius: 8px;
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  font-size: 16px;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.02em;
   cursor: pointer;
   transition: all 0.25s ease;
   overflow: hidden;
@@ -1689,15 +1772,6 @@
   box-shadow: 0 0 8px rgba(245, 230, 211, 0.4), 0 0 16px rgba(245, 230, 211, 0.2);
 }
 
-.intro-modal__countdown {
-  margin: 1.5rem 0 0;
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: rgba(245, 230, 211, 0.35);
-  letter-spacing: 0.02em;
-}
-
 /* Mobile adjustments for intro */
 @media (max-width: 768px) {
   .nav-brand__tagline {
@@ -1714,25 +1788,34 @@
   }
 
   .intro-modal__greeting {
-    font-size: 1.5rem;
+    font-size: 32px;
   }
 
   .intro-modal__message {
-    font-size: 0.875rem;
+    font-size: 15px;
+    margin-bottom: 32px;
   }
 
-  .intro-modal__hint {
-    font-size: 0.75rem;
-    margin-bottom: 1.5rem;
+  .intro-modal__lighting-label {
+    font-size: 13px;
   }
 
   .intro-modal__button {
     padding: 0.75rem 1.75rem;
-    font-size: 0.8125rem;
+    font-size: 14px;
   }
-
-  .intro-modal__countdown {
-    font-size: 0.6875rem;
+  
+  .intro-modal__lighting-options {
+    gap: 1rem;
+  }
+  
+  .intro-modal__radio-text {
+    font-size: 14px;
+  }
+  
+  .intro-modal__hint {
+    font-size: 12px;
+    margin-top: 20px;
   }
 }
 
