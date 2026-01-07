@@ -1,7 +1,10 @@
-"use client"
-
-import { DeskScene } from "@/components/desk-scene"
+import { SiteLayout } from '@/components/site-layout'
+import { AboutSection } from '@/components/about-section'
 
 export default function AboutPage() {
-  return <DeskScene />
+  return (
+    <SiteLayout>
+      <AboutSection />
+    </SiteLayout>
+  )
 }

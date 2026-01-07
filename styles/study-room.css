@@ -442,6 +442,172 @@
 }
 
 /* ============================================
+   HOTSPOT VISUAL INDICATORS
+   ============================================ */
+
+/* Indicator container - transforms into pill on hover */
+.hotspot__indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 40px;
+  padding: 0 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 5;
+  border-radius: 100px;
+  background: transparent;
+  border: 1px solid transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  will-change: background, border-color, backdrop-filter;
+  transition: 
+    background 0.3s ease,
+    border-color 0.3s ease,
+    backdrop-filter 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* HOVER: Frosted glass pill background (like navbar) */
+.hotspot__indicator:hover {
+  background: rgba(20, 16, 14, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(255, 200, 120, 0.3);
+  box-shadow: 
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Solid center dot - default state with scale pulse */
+.hotspot__dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 200, 120, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 200, 120, 0.5);
+  z-index: 2;
+  flex-shrink: 0;
+  animation: scale-pulse 2.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Scale up/down pulse animation */
+@keyframes scale-pulse {
+  0%, 100% { 
+    transform: scale(1);
+  }
+  50% { 
+    transform: scale(1.25);
+  }
+}
+
+/* HOVER: Dot stops pulsing, stays at normal size */
+.hotspot__indicator:hover .hotspot__dot {
+  animation: none;
+  transform: scale(1);
+}
+
+/* Label inside indicator - hidden by default */
+.hotspot__label {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #f5e6d3;
+  white-space: nowrap;
+  opacity: 0;
+  max-width: 0;
+  overflow: hidden;
+  will-change: opacity, max-width;
+  transition: 
+    opacity 0.25s ease 0.05s,
+    max-width 0.3s ease;
+}
+
+/* HOVER: Label fades in */
+.hotspot__indicator:hover .hotspot__label {
+  opacity: 1;
+  max-width: 200px;
+}
+
+/* Hide the pulse element (not needed anymore) */
+.hotspot__pulse {
+  display: none;
+}
+
+/* ============================================
+   HOTSPOT LIGHTING MODE COLORS
+   (Matching nav bar colors for each mode)
+   ============================================ */
+
+/* AMBIENT MODE - cool blue (#a8c0ff) */
+[data-lighting="ambient"] .hotspot__dot {
+  background: rgba(168, 192, 255, 0.95);
+  box-shadow: 0 0 10px rgba(168, 192, 255, 0.6);
+}
+
+[data-lighting="ambient"] .hotspot__indicator:hover {
+  background: rgba(20, 16, 14, 0.88);
+  border-color: rgba(168, 192, 255, 0.2);
+}
+
+[data-lighting="ambient"] .hotspot__indicator:hover .hotspot__dot {
+  background: rgba(168, 192, 255, 1);
+  box-shadow: 0 0 8px rgba(168, 192, 255, 0.7);
+}
+
+[data-lighting="ambient"] .hotspot__label {
+  color: #f5e6d3;
+}
+
+/* WARM MODE - gold (#ffb850) with dark pill */
+[data-lighting="warm"] .hotspot__dot {
+  background: rgba(255, 184, 80, 0.95);
+  box-shadow: 0 0 10px rgba(255, 184, 80, 0.6);
+}
+
+[data-lighting="warm"] .hotspot__indicator:hover {
+  background: rgba(20, 16, 14, 0.88);
+  border-color: rgba(255, 184, 80, 0.2);
+}
+
+[data-lighting="warm"] .hotspot__indicator:hover .hotspot__dot {
+  background: rgba(255, 184, 80, 1);
+  box-shadow: 0 0 8px rgba(255, 184, 80, 0.7);
+}
+
+[data-lighting="warm"] .hotspot__label {
+  color: #f5e6d3;
+}
+
+/* NATURAL MODE - warmish white (#f5e6d3) with dark pill */
+[data-lighting="natural"] .hotspot__dot {
+  background: rgba(245, 230, 211, 0.95);
+  box-shadow: 0 0 10px rgba(245, 230, 211, 0.5);
+}
+
+[data-lighting="natural"] .hotspot__indicator:hover {
+  background: rgba(20, 16, 14, 0.88);
+  border-color: rgba(245, 230, 211, 0.2);
+}
+
+[data-lighting="natural"] .hotspot__indicator:hover .hotspot__dot {
+  background: rgba(245, 230, 211, 1);
+  box-shadow: 0 0 8px rgba(245, 230, 211, 0.6);
+}
+
+[data-lighting="natural"] .hotspot__label {
+  color: #f5e6d3;
+}
+
+/* ============================================
    AMBIENT DUST PARTICLES
    ============================================ */
 
@@ -787,7 +953,7 @@
 .nav-brand__title {
   font-family: var(--font-serif);
   font-size: 2.25rem;
-  font-weight: 400;
+  font-weight: 200;
   color: #ffffff;
   letter-spacing: -1.9px;
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
@@ -1450,7 +1616,7 @@
   margin: 0 0 16px;
   font-family: var(--font-serif);
   font-size: 32px;
-  font-weight: 400;
+  font-weight: 200;
   line-height: 1.2;
   color: #f5e6d3;
   letter-spacing: -0.02em;

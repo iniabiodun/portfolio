@@ -398,17 +398,25 @@ export function StudyRoom() {
               height: `${spot.bounds.height}%`,
               zIndex: spot.zIndex,
             }}
-            onMouseMove={(e) => handleMouseMove(e, spot.id)}
-            onMouseLeave={() => setHoveredSpot(null)}
             aria-label={spot.label}
-          />
+          >
+            {/* Visual hotspot indicator - transforms into pill with label on hover */}
+            <span 
+              className="hotspot__indicator"
+              onMouseEnter={() => setHoveredSpot(spot.id)}
+              onMouseLeave={() => setHoveredSpot(null)}
+            >
+              <span className="hotspot__dot" />
+              <span className="hotspot__label">{spot.label}</span>
+            </span>
+          </Link>
         ))}
 
         {/* Custom cursor - dot when idle, pill when on hotspot */}
         <AnimatePresence>
-          {showCursor && (
+          {showCursor && !hoveredSpot && (
             <motion.div
-              className={`custom-cursor ${hoveredSpot ? "has-label" : ""}`}
+              className="custom-cursor"
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.5 }}
@@ -419,17 +427,6 @@ export function StudyRoom() {
               }}
             >
               <span className="custom-cursor__dot" />
-              {hoveredSpot && (
-                <motion.span 
-                  className="custom-cursor__label"
-                  initial={{ opacity: 0, x: -5 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -5 }}
-                  transition={{ duration: 0.1 }}
-                >
-                  {hotspots.find((s) => s.id === hoveredSpot)?.label}
-                </motion.span>
-              )}
             </motion.div>
           )}
         </AnimatePresence>

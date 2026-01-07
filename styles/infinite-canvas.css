@@ -1,0 +1,351 @@
+/* Infinite Canvas - About Page */
+
+.infinite-canvas {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Background gradients per lighting mode */
+.infinite-canvas__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: background 0.6s ease;
+}
+
+/* Natural mode - warm daylight */
+.infinite-canvas--natural .infinite-canvas__bg {
+  background: 
+    radial-gradient(ellipse at 30% 20%, rgba(255, 248, 240, 0.8) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(245, 235, 220, 0.6) 0%, transparent 40%),
+    linear-gradient(180deg, #faf8f5 0%, #f5f0e8 50%, #ede5d8 100%);
+}
+
+/* Warm mode - golden hour */
+.infinite-canvas--warm .infinite-canvas__bg {
+  background: 
+    radial-gradient(ellipse at 30% 20%, rgba(255, 220, 180, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 80%, rgba(255, 200, 150, 0.3) 0%, transparent 40%),
+    linear-gradient(180deg, #f5e6d3 0%, #e8d5be 50%, #d4c4a8 100%);
+}
+
+/* Ambient mode - evening dark */
+.infinite-canvas--ambient .infinite-canvas__bg {
+  background: 
+    radial-gradient(ellipse at 30% 30%, rgba(60, 40, 35, 0.8) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(40, 25, 20, 0.6) 0%, transparent 40%),
+    linear-gradient(180deg, #1a1412 0%, #0f0c0a 50%, #0a0807 100%);
+}
+
+/* Canvas content layer */
+.infinite-canvas__content {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Center avatar */
+.infinite-canvas__center {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  pointer-events: none;
+}
+
+.infinite-canvas__center img {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
+}
+
+.infinite-canvas--ambient .infinite-canvas__center img {
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+}
+
+/* Drag hint */
+.infinite-canvas__hint {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  z-index: 100;
+  pointer-events: none;
+}
+
+.infinite-canvas--natural .infinite-canvas__hint,
+.infinite-canvas--warm .infinite-canvas__hint {
+  color: rgba(60, 40, 30, 0.5);
+}
+
+.infinite-canvas--ambient .infinite-canvas__hint {
+  color: rgba(245, 230, 211, 0.4);
+}
+
+/* Canvas Items */
+.canvas-item {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+  transition: filter 0.3s ease;
+}
+
+.canvas-item--clickable {
+  cursor: pointer;
+}
+
+.canvas-item__image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.infinite-canvas--ambient .canvas-item__image-wrapper {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.canvas-item--clickable:hover .canvas-item__image-wrapper {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+}
+
+.infinite-canvas--ambient .canvas-item--clickable:hover .canvas-item__image-wrapper {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+}
+
+/* Item label */
+.canvas-item__label {
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translate(-50%, 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.canvas-item__label-text {
+  font-family: var(--font-serif);
+  font-size: 0.875rem;
+  font-weight: 200;
+  padding: 0.375rem 0.75rem;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.infinite-canvas--natural .canvas-item__label-text,
+.infinite-canvas--warm .canvas-item__label-text {
+  background: rgba(255, 255, 255, 0.85);
+  color: #2a1f1a;
+}
+
+.infinite-canvas--ambient .canvas-item__label-text {
+  background: rgba(30, 25, 22, 0.85);
+  color: #f5e6d3;
+}
+
+.canvas-item__label-desc {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  max-width: 200px;
+  white-space: normal;
+}
+
+.infinite-canvas--natural .canvas-item__label-desc,
+.infinite-canvas--warm .canvas-item__label-desc {
+  color: rgba(60, 40, 30, 0.7);
+}
+
+.infinite-canvas--ambient .canvas-item__label-desc {
+  color: rgba(245, 230, 211, 0.6);
+}
+
+/* Click hint */
+.canvas-item__click-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+.infinite-canvas--natural .canvas-item__click-hint,
+.infinite-canvas--warm .canvas-item__click-hint {
+  background: rgba(255, 255, 255, 0.9);
+  color: #2a1f1a;
+}
+
+.infinite-canvas--ambient .canvas-item__click-hint {
+  background: rgba(30, 25, 22, 0.9);
+  color: #f5e6d3;
+}
+
+/* Expanded overlay */
+.infinite-canvas__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.infinite-canvas--natural .infinite-canvas__overlay,
+.infinite-canvas--warm .infinite-canvas__overlay {
+  background: rgba(250, 245, 240, 0.85);
+}
+
+.infinite-canvas--ambient .infinite-canvas__overlay {
+  background: rgba(10, 8, 7, 0.9);
+}
+
+.infinite-canvas__expanded {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+.infinite-canvas__close {
+  position: absolute;
+  top: -2rem;
+  right: -2rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.infinite-canvas--natural .infinite-canvas__close,
+.infinite-canvas--warm .infinite-canvas__close {
+  background: rgba(60, 40, 30, 0.1);
+  color: #2a1f1a;
+}
+
+.infinite-canvas--natural .infinite-canvas__close:hover,
+.infinite-canvas--warm .infinite-canvas__close:hover {
+  background: rgba(60, 40, 30, 0.2);
+}
+
+.infinite-canvas--ambient .infinite-canvas__close {
+  background: rgba(245, 230, 211, 0.1);
+  color: #f5e6d3;
+}
+
+.infinite-canvas--ambient .infinite-canvas__close:hover {
+  background: rgba(245, 230, 211, 0.2);
+}
+
+.infinite-canvas__expanded-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.infinite-canvas__expanded-content img {
+  border-radius: 8px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.infinite-canvas--ambient .infinite-canvas__expanded-content img {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.infinite-canvas__expanded-info {
+  text-align: center;
+  max-width: 500px;
+}
+
+.infinite-canvas__expanded-info h3 {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 200;
+  margin: 0 0 0.5rem;
+}
+
+.infinite-canvas__expanded-info p {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.infinite-canvas--natural .infinite-canvas__expanded-info h3,
+.infinite-canvas--warm .infinite-canvas__expanded-info h3 {
+  color: #2a1f1a;
+}
+
+.infinite-canvas--natural .infinite-canvas__expanded-info p,
+.infinite-canvas--warm .infinite-canvas__expanded-info p {
+  color: rgba(60, 40, 30, 0.7);
+}
+
+.infinite-canvas--ambient .infinite-canvas__expanded-info h3 {
+  color: #f5e6d3;
+}
+
+.infinite-canvas--ambient .infinite-canvas__expanded-info p {
+  color: rgba(245, 230, 211, 0.7);
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .infinite-canvas__center img {
+    width: 180px !important;
+    height: auto !important;
+  }
+  
+  .infinite-canvas__hint {
+    bottom: 5rem;
+    font-size: 0.75rem;
+  }
+  
+  .canvas-item__label-text {
+    font-size: 0.75rem;
+  }
+  
+  .canvas-item__label-desc {
+    display: none;
+  }
+  
+  .infinite-canvas__expanded {
+    max-width: 95vw;
+    max-height: 85vh;
+  }
+  
+  .infinite-canvas__close {
+    top: -1rem;
+    right: 0;
+  }
+}
+
