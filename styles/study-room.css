@@ -1449,7 +1449,7 @@
 .intro-modal__greeting {
   margin: 0 0 16px;
   font-family: var(--font-serif);
-  font-size: 42px;
+  font-size: 32px;
   font-weight: 400;
   line-height: 1.2;
   color: #f5e6d3;
@@ -1465,31 +1465,23 @@
   line-height: 1.5;
 }
 
-.intro-modal__hint {
-  margin: 24px 0 0;
-  font-family: var(--font-sans);
-  font-size: 13px;
-  font-weight: 300;
-  font-style: italic;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* Show desktop hint on desktop, hide on mobile */
-.intro-modal__hint-desktop {
+/* Show desktop hint on desktop, mobile hint on mobile */
+.intro-modal__message-hint--desktop {
   display: inline;
 }
-.intro-modal__hint-mobile {
+.intro-modal__message-hint--mobile {
   display: none;
 }
 
 @media (max-width: 767px) {
-  .intro-modal__hint-desktop {
+  .intro-modal__message-hint--desktop {
     display: none;
   }
-  .intro-modal__hint-mobile {
+  .intro-modal__message-hint--mobile {
     display: inline;
   }
 }
+
 
 /* Lighting selector */
 .intro-modal__lighting {

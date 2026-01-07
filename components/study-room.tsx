@@ -482,7 +482,7 @@ export function StudyRoom() {
             >
               <p className="intro-modal__greeting">Hi, I am ÌníOlúwa</p>
               <p className="intro-modal__message">
-                Welcome to my digital workshop and archive.
+                Welcome to my digital workshop and archive. <span className="intro-modal__message-hint intro-modal__message-hint--desktop">Hover on hotspots to explore the site.</span><span className="intro-modal__message-hint intro-modal__message-hint--mobile">Use desktop for immersive experience.</span>
               </p>
               
               {/* Lighting selector */}
@@ -531,11 +531,6 @@ export function StudyRoom() {
               >
                 Enter the Atelier →
               </button>
-              
-              <p className="intro-modal__hint">
-                <span className="intro-modal__hint-desktop">Hover on hotspots to explore the site.</span>
-                <span className="intro-modal__hint-mobile">Use desktop for immersive experience.</span>
-              </p>
             </motion.div>
           </>
         )}
