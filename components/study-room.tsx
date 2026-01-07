@@ -144,30 +144,16 @@ export function StudyRoom() {
   const [countdown, setCountdown] = useState(10)
   const [hasCheckedVisitor, setHasCheckedVisitor] = useState(false)
   
-  // Preloader state (desktop only) - using motion value for smooth animation
-  const preloaderMotionValue = useMotionValue(0)
-  // Spring config tuned for ~3s animation to 100 (Eva Sánchez speed)
-  const preloaderSpring = useSpring(preloaderMotionValue, { 
-    stiffness: 12,  // Moderate stiffness = faster approach
-    damping: 18,    // Smooth deceleration
-    mass: 1.2       // Balanced momentum
-  })
-  const [preloaderProgress, setPreloaderProgress] = useState(0)
-  const [preloaderTransitioning, setPreloaderTransitioning] = useState(false)
+  // Preloader state - rotating phrases
+  const preloaderPhrases = [
+    "Unlocking the atelier...",
+    "Adjusting the lighting...",
+    "Arranging the artifacts...",
+    "Opening the journal...",
+    "Preparing the workspace...",
+  ]
+  const [preloaderPhraseIndex, setPreloaderPhraseIndex] = useState(0)
   const [preloaderComplete, setPreloaderComplete] = useState(false)
-  
-  // Subscribe to spring changes to update displayed value
-  useEffect(() => {
-    const unsubscribe = preloaderSpring.on("change", (latest) => {
-      setPreloaderProgress(Math.round(latest))
-      
-      // Mark complete when we hit 100
-      if (latest >= 99.5 && !preloaderComplete) {
-        setPreloaderComplete(true)
-      }
-    })
-    return () => unsubscribe()
-  }, [preloaderSpring, preloaderComplete])
   
   // Framer Motion values for parallax
   const mouseX = useMotionValue(0)
@@ -239,20 +225,23 @@ export function StudyRoom() {
     setHasCheckedVisitor(true)
   }, [isDesktop, isDesktopChecked])
 
-  // Preloader animation - set target to 100, spring physics handles the smooth animation
+  // Preloader animation - rotate through phrases
   useEffect(() => {
     if (!showIntro || !isDesktop || introPhase !== 'preloader') return
     
-    // Reset and set target - spring physics will smoothly animate to 100
-    preloaderMotionValue.set(0)
+    const phraseInterval = setInterval(() => {
+      setPreloaderPhraseIndex(prev => {
+        if (prev >= preloaderPhrases.length - 1) {
+          clearInterval(phraseInterval)
+          setPreloaderComplete(true)
+          return prev
+        }
+        return prev + 1
+      })
+    }, 800) // Change phrase every 800ms
     
-    // Small delay then set target to 100 - spring handles the rest
-    const startTimer = setTimeout(() => {
-      preloaderMotionValue.set(100)
-    }, 100)
-
-    return () => clearTimeout(startTimer)
-  }, [showIntro, isDesktop, introPhase, preloaderMotionValue])
+    return () => clearInterval(phraseInterval)
+  }, [showIntro, isDesktop, introPhase, preloaderPhrases.length])
   
   // Handle transition when preloader completes - CRT TV turn-on effect
   useEffect(() => {
@@ -565,15 +554,19 @@ export function StudyRoom() {
             style={{ originY: 0.5 }}
           >
             <div className="preloader__content">
-              {/* Large centered counter */}
-              <div className="preloader__counter">
-                {preloaderProgress.toString().padStart(3, '0')}
-              </div>
-              
-              {/* Copy - 24px below counter */}
-              <div className="preloader__footer">
-                YOU ARE ENTERING THE DESIGN WORKSHOP & ARCHIVE OF ÌNÍOLÚWA ABÍÓDÚN
-              </div>
+              {/* Rotating phrase */}
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={preloaderPhraseIndex}
+                  className="preloader__phrase"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {preloaderPhrases[preloaderPhraseIndex]}
+                </motion.div>
+              </AnimatePresence>
             </div>
           </motion.div>
         )}

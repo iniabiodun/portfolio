@@ -1433,32 +1433,18 @@
   text-align: center;
 }
 
-/* Large centered counter - PP Kyoto ExtraLight */
-.preloader__counter {
-  font-family: "PP Kyoto", var(--font-serif), Georgia, serif;
-  font-size: clamp(10rem, 28vw, 24rem);
-  font-weight: 200;
+/* Rotating phrase text */
+.preloader__phrase {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 300;
   color: #F5E6D3;
-  line-height: 1;
-  letter-spacing: -0.02em;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
+  letter-spacing: 0.05em;
+  text-align: center;
   user-select: none;
-  min-width: 3ch;
   text-align: center;
 }
 
-/* Copy - 24px below counter, mono */
-.preloader__footer {
-  margin-top: 24px;
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  color: #F5E6D3;
-  text-align: center;
-  white-space: nowrap;
-}
 
 /* Hide preloader on mobile - they get direct load */
 @media (max-width: 768px) {
