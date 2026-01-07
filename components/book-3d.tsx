@@ -43,9 +43,9 @@ export function Book3D({
 
   // Size configurations
   const sizeConfig = {
-    sm: { width: 90, height: 140, depth: 18, perspective: 600 },
-    md: { width: 140, height: 218, depth: 24, perspective: 800 },
-    lg: { width: 180, height: 280, depth: 30, perspective: 1000 },
+    sm: { width: 90, height: 140, depth: 24, perspective: 600 },
+    md: { width: 140, height: 218, depth: 32, perspective: 800 },
+    lg: { width: 180, height: 280, depth: 40, perspective: 1000 },
   }
 
   const config = sizeConfig[size]
