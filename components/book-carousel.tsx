@@ -154,6 +154,7 @@ export function BookCarousel({ books, selectedBookSlug, onSelectBook }: BookCaro
                   author={book.author}
                   coverImage={book.coverImage!}
                   spineImage={book.spineImage!}
+                  aspectRatio={book.aspectRatio}
                   size="md"
                   isSelected={isSelected}
                   leanAngle={0}

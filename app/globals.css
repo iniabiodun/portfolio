@@ -36,6 +36,9 @@
   --base-muted-fg: oklch(0.45 0.02 60);
   --base-border: rgba(139, 111, 76, 0.18);
 
+  /* Wooden shelf shadow */
+  --shelf-shadow: rgba(0, 0, 0, 0.15);
+
   /* Derived tokens - reference base colors */
   --background: var(--base-bg);
   --foreground: var(--base-fg);
@@ -64,6 +67,9 @@
   --base-muted: #252220;
   --base-muted-fg: rgba(245, 230, 211, 0.6);
   --base-border: rgba(255, 200, 120, 0.12);
+
+  /* Wooden shelf shadow */
+  --shelf-shadow: rgba(0, 0, 0, 0.4);
 }
 
 @theme inline {
@@ -140,3 +146,12 @@
 
 /* Desk scene (new About page) */
 @import "../styles/desk-scene.css";
+
+/* Book cover image rendering - prevents pixelation on retina displays */
+.book-3d img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: smooth;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}

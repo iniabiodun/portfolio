@@ -308,6 +308,7 @@ function generateBooks() {
       const isReading = data.isReading ?? false
       const coverImage = data.coverImage || ""
       const spineImage = data.spineImage || ""
+      const aspectRatio = data.aspectRatio || null
       const content = markdownToHtml(mdxContent)
 
       return {
@@ -320,6 +321,7 @@ function generateBooks() {
         isReading,
         ...(coverImage && { coverImage }),
         ...(spineImage && { spineImage }),
+        ...(aspectRatio && { aspectRatio }),
         content,
       }
     })
@@ -333,6 +335,7 @@ function generateBooks() {
   lastUpdated?: string
   coverImage?: string
   spineImage?: string
+  aspectRatio?: number
   hasNotes: boolean
   isReading: boolean
   content: string
