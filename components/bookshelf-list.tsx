@@ -75,13 +75,10 @@ export function BookshelfList({
           selectedBook && "max-md:hidden",
         )}
       >
-        <div className="px-6 md:px-10 pt-20 md:pt-16 pb-0 w-full flex flex-col justify-between min-h-full">
+        <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
           <div>
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-4xl font-serif mb-4">Library</h1>
-              <p className="text-muted-foreground">Books, readings, and notes.</p>
-            </div>
+            <h1 className="text-4xl font-serif mb-8">Library</h1>
+            <p className="text-muted-foreground mb-8">Books, readings, and notes.</p>
 
             {/* Wooden Shelf Sections */}
             <div className="space-y-6 -mx-4">

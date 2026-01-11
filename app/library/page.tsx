@@ -10,9 +10,9 @@ import { ContentPanel } from "@/components/content-panel"
 export default function LibraryPage() {
   const [selectedBook, setSelectedBook] = useState<string | null>(null)
   const bookList = useResizable({
-    initialWidth: 500,
-    minWidth: 300,
-    maxWidth: 900,
+    initialWidth: 600,
+    minWidth: 200,
+    maxWidth: 600,
   })
 
   return (
