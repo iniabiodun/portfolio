@@ -574,7 +574,7 @@ export function Book3D({
           }}
         />
 
-        {/* Back Cover */}
+        {/* Back Cover - matches spine color */}
         <div
           className="book-3d__back"
           style={{
@@ -582,7 +582,7 @@ export function Book3D({
             width: config.width,
             height: config.height,
             transform: `translateZ(-${halfDepth}px) rotateY(180deg)`,
-            background: "linear-gradient(135deg, #8b7355 0%, #6b5344 100%)",
+            background: `linear-gradient(135deg, ${bookColor.bg} 0%, ${bookColor.accent} 100%)`,
             borderRadius: "2px 0 0 2px",
           }}
         />
