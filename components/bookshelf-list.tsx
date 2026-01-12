@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useRef, useEffect } from "react"
+import { useMemo, useRef } from "react"
 import { books } from "@/content/books"
 import { cn } from "@/lib/utils"
 import { Footer } from "./footer"
@@ -23,22 +23,11 @@ export function BookshelfList({
   onMouseDown 
 }: BookshelfListProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const scrollPositionRef = useRef<number>(0)
 
-  // Save scroll position before state changes
+  // Handle book selection
   const handleSelectBook = (slug: string | null) => {
-    if (scrollRef.current) {
-      scrollPositionRef.current = scrollRef.current.scrollTop
-    }
     onSelectBook(slug)
   }
-
-  // Restore scroll position after render
-  useEffect(() => {
-    if (scrollRef.current && scrollPositionRef.current > 0) {
-      scrollRef.current.scrollTop = scrollPositionRef.current
-    }
-  }, [selectedBook])
   // Categorize books
   // Currently reading: isReading = true, not finished
   const currentlyReading = useMemo(() => 
@@ -71,7 +60,7 @@ export function BookshelfList({
         ref={scrollRef}
         style={{ width: `${width}px` }}
         className={cn(
-          "list-container relative overflow-y-auto shrink-0 border-r border-border h-screen max-md:w-full max-md:pt-20",
+          "list-container relative overflow-y-auto overflow-x-hidden shrink-0 border-r border-border h-screen max-md:w-full max-md:pt-20 [overflow-scrolling:touch]",
           selectedBook && "max-md:hidden",
         )}
       >

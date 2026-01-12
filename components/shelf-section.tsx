@@ -33,6 +33,13 @@ export function ShelfSection({
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const { mode } = useLighting()
   
+  // Touch swipe handling for mobile
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchStartY, setTouchStartY] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [touchEndY, setTouchEndY] = useState<number | null>(null)
+  const minSwipeDistance = 50
+  
   // Get the appropriate wood texture for current lighting mode
   const woodTexture = woodTextures[mode]
   const isDark = mode === "ambient"
@@ -65,6 +72,40 @@ export function ShelfSection({
       left: direction === 'left' ? -scrollAmount : scrollAmount,
       behavior: 'smooth'
     })
+  }
+
+  // Touch event handlers - only respond to horizontal swipes, allow vertical scroll
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchEndY(null)
+    setTouchStart(e.targetTouches[0].clientX)
+    setTouchStartY(e.targetTouches[0].clientY)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+    setTouchEndY(e.targetTouches[0].clientY)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd || !touchStartY || !touchEndY) return
+    
+    const distanceX = touchStart - touchEnd
+    const distanceY = touchStartY - touchEndY
+    
+    // Only handle horizontal swipes (not vertical scrolls)
+    // If horizontal movement is greater than vertical, treat as swipe
+    if (Math.abs(distanceX) > Math.abs(distanceY)) {
+      const isLeftSwipe = distanceX > minSwipeDistance
+      const isRightSwipe = distanceX < -minSwipeDistance
+      
+      if (isLeftSwipe && canScrollRight) {
+        scroll('right')
+      }
+      if (isRightSwipe && canScrollLeft) {
+        scroll('left')
+      }
+    }
   }
 
   // Find selected index for spacing calculations
@@ -118,7 +159,11 @@ export function ShelfSection({
         {/* Scrollable books container */}
         <div
           ref={scrollRef}
-          className="flex items-end gap-1 px-6 pb-0 pt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex items-end gap-1 px-6 pb-0 pt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x"
+          style={{ touchAction: 'pan-x pan-y' }}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
           {books.map((book, index) => {
             const isSelected = selectedBookSlug === book.slug
