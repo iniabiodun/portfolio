@@ -11,8 +11,8 @@ export default function EventsPage() {
   const [selectedSpeaking, setSelectedSpeaking] = useState<string | null>(null)
   const speakingList = useResizable({
     initialWidth: 600,
-    minWidth: 200,
-    maxWidth: 600,
+    minWidth: 300,
+    maxWidth: 800,
   })
 
   return (

@@ -11,8 +11,8 @@ export default function EssaysPage() {
   const [selectedNote, setSelectedNote] = useState<string | null>(null)
   const notesList = useResizable({
     initialWidth: 600,
-    minWidth: 200,
-    maxWidth: 600,
+    minWidth: 300,
+    maxWidth: 800,
   })
 
   return (

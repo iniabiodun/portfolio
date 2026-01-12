@@ -11,8 +11,8 @@ export default function LibraryPage() {
   const [selectedBook, setSelectedBook] = useState<string | null>(null)
   const bookList = useResizable({
     initialWidth: 600,
-    minWidth: 200,
-    maxWidth: 600,
+    minWidth: 300,
+    maxWidth: 800,
   })
 
   return (

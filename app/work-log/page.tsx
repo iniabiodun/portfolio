@@ -11,8 +11,8 @@ export default function WorkLogPage() {
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<string | null>(null)
   const caseStudiesList = useResizable({
     initialWidth: 600,
-    minWidth: 200,
-    maxWidth: 600,
+    minWidth: 300,
+    maxWidth: 800,
   })
 
   return (
