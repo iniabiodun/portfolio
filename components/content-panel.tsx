@@ -1,5 +1,6 @@
-import { X, ArrowLeft } from "lucide-react"
+import { X } from "lucide-react"
 import type React from "react"
+import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 interface ContentPanelProps {
@@ -13,16 +14,26 @@ export function ContentPanel({ onClose, children, onMouseDown, isDragging }: Con
   const ditheredPattern = `data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23000' opacity='0.25'/%3E%3C/svg%3E`
 
   return (
-    <main className="flex-1 p-6 pt-4 md:p-16 max-w-3xl overflow-y-auto max-md:pt-16 relative h-screen">
-      {/* Mobile back button */}
-      <div className="md:hidden mb-6">
+    <motion.main 
+      className="flex-1 p-6 pt-16 md:p-16 max-w-3xl overflow-y-auto relative h-screen md:h-auto fixed md:relative inset-0 md:inset-auto bg-background z-50 md:z-auto"
+      initial={{ y: "100%" }}
+      animate={{ y: 0 }}
+      exit={{ y: "100%" }}
+      transition={{
+        type: "spring",
+        damping: 30,
+        stiffness: 300,
+        mass: 0.8,
+      }}
+    >
+      {/* Mobile close button - top right */}
+      <div className="md:hidden fixed top-4 right-4 z-10">
         <button
           onClick={onClose}
-          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors -ml-1 py-2"
-          aria-label="Back to library"
+          className="p-2.5 bg-background/95 backdrop-blur-sm border border-border rounded-full shadow-lg hover:bg-background active:scale-95 transition-all"
+          aria-label="Close"
         >
-          <ArrowLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">Back</span>
+          <X className="w-5 h-5" />
         </button>
       </div>
 
@@ -54,6 +65,6 @@ export function ContentPanel({ onClose, children, onMouseDown, isDragging }: Con
       </div>
       
       {children}
-    </main>
+    </motion.main>
   )
 }

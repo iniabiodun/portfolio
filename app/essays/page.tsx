@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site-layout"
 import { NotesList } from "@/components/notes-list"
 import { NoteReader } from "@/components/note-reader"
 import { ContentPanel } from "@/components/content-panel"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function EssaysPage() {
   const [selectedNote, setSelectedNote] = useState<string | null>(null)
@@ -24,15 +25,31 @@ export default function EssaysPage() {
         isDragging={notesList.isDragging}
         onMouseDown={notesList.handleMouseDown}
       />
-      {selectedNote && (
-        <ContentPanel 
-          onClose={() => setSelectedNote(null)}
-          onMouseDown={notesList.handleMouseDown}
-          isDragging={notesList.isDragging}
-        >
-          <NoteReader slug={selectedNote} />
-        </ContentPanel>
-      )}
+      <AnimatePresence mode="wait">
+        {selectedNote && (
+          <>
+            {/* Mobile backdrop - fades in/out */}
+            <motion.div
+              key="backdrop"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSelectedNote(null)}
+            />
+            
+            <ContentPanel 
+              key="note-reader"
+              onClose={() => setSelectedNote(null)}
+              onMouseDown={notesList.handleMouseDown}
+              isDragging={notesList.isDragging}
+            >
+              <NoteReader slug={selectedNote} />
+            </ContentPanel>
+          </>
+        )}
+      </AnimatePresence>
     </SiteLayout>
   )
 }

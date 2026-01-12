@@ -6,6 +6,7 @@ import { SiteLayout } from "@/components/site-layout"
 import { CaseStudiesList } from "@/components/case-studies-list"
 import { CaseStudyReader } from "@/components/case-study-reader"
 import { ContentPanel } from "@/components/content-panel"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function WorkLogPage() {
   const [selectedCaseStudy, setSelectedCaseStudy] = useState<string | null>(null)
@@ -24,15 +25,31 @@ export default function WorkLogPage() {
         isDragging={caseStudiesList.isDragging}
         onMouseDown={caseStudiesList.handleMouseDown}
       />
-      {selectedCaseStudy && (
-        <ContentPanel 
-          onClose={() => setSelectedCaseStudy(null)}
-          onMouseDown={caseStudiesList.handleMouseDown}
-          isDragging={caseStudiesList.isDragging}
-        >
-          <CaseStudyReader slug={selectedCaseStudy} />
-        </ContentPanel>
-      )}
+      <AnimatePresence mode="wait">
+        {selectedCaseStudy && (
+          <>
+            {/* Mobile backdrop - fades in/out */}
+            <motion.div
+              key="backdrop"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSelectedCaseStudy(null)}
+            />
+            
+            <ContentPanel 
+              key="case-study-reader"
+              onClose={() => setSelectedCaseStudy(null)}
+              onMouseDown={caseStudiesList.handleMouseDown}
+              isDragging={caseStudiesList.isDragging}
+            >
+              <CaseStudyReader slug={selectedCaseStudy} />
+            </ContentPanel>
+          </>
+        )}
+      </AnimatePresence>
     </SiteLayout>
   )
 }
