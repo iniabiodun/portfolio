@@ -127,15 +127,15 @@ export function ShelfSection({
   if (books.length === 0) return null
 
   return (
-    <div className="mb-10 max-w-full overflow-hidden">
+    <div className="mb-10 w-screen md:w-auto md:max-w-full overflow-hidden">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4 px-2">
+      <div className="flex justify-between items-center mb-4 px-4 md:px-2">
         <h2 className="text-xs uppercase tracking-widest text-muted-foreground">{title}</h2>
       </div>
       
-      {/* Books on shelf with scroll */}
-      <div className="relative group">
-        {/* Left Arrow - always visible on mobile when scrollable */}
+      {/* Books on shelf with scroll - constrained container */}
+      <div className="relative group w-full">
+        {/* Left Arrow - visible on mobile at screen edge */}
         <AnimatePresence>
           {canScrollLeft && (
             <motion.button
@@ -143,15 +143,15 @@ export function ShelfSection({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll('left')}
-              className="absolute left-1 sm:-left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all md:opacity-0 md:group-hover:opacity-100"
+              className="absolute left-2 md:-left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all md:opacity-0 md:group-hover:opacity-100"
               aria-label="Scroll left"
             >
-              <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
+              <ChevronLeft className="w-4 h-4" />
             </motion.button>
           )}
         </AnimatePresence>
 
-        {/* Right Arrow - always visible on mobile when scrollable */}
+        {/* Right Arrow - visible on mobile at screen edge */}
         <AnimatePresence>
           {canScrollRight && (
             <motion.button
@@ -159,18 +159,18 @@ export function ShelfSection({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll('right')}
-              className="absolute right-1 sm:-right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all md:opacity-0 md:group-hover:opacity-100"
+              className="absolute right-2 md:-right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all md:opacity-0 md:group-hover:opacity-100"
               aria-label="Scroll right"
             >
-              <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />
+              <ChevronRight className="w-4 h-4" />
             </motion.button>
           )}
         </AnimatePresence>
 
-        {/* Scrollable books container */}
+        {/* Scrollable books container - constrained to viewport width */}
         <div
           ref={scrollRef}
-          className="flex items-end gap-1 px-6 pb-0 pt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          className="flex items-end gap-1 px-4 md:px-6 pb-0 pt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] w-full"
           style={{ touchAction: 'pan-x' }}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
@@ -245,7 +245,7 @@ export function ShelfSection({
 
         {/* Wooden shelf with real texture */}
         <div 
-          className="h-5 rounded-t-sm mx-2 relative overflow-hidden"
+          className="h-5 rounded-t-sm mx-1 md:mx-2 relative overflow-hidden"
           style={{
             backgroundImage: `url(${woodTexture})`,
             backgroundSize: 'cover',
@@ -265,7 +265,7 @@ export function ShelfSection({
         </div>
         {/* Shelf edge/lip with texture */}
         <div 
-          className="h-2 -mt-px rounded-b-sm mx-2 relative overflow-hidden"
+          className="h-2 -mt-px rounded-b-sm mx-1 md:mx-2 relative overflow-hidden"
           style={{
             backgroundImage: `url(${woodTexture})`,
             backgroundSize: 'cover',

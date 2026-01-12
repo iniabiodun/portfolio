@@ -69,8 +69,8 @@ export function BookshelfList({
             <h1 className="text-4xl font-serif mb-8">Library</h1>
             <p className="text-muted-foreground mb-8">Books, readings, and notes.</p>
 
-            {/* Wooden Shelf Sections */}
-            <div className="space-y-6 -mx-4">
+            {/* Wooden Shelf Sections - full width on mobile */}
+            <div className="space-y-6 -mx-6 md:-mx-4">
               {currentlyReading.length > 0 && (
                 <ShelfSection
                   title="Currently reading"
