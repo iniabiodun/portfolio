@@ -74,7 +74,7 @@ export function ShelfSection({
     })
   }
 
-  // Touch event handlers - only respond to horizontal swipes, allow vertical scroll
+  // Touch event handlers - only books scroll horizontally, not the page
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
     setTouchEndY(null)
@@ -83,8 +83,20 @@ export function ShelfSection({
   }
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
-    setTouchEndY(e.targetTouches[0].clientY)
+    if (!touchStart || !touchStartY) return
+    
+    const currentX = e.targetTouches[0].clientX
+    const currentY = e.targetTouches[0].clientY
+    const diffX = touchStart - currentX
+    const diffY = touchStartY - currentY
+    
+    // If horizontal swipe is dominant, prevent page scroll
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+      e.preventDefault() // Prevent page scroll
+    }
+    
+    setTouchEnd(currentX)
+    setTouchEndY(currentY)
   }
 
   const onTouchEnd = () => {
@@ -94,7 +106,6 @@ export function ShelfSection({
     const distanceY = touchStartY - touchEndY
     
     // Only handle horizontal swipes (not vertical scrolls)
-    // If horizontal movement is greater than vertical, treat as swipe
     if (Math.abs(distanceX) > Math.abs(distanceY)) {
       const isLeftSwipe = distanceX > minSwipeDistance
       const isRightSwipe = distanceX < -minSwipeDistance
@@ -116,7 +127,7 @@ export function ShelfSection({
   if (books.length === 0) return null
 
   return (
-    <div className="mb-10">
+    <div className="mb-10 max-w-full overflow-hidden">
       {/* Header */}
       <div className="flex justify-between items-center mb-4 px-2">
         <h2 className="text-xs uppercase tracking-widest text-muted-foreground">{title}</h2>
@@ -124,7 +135,7 @@ export function ShelfSection({
       
       {/* Books on shelf with scroll */}
       <div className="relative group">
-        {/* Left Arrow - positioned inside on mobile */}
+        {/* Left Arrow - always visible on mobile when scrollable */}
         <AnimatePresence>
           {canScrollLeft && (
             <motion.button
@@ -132,7 +143,7 @@ export function ShelfSection({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll('left')}
-              className="absolute left-1 sm:-left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all"
+              className="absolute left-1 sm:-left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all md:opacity-0 md:group-hover:opacity-100"
               aria-label="Scroll left"
             >
               <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
@@ -140,7 +151,7 @@ export function ShelfSection({
           )}
         </AnimatePresence>
 
-        {/* Right Arrow - positioned inside on mobile */}
+        {/* Right Arrow - always visible on mobile when scrollable */}
         <AnimatePresence>
           {canScrollRight && (
             <motion.button
@@ -148,7 +159,7 @@ export function ShelfSection({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll('right')}
-              className="absolute right-1 sm:-right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all"
+              className="absolute right-1 sm:-right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all md:opacity-0 md:group-hover:opacity-100"
               aria-label="Scroll right"
             >
               <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />
@@ -159,8 +170,8 @@ export function ShelfSection({
         {/* Scrollable books container */}
         <div
           ref={scrollRef}
-          className="flex items-end gap-1 px-6 pb-0 pt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] touch-pan-x"
-          style={{ touchAction: 'pan-x pan-y' }}
+          className="flex items-end gap-1 px-6 pb-0 pt-4 overflow-x-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          style={{ touchAction: 'pan-x' }}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
