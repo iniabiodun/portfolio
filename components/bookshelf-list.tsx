@@ -60,7 +60,7 @@ export function BookshelfList({
         ref={scrollRef}
         style={{ width: `${width}px` }}
         className={cn(
-          "list-container relative overflow-y-auto overflow-x-hidden shrink-0 border-r border-border h-screen max-md:w-full max-md:pt-20 [overflow-scrolling:touch]",
+          "list-container relative overflow-y-auto overflow-x-hidden shrink-0 border-r border-border h-screen max-md:w-full max-md:pt-20 [-webkit-overflow-scrolling:touch]",
           selectedBook && "max-md:hidden",
         )}
       >
