@@ -189,7 +189,7 @@ export function ShelfSection({
 
         {/* Wooden shelf with real texture */}
         <div 
-          className="h-5 rounded-sm mx-2 relative overflow-hidden"
+          className="h-5 rounded-t-sm mx-2 relative overflow-hidden"
           style={{
             backgroundImage: `url(${woodTexture})`,
             backgroundSize: 'cover',
