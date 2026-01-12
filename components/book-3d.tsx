@@ -249,6 +249,15 @@ export function Book3D({
     setBaseRotation(dragRotation)
   }
 
+  // Touch handlers for mobile
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isSelected) return
+    const touch = e.touches[0]
+    setIsDragging(true)
+    setDragStartX(touch.clientX)
+    setBaseRotation(dragRotation)
+  }
+
   useEffect(() => {
     if (!isDragging || !isSelected) return
 
@@ -258,7 +267,14 @@ export function Book3D({
       setDragRotation(baseRotation + rotationDelta)
     }
 
-    const handleMouseUp = () => {
+    const handleTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0]
+      const deltaX = touch.clientX - dragStartX
+      const rotationDelta = (deltaX / 150) * 180
+      setDragRotation(baseRotation + rotationDelta)
+    }
+
+    const handleDragEnd = () => {
       setIsDragging(false)
       const currentRotation = dragRotation % 360
       const normalizedRotation = currentRotation < 0 ? currentRotation + 360 : currentRotation
@@ -281,11 +297,15 @@ export function Book3D({
     }
 
     window.addEventListener('mousemove', handleMouseMove)
-    window.addEventListener('mouseup', handleMouseUp)
+    window.addEventListener('mouseup', handleDragEnd)
+    window.addEventListener('touchmove', handleTouchMove, { passive: true })
+    window.addEventListener('touchend', handleDragEnd)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
-      window.removeEventListener('mouseup', handleMouseUp)
+      window.removeEventListener('mouseup', handleDragEnd)
+      window.removeEventListener('touchmove', handleTouchMove)
+      window.removeEventListener('touchend', handleDragEnd)
     }
   }, [isDragging, isSelected, dragStartX, baseRotation, dragRotation])
 
@@ -351,6 +371,7 @@ export function Book3D({
       }}
       onMouseMove={handleMouseMove}
       onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
       onClick={(e) => {
         if (!isDragging && onClick) {
           onClick()

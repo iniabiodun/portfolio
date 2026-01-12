@@ -1,4 +1,4 @@
-import { X } from "lucide-react"
+import { X, ArrowLeft } from "lucide-react"
 import type React from "react"
 import { cn } from "@/lib/utils"
 
@@ -13,7 +13,19 @@ export function ContentPanel({ onClose, children, onMouseDown, isDragging }: Con
   const ditheredPattern = `data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%23000' opacity='0.25'/%3E%3C/svg%3E`
 
   return (
-    <main className="flex-1 p-8 md:p-16 max-w-3xl overflow-y-auto max-md:pt-20 relative h-screen">
+    <main className="flex-1 p-6 pt-4 md:p-16 max-w-3xl overflow-y-auto max-md:pt-16 relative h-screen">
+      {/* Mobile back button */}
+      <div className="md:hidden mb-6">
+        <button
+          onClick={onClose}
+          className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors -ml-1 py-2"
+          aria-label="Back to library"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="text-sm font-medium">Back</span>
+        </button>
+      </div>
+
       {/* Left resize handle - desktop only */}
       {onMouseDown && (
         <div

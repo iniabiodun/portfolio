@@ -12,10 +12,10 @@ export function BookReader({ slug }: BookReaderProps) {
 
   return (
     <article className="max-w-none">
-      {/* Book Header with Cover */}
-      <div className="flex gap-6 mb-8">
-        {/* Always reserve space for cover - fixed dimensions */}
-        <div className="flex-shrink-0 w-32 h-48 rounded shadow-lg overflow-hidden bg-muted/50">
+      {/* Book Header with Cover - stacks on mobile */}
+      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-8">
+        {/* Cover - smaller on mobile, centered */}
+        <div className="flex-shrink-0 w-24 h-36 sm:w-32 sm:h-48 rounded shadow-lg overflow-hidden bg-muted/50 mx-auto sm:mx-0">
           {book.coverImage ? (
             <img 
               src={book.coverImage} 
@@ -24,14 +24,14 @@ export function BookReader({ slug }: BookReaderProps) {
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-muted-foreground/50">
-              <span className="text-4xl">📖</span>
+              <span className="text-3xl sm:text-4xl">📖</span>
             </div>
           )}
         </div>
-        <div className="flex flex-col justify-center min-w-0">
-          <h1 className="text-3xl font-serif mb-2">{book.title}</h1>
-          <p className="text-lg text-muted-foreground mb-2">{book.author}</p>
-          <div className="flex gap-4 text-sm text-muted-foreground">
+        <div className="flex flex-col justify-center min-w-0 text-center sm:text-left">
+          <h1 className="text-2xl sm:text-3xl font-serif mb-2">{book.title}</h1>
+          <p className="text-base sm:text-lg text-muted-foreground mb-2">{book.author}</p>
+          <div className="flex justify-center sm:justify-start gap-4 text-sm text-muted-foreground">
             {book.year && <span>{book.year}</span>}
             {book.hasNotes ? (
               <span className="text-emerald-500 font-medium">Finished</span>

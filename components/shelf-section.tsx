@@ -83,7 +83,7 @@ export function ShelfSection({
       
       {/* Books on shelf with scroll */}
       <div className="relative group">
-        {/* Left Arrow */}
+        {/* Left Arrow - positioned inside on mobile */}
         <AnimatePresence>
           {canScrollLeft && (
             <motion.button
@@ -91,15 +91,15 @@ export function ShelfSection({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll('left')}
-              className="absolute -left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all"
+              className="absolute left-1 sm:-left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all"
               aria-label="Scroll left"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-5 h-5 sm:w-4 sm:h-4" />
             </motion.button>
           )}
         </AnimatePresence>
 
-        {/* Right Arrow */}
+        {/* Right Arrow - positioned inside on mobile */}
         <AnimatePresence>
           {canScrollRight && (
             <motion.button
@@ -107,10 +107,10 @@ export function ShelfSection({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => scroll('right')}
-              className="absolute -right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all"
+              className="absolute right-1 sm:-right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-9 sm:h-9 bg-background/95 backdrop-blur-sm border border-border rounded-full flex items-center justify-center shadow-lg hover:bg-background active:scale-95 transition-all"
               aria-label="Scroll right"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-5 h-5 sm:w-4 sm:h-4" />
             </motion.button>
           )}
         </AnimatePresence>
