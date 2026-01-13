@@ -35,7 +35,7 @@ export function SpeakingList({ selectedSpeaking, onSelectSpeaking, width, isDrag
       <div className="px-6 md:px-16 pt-20 md:pt-16 pb-0 w-full md:max-w-3xl flex flex-col justify-between min-h-full">
         <div>
           <h1 className="text-4xl font-serif mb-8">Events</h1>
-          <p className="text-muted-foreground mb-8">Talks, workshops, and presentations.</p>
+          <p className="text-muted-foreground mb-8 font-sans font-semibold">Talks, workshops, and presentations.</p>
           <div className="space-y-0">
             {sortedSpeaking.map((item, index) => (
               <div key={item.slug} className="relative">

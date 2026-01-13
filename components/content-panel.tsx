@@ -15,7 +15,7 @@ export function ContentPanel({ onClose, children, onMouseDown, isDragging }: Con
 
   return (
     <motion.main 
-      className="flex-1 p-6 pt-16 md:p-16 max-w-3xl overflow-y-auto relative h-screen md:h-auto fixed md:relative inset-0 md:inset-auto bg-background z-50 md:z-auto"
+      className="flex-1 p-6 pt-16 md:p-16 md:overflow-y-auto relative h-screen fixed md:relative inset-0 md:inset-auto bg-background z-50 md:z-auto"
       initial={{ y: "100%" }}
       animate={{ y: 0 }}
       exit={{ y: "100%" }}

@@ -14,7 +14,7 @@ export function SiteLayout({ children }: SiteLayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex h-screen overflow-hidden max-md:overflow-y-auto max-md:h-auto max-md:min-h-screen">
       {/* Desktop sidebar */}
       <NavSidebar
         width={sidebar.width}

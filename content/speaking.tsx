@@ -8,6 +8,13 @@ export interface Speaking {
 
 export const speaking: Speaking[] = [
   {
+    "slug": "designers-building-cool-shit-ii-2026",
+    "title": "Designers Building Cool Shit II",
+    "date": "01-26-2026",
+    "excerpt": "",
+    "content": "<p>Hosting v2 of our share and tell for designers building and shipping with AI. Happening on Monday, January 26, 2026. Somewhere in London.</p>\n<p>If you're interested in joining, RSVP at the link below.</p>\n<p><a href=\"https://designersbuilding.lovable.app/\" target=\"_blank\" rel=\"noopener noreferrer\">RSVP here</a></p>"
+  },
+  {
     "slug": "designers-doing-cool-shit-2025",
     "title": "Designers Doing Cool Shit",
     "date": "11-11-2025",
